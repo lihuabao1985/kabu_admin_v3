@@ -31,10 +31,11 @@ public class StockPriceHistoryController {
         this.stockPriceHistoryService = stockPriceHistoryService;
     }
 
-    @GetMapping("/stocks/{stockCode}/price-history")
+    @GetMapping("/stock-price-history")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','STOCK_PRICE_HISTORY:VIEW','STOCK_PRICE_HISTORY:MANAGE','STOCK_PRICE_HISTORY:IMPORT')")
-    public StockPriceHistoryListResponse listByStockCode(
-        @PathVariable String stockCode,
+    public StockPriceHistoryListResponse list(
+        @RequestParam(required = false) String stockCode,
+        @RequestParam(required = false) String typeName,
         @RequestParam(required = false) String dateFrom,
         @RequestParam(required = false) String dateTo,
         @RequestParam(required = false) Integer page,
@@ -43,6 +44,7 @@ public class StockPriceHistoryController {
     ) {
         StockPriceHistoryQueryRequest request = new StockPriceHistoryQueryRequest(
             stockCode,
+            typeName,
             dateFrom,
             dateTo,
             page,

@@ -6,6 +6,8 @@ import java.time.LocalDate;
 public record StockPriceHistoryResponse(
     Long id,
     String stockCode,
+    String stockName,
+    String typeName,
     LocalDate transDate,
     Integer beforeDayPrice,
     Integer openPrice,

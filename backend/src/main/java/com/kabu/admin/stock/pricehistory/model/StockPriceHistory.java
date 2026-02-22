@@ -6,6 +6,8 @@ import java.time.LocalDate;
 public class StockPriceHistory {
     private Long id;
     private String stockCode;
+    private String stockName;
+    private String typeName;
     private LocalDate transDate;
     private Integer beforeDayPrice;
     private Integer openPrice;
@@ -32,6 +34,23 @@ public class StockPriceHistory {
 
     public void setStockCode(String stockCode) {
         this.stockCode = stockCode;
+    }
+
+
+    public String getStockName() {
+        return stockName;
+    }
+
+    public void setStockName(String stockName) {
+        this.stockName = stockName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public LocalDate getTransDate() {

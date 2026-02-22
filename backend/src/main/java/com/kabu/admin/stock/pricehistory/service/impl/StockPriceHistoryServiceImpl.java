@@ -59,7 +59,8 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
             throw new IllegalArgumentException("查询请求不能为空");
         }
 
-        String stockCode = normalizeStockCode(request.stockCode());
+        String stockCode = normalizeStockCodeForSearch(request.stockCode());
+        String typeName = normalizeText(request.typeName());
         LocalDate dateFrom = normalizeDate(request.dateFrom(), "dateFrom", true);
         LocalDate dateTo = normalizeDate(request.dateTo(), "dateTo", true);
         if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
@@ -72,11 +73,11 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
         SortSpec sortSpec = normalizeSort(request.sort());
 
         List<StockPriceHistoryResponse> items = stockPriceHistoryRepository
-            .findByCriteria(stockCode, dateFrom, dateTo, sortSpec.sortBy(), sortSpec.sortDirection(), size, offset)
+            .findByCriteria(stockCode, typeName, dateFrom, dateTo, sortSpec.sortBy(), sortSpec.sortDirection(), size, offset)
             .stream()
             .map(this::toResponse)
             .toList();
-        long total = stockPriceHistoryRepository.countByCriteria(stockCode, dateFrom, dateTo);
+        long total = stockPriceHistoryRepository.countByCriteria(stockCode, typeName, dateFrom, dateTo);
         return new StockPriceHistoryListResponse(items, total, page, size);
     }
 
@@ -361,6 +362,8 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
         return new StockPriceHistoryResponse(
             item.getId(),
             item.getStockCode(),
+            item.getStockName(),
+            item.getTypeName(),
             item.getTransDate(),
             item.getBeforeDayPrice(),
             item.getOpenPrice(),
@@ -461,6 +464,19 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
         }
         return normalized;
     }
+
+    private String normalizeStockCodeForSearch(String stockCode) {
+        String normalized = normalizeText(stockCode);
+        if (normalized == null) {
+            return null;
+        }
+        String upper = normalized.toUpperCase();
+        if (!STOCK_CODE_PATTERN.matcher(upper).matches()) {
+            throw new IllegalArgumentException("股票代码格式不正确，仅允许字母数字._-");
+        }
+        return upper;
+    }
+
 
     private void ensureStockExists(String stockCode) {
         if (stockRepository.findByStockCode(stockCode).isEmpty()) {
