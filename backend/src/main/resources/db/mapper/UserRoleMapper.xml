@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.rbac.mapper.UserRoleMapper">
+
+    <select id="findRoleIdsByUserId" resultType="long">
+        SELECT
+            ROLE_ID
+        FROM M_USER_ROLE
+        WHERE USER_ID = #{userId}
+        ORDER BY ROLE_ID ASC
+    </select>
+
+    <select id="findUserIdsByRoleId" resultType="long">
+        SELECT
+            USER_ID
+        FROM M_USER_ROLE
+        WHERE ROLE_ID = #{roleId}
+        ORDER BY USER_ID ASC
+    </select>
+
+    <insert id="insertIgnoreBatch">
+        <if test="ids != null and ids.size() > 0">
+            INSERT IGNORE INTO M_USER_ROLE (
+                USER_ID,
+                ROLE_ID,
+                CREATED_AT,
+                UPDATED_AT
+            ) VALUES
+            <foreach item="id" collection="ids" separator=",">
+                (#{userId}, #{id}, #{now}, #{now})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteByUserIdAndRoleIds">
+        DELETE FROM M_USER_ROLE
+        WHERE USER_ID = #{userId}
+          <if test="ids != null and ids.size() > 0">
+            AND ROLE_ID IN
+            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+          </if>
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE FROM M_USER_ROLE
+        WHERE USER_ID = #{userId}
+    </delete>
+
+</mapper>

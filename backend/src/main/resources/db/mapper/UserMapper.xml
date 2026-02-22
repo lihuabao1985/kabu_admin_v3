@@ -6,22 +6,38 @@
 
     <sql id="userColumns">
         ID,
+        TENANT_ID,
         USERNAME,
         DISPLAY_NAME,
         EMAIL,
+        PHONE,
+        PASSWORD_HASH,
+        PASSWORD_CHANGED_AT,
         STATUS,
+        ACCOUNT_LOCKED,
+        LOCKED_AT,
+        VERSION,
         CREATED_AT,
-        UPDATED_AT
+        UPDATED_AT,
+        DELETED_AT
     </sql>
 
     <resultMap id="userResultMap" type="com.kabu.admin.user.model.User">
         <id property="id" column="ID"/>
+        <result property="tenantId" column="TENANT_ID"/>
         <result property="username" column="USERNAME"/>
         <result property="displayName" column="DISPLAY_NAME"/>
         <result property="email" column="EMAIL"/>
+        <result property="phone" column="PHONE"/>
+        <result property="passwordHash" column="PASSWORD_HASH"/>
+        <result property="passwordChangedAt" column="PASSWORD_CHANGED_AT"/>
         <result property="status" column="STATUS"/>
+        <result property="accountLocked" column="ACCOUNT_LOCKED"/>
+        <result property="lockedAt" column="LOCKED_AT"/>
+        <result property="version" column="VERSION"/>
         <result property="createdAt" column="CREATED_AT"/>
         <result property="updatedAt" column="UPDATED_AT"/>
+        <result property="deletedAt" column="DELETED_AT"/>
     </resultMap>
 
     <select id="findByCriteria" resultMap="userResultMap">
@@ -29,6 +45,7 @@
             <include refid="userColumns"/>
         FROM M_USER
         <where>
+            DELETED_AT IS NULL
             <if test="username != null and username != ''">
                 AND USERNAME LIKE CONCAT('%', #{username}, '%')
             </if>
@@ -37,6 +54,12 @@
             </if>
             <if test="status != null">
                 AND STATUS = #{status}
+            </if>
+            <if test="locked != null">
+                AND ACCOUNT_LOCKED = #{locked}
+            </if>
+            <if test="tenantId != null and tenantId != ''">
+                AND TENANT_ID = #{tenantId}
             </if>
         </where>
         ORDER BY ID DESC
@@ -48,6 +71,7 @@
             COUNT(1)
         FROM M_USER
         <where>
+            DELETED_AT IS NULL
             <if test="username != null and username != ''">
                 AND USERNAME LIKE CONCAT('%', #{username}, '%')
             </if>
@@ -57,6 +81,12 @@
             <if test="status != null">
                 AND STATUS = #{status}
             </if>
+            <if test="locked != null">
+                AND ACCOUNT_LOCKED = #{locked}
+            </if>
+            <if test="tenantId != null and tenantId != ''">
+                AND TENANT_ID = #{tenantId}
+            </if>
         </where>
     </select>
 
@@ -65,6 +95,7 @@
             <include refid="userColumns"/>
         FROM M_USER
         WHERE ID = #{id}
+          AND DELETED_AT IS NULL
     </select>
 
     <select id="findByUsername" resultMap="userResultMap">
@@ -72,22 +103,51 @@
             <include refid="userColumns"/>
         FROM M_USER
         WHERE USERNAME = #{username}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <select id="findByEmail" resultMap="userResultMap">
+        SELECT
+            <include refid="userColumns"/>
+        FROM M_USER
+        WHERE EMAIL = #{email}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <select id="findByPhone" resultMap="userResultMap">
+        SELECT
+            <include refid="userColumns"/>
+        FROM M_USER
+        WHERE PHONE = #{phone}
+          AND DELETED_AT IS NULL
     </select>
 
     <insert id="insert" parameterType="com.kabu.admin.user.model.User" useGeneratedKeys="true" keyProperty="id"
         keyColumn="ID">
         INSERT INTO M_USER (
+            TENANT_ID,
             USERNAME,
             DISPLAY_NAME,
             EMAIL,
+            PHONE,
+            PASSWORD_HASH,
+            PASSWORD_CHANGED_AT,
             STATUS,
+            ACCOUNT_LOCKED,
+            VERSION,
             CREATED_AT,
             UPDATED_AT
         ) VALUES (
+            #{tenantId},
             #{username},
             #{displayName},
             #{email},
+            #{phone},
+            #{passwordHash},
+            #{passwordChangedAt},
             #{status},
+            #{accountLocked},
+            #{version},
             #{createdAt},
             #{updatedAt}
         )
@@ -99,14 +159,46 @@
             USERNAME = #{username},
             DISPLAY_NAME = #{displayName},
             EMAIL = #{email},
+            PHONE = #{phone},
+            PASSWORD_HASH = #{passwordHash},
+            PASSWORD_CHANGED_AT = #{passwordChangedAt},
             STATUS = #{status},
+            VERSION = VERSION + 1,
             UPDATED_AT = #{updatedAt}
         WHERE ID = #{id}
+          AND VERSION = #{version}
+          AND DELETED_AT IS NULL
     </update>
 
-    <delete id="deleteById">
-        DELETE FROM M_USER
+    <update id="updateStatus">
+        UPDATE M_USER
+        SET
+            STATUS = #{status},
+            VERSION = VERSION + 1,
+            UPDATED_AT = #{updatedAt}
         WHERE ID = #{id}
-    </delete>
+          AND DELETED_AT IS NULL
+    </update>
+
+    <update id="updateLock">
+        UPDATE M_USER
+        SET
+            ACCOUNT_LOCKED = #{locked},
+            LOCKED_AT = #{lockedAt},
+            VERSION = VERSION + 1,
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
+
+    <update id="softDelete">
+        UPDATE M_USER
+        SET
+            DELETED_AT = #{deletedAt},
+            VERSION = VERSION + 1,
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
 
 </mapper>

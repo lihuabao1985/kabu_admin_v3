@@ -1,0 +1,22 @@
+-- T_STOCK_DIVIDEND_CONFIRMED schema for stock dividend confirmation management.
+-- Target: MySQL 8.x
+
+CREATE TABLE IF NOT EXISTS `T_STOCK_DIVIDEND_CONFIRMED` (
+  `ID` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `STOCK_CODE` VARCHAR(10) NOT NULL COMMENT '銘柄コード',
+  `DIVIDEND_AMOUNT` DECIMAL(10,2) NOT NULL COMMENT '配当金(1株あたり, 円)',
+  `DIVIDEND_YIELD` DECIMAL(4,2) DEFAULT NULL COMMENT '配当利回り(%)',
+  `RIGHTS_LAST_DAY` DATE DEFAULT NULL COMMENT '権利付き最終日',
+  `EX_DIVIDEND_DATE` DATE DEFAULT NULL COMMENT '配当落ち日',
+  `RECORD_DATE` DATE NOT NULL COMMENT '権利確定日(基準日)',
+  `CONFIRMED_FLG` CHAR(1) NOT NULL DEFAULT '0' COMMENT '確定フラグ',
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `uk_stock_record_date` (`STOCK_CODE`, `RECORD_DATE`),
+  KEY `idx_stock_code` (`STOCK_CODE`),
+  KEY `idx_record_date` (`RECORD_DATE`),
+  KEY `idx_confirmed_flg` (`CONFIRMED_FLG`),
+  KEY `idx_stock_record` (`STOCK_CODE`, `RECORD_DATE`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_bin
+  COMMENT='銘柄 配当確定管理';

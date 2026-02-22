@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.stock.pricehistory.mapper.StockPriceHistoryMapper">
+
+    <sql id="columns">
+        ID,
+        STOCK_CODE,
+        TRANS_DATE,
+        BEFORE_DAY_PRICE,
+        OPEN_PRICE,
+        HIGH_PRICE,
+        LOW_PRICE,
+        CLOSE_PRICE,
+        ADJUSTED_CLOSE_PRICE,
+        BEFORE_DAY_DIFF,
+        BEFORE_DAY_DIFF_PERCENT,
+        VOLUME,
+        REMARK
+    </sql>
+
+    <resultMap id="resultMap" type="com.kabu.admin.stock.pricehistory.model.StockPriceHistory">
+        <id property="id" column="ID"/>
+        <result property="stockCode" column="STOCK_CODE"/>
+        <result property="transDate" column="TRANS_DATE"/>
+        <result property="beforeDayPrice" column="BEFORE_DAY_PRICE"/>
+        <result property="openPrice" column="OPEN_PRICE"/>
+        <result property="highPrice" column="HIGH_PRICE"/>
+        <result property="lowPrice" column="LOW_PRICE"/>
+        <result property="closePrice" column="CLOSE_PRICE"/>
+        <result property="adjustedClosePrice" column="ADJUSTED_CLOSE_PRICE"/>
+        <result property="beforeDayDiff" column="BEFORE_DAY_DIFF"/>
+        <result property="beforeDayDiffPercent" column="BEFORE_DAY_DIFF_PERCENT"/>
+        <result property="volume" column="VOLUME"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+    <select id="findByCriteria" resultMap="resultMap">
+        SELECT
+            <include refid="columns"/>
+        FROM M_STOCK_PRICE_HISTORY
+        <where>
+            STOCK_CODE = #{stockCode}
+            <if test="dateFrom != null">
+                AND TRANS_DATE <![CDATA[>=]]> #{dateFrom}
+            </if>
+            <if test="dateTo != null">
+                AND TRANS_DATE <![CDATA[<=]]> #{dateTo}
+            </if>
+        </where>
+        ORDER BY
+            <choose>
+                <when test="sortBy == 'ID'">ID</when>
+                <otherwise>TRANS_DATE</otherwise>
+            </choose>
+            <choose>
+                <when test="sortDirection == 'ASC'">ASC</when>
+                <otherwise>DESC</otherwise>
+            </choose>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByCriteria" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM M_STOCK_PRICE_HISTORY
+        <where>
+            STOCK_CODE = #{stockCode}
+            <if test="dateFrom != null">
+                AND TRANS_DATE <![CDATA[>=]]> #{dateFrom}
+            </if>
+            <if test="dateTo != null">
+                AND TRANS_DATE <![CDATA[<=]]> #{dateTo}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="resultMap">
+        SELECT
+            <include refid="columns"/>
+        FROM M_STOCK_PRICE_HISTORY
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findByStockCodeAndTransDate" resultMap="resultMap">
+        SELECT
+            <include refid="columns"/>
+        FROM M_STOCK_PRICE_HISTORY
+        WHERE STOCK_CODE = #{stockCode}
+          AND TRANS_DATE = #{transDate}
+    </select>
+
+    <insert id="insert" parameterType="com.kabu.admin.stock.pricehistory.model.StockPriceHistory" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+        INSERT INTO M_STOCK_PRICE_HISTORY (
+            STOCK_CODE,
+            TRANS_DATE,
+            BEFORE_DAY_PRICE,
+            OPEN_PRICE,
+            HIGH_PRICE,
+            LOW_PRICE,
+            CLOSE_PRICE,
+            ADJUSTED_CLOSE_PRICE,
+            BEFORE_DAY_DIFF,
+            BEFORE_DAY_DIFF_PERCENT,
+            VOLUME,
+            REMARK
+        ) VALUES (
+            #{stockCode},
+            #{transDate},
+            #{beforeDayPrice},
+            #{openPrice},
+            #{highPrice},
+            #{lowPrice},
+            #{closePrice},
+            #{adjustedClosePrice},
+            #{beforeDayDiff},
+            #{beforeDayDiffPercent},
+            #{volume},
+            #{remark}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.kabu.admin.stock.pricehistory.model.StockPriceHistory">
+        UPDATE M_STOCK_PRICE_HISTORY
+        SET
+            STOCK_CODE = #{stockCode},
+            TRANS_DATE = #{transDate},
+            BEFORE_DAY_PRICE = #{beforeDayPrice},
+            OPEN_PRICE = #{openPrice},
+            HIGH_PRICE = #{highPrice},
+            LOW_PRICE = #{lowPrice},
+            CLOSE_PRICE = #{closePrice},
+            ADJUSTED_CLOSE_PRICE = #{adjustedClosePrice},
+            BEFORE_DAY_DIFF = #{beforeDayDiff},
+            BEFORE_DAY_DIFF_PERCENT = #{beforeDayDiffPercent},
+            VOLUME = #{volume},
+            REMARK = #{remark}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM M_STOCK_PRICE_HISTORY
+        WHERE ID = #{id}
+    </delete>
+
+</mapper>

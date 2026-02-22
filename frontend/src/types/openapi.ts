@@ -11,10 +11,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List users */
+        /** 查询用户列表 */
         get: operations["listUsers"];
         put?: never;
-        /** Create user */
+        /** 创建用户 */
         post: operations["createUser"];
         delete?: never;
         options?: never;
@@ -29,13 +29,509 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get user by id */
+        /** 根据ID获取用户 */
         get: operations["getUserById"];
-        /** Update user */
+        /** 更新用户 */
         put: operations["updateUser"];
         post?: never;
-        /** Delete user */
+        /** 删除用户 */
         delete: operations["deleteUser"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 更新用户状态 */
+        patch: operations["updateUserStatus"];
+        trace?: never;
+    };
+    "/api/users/{id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 更新用户锁定状态 */
+        patch: operations["updateUserLock"];
+        trace?: never;
+    };
+    "/api/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 查询角色列表 */
+        get: operations["listRoles"];
+        put?: never;
+        /** 创建角色 */
+        post: operations["createRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/roles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 根据ID获取角色 */
+        get: operations["getRoleById"];
+        /** 更新角色 */
+        put: operations["updateRole"];
+        post?: never;
+        /** 删除角色 */
+        delete: operations["deleteRole"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/roles/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 更新角色状态 */
+        patch: operations["updateRoleStatus"];
+        trace?: never;
+    };
+    "/api/permissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 查询权限列表 */
+        get: operations["listPermissions"];
+        put?: never;
+        /** 创建权限 */
+        post: operations["createPermission"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/permissions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 根据ID获取权限 */
+        get: operations["getPermissionById"];
+        /** 更新权限 */
+        put: operations["updatePermission"];
+        post?: never;
+        /** 删除权限 */
+        delete: operations["deletePermission"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/permissions/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 更新权限状态 */
+        patch: operations["updatePermissionStatus"];
+        trace?: never;
+    };
+    "/api/users/{userId}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 查询用户角色ID列表 */
+        get: operations["listUserRoles"];
+        /** 替换用户角色 */
+        put: operations["replaceUserRoles"];
+        /** 新增用户角色 */
+        post: operations["addUserRoles"];
+        /** 移除用户角色 */
+        delete: operations["removeUserRoles"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/roles/{roleId}/permissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 查询角色权限ID列表 */
+        get: operations["listRolePermissions"];
+        /** 替换角色权限 */
+        put: operations["replaceRolePermissions"];
+        /** 新增角色权限 */
+        post: operations["addRolePermissions"];
+        /** 移除角色权限 */
+        delete: operations["removeRolePermissions"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 用户名密码登录 */
+        post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 注销当前会话 */
+        post: operations["logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/me/permissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 获取当前用户权限 */
+        get: operations["getCurrentUserPermissions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 查询股票列表 */
+        get: operations["listStocks"];
+        put?: never;
+        /** 创建股票 */
+        post: operations["createStock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stocks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 根据ID获取股票 */
+        get: operations["getStockById"];
+        /** 更新股票 */
+        put: operations["updateStock"];
+        post?: never;
+        /** 删除股票（逻辑删除） */
+        delete: operations["deleteStock"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stocks/{id}/delete-flag": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 更新股票删除标记 */
+        patch: operations["updateStockDeleteFlag"];
+        trace?: never;
+    };
+    "/api/stocks/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 查询股票下拉候选 */
+        get: operations["listStockOptions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stocks:import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 批量导入股票 */
+        post: operations["importStocks"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stocks/{stockCode}/price-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 按股票查询历史行情 */
+        get: operations["listStockPriceHistoryByStockCode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stock-price-history/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 根据ID获取历史行情 */
+        get: operations["getStockPriceHistoryById"];
+        /** 更新历史行情 */
+        put: operations["updateStockPriceHistory"];
+        post?: never;
+        /** 删除历史行情 */
+        delete: operations["deleteStockPriceHistory"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stock-price-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 创建历史行情 */
+        post: operations["createStockPriceHistory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stock-price-history:import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 批量导入历史行情 */
+        post: operations["importStockPriceHistory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stock-dividend-confirmed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 查询股票配当确权列表 */
+        get: operations["listStockDividendConfirmed"];
+        put?: never;
+        /** 创建股票配当确权记录 */
+        post: operations["createStockDividendConfirmed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stock-dividend-confirmed/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 根据ID获取股票配当确权记录 */
+        get: operations["getStockDividendConfirmedById"];
+        /** 更新股票配当确权记录 */
+        put: operations["updateStockDividendConfirmed"];
+        post?: never;
+        /** 删除股票配当确权记录 */
+        delete: operations["deleteStockDividendConfirmed"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stock-dividend-confirmed/{id}/confirmed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 确认股票配当确权记录 */
+        patch: operations["confirmStockDividendConfirmed"];
+        trace?: never;
+    };
+    "/api/stock-dividend-confirmed/{id}/unconfirmed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 反确认股票配当确权记录 */
+        patch: operations["unconfirmStockDividendConfirmed"];
+        trace?: never;
+    };
+    "/api/stock-dividend-confirmed:import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 批量导入股票配当确权记录 */
+        post: operations["importStockDividendConfirmed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stock-dividend-confirmed/stats/rights-last-day": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 按含权最后日统计配当记录 */
+        get: operations["listStockDividendConfirmedRightsLastDayStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -50,6 +546,8 @@ export interface components {
             displayName?: string;
             /** Format: email */
             email?: string;
+            phone?: string;
+            password: string;
             /** @default 1 */
             status: number;
         };
@@ -58,6 +556,8 @@ export interface components {
             displayName?: string;
             /** Format: email */
             email?: string;
+            phone?: string;
+            password?: string;
             status?: number;
         };
         UserResponse: {
@@ -66,7 +566,9 @@ export interface components {
             username: string;
             displayName?: string | null;
             email?: string | null;
+            phone?: string | null;
             status: number;
+            accountLocked?: number;
             /** Format: date-time */
             createdAt?: string | null;
             /** Format: date-time */
@@ -78,6 +580,456 @@ export interface components {
             total: number;
             page: number;
             size: number;
+        };
+        RoleCreateRequest: {
+            roleCode: string;
+            roleName: string;
+            description?: string;
+            /** @default 1 */
+            status: number;
+            /** @default 0 */
+            isSystem: number;
+            /** @default 0 */
+            sortOrder: number;
+        };
+        RoleUpdateRequest: {
+            roleCode: string;
+            roleName: string;
+            description?: string;
+            status?: number;
+            isSystem?: number;
+            sortOrder?: number;
+        };
+        RoleResponse: {
+            /** Format: int64 */
+            id: number;
+            roleCode: string;
+            roleName: string;
+            description?: string | null;
+            status: number;
+            isSystem: number;
+            sortOrder: number;
+            /** Format: date-time */
+            createdAt?: string | null;
+            /** Format: date-time */
+            updatedAt?: string | null;
+        };
+        RoleListResponse: {
+            items: components["schemas"]["RoleResponse"][];
+            /** Format: int64 */
+            total: number;
+            page: number;
+            size: number;
+        };
+        PermissionCreateRequest: {
+            permissionCode: string;
+            permissionName: string;
+            description?: string;
+            /** @default 1 */
+            status: number;
+            resourceType: string;
+            resource: string;
+            httpMethod?: string | null;
+            action?: string | null;
+            permissionGroup?: string | null;
+            /** @default 0 */
+            sortOrder: number;
+            uiMenuKey?: string | null;
+            uiRoute?: string | null;
+        };
+        PermissionUpdateRequest: {
+            permissionCode: string;
+            permissionName: string;
+            description?: string;
+            status?: number;
+            resourceType: string;
+            resource: string;
+            httpMethod?: string | null;
+            action?: string | null;
+            permissionGroup?: string | null;
+            sortOrder?: number;
+            uiMenuKey?: string | null;
+            uiRoute?: string | null;
+        };
+        PermissionResponse: {
+            /** Format: int64 */
+            id: number;
+            permissionCode: string;
+            permissionName: string;
+            description?: string | null;
+            status: number;
+            resourceType: string;
+            resource: string;
+            httpMethod?: string | null;
+            action?: string | null;
+            permissionGroup?: string | null;
+            sortOrder: number;
+            uiMenuKey?: string | null;
+            uiRoute?: string | null;
+            /** Format: date-time */
+            createdAt?: string | null;
+            /** Format: date-time */
+            updatedAt?: string | null;
+        };
+        PermissionListResponse: {
+            items: components["schemas"]["PermissionResponse"][];
+            /** Format: int64 */
+            total: number;
+            page: number;
+            size: number;
+        };
+        StatusPatchRequest: {
+            status: number;
+        };
+        LockPatchRequest: {
+            locked: number;
+        };
+        IdBatchRequest: {
+            ids: number[];
+        };
+        UserRoleListResponse: {
+            roleIds: number[];
+        };
+        RolePermissionListResponse: {
+            permissionIds: number[];
+        };
+        AuthPermissionResponse: {
+            permissions: string[];
+        };
+        AuthLoginRequest: {
+            username: string;
+            password: string;
+        };
+        AuthLoginResponse: {
+            username: string;
+            message: string;
+        };
+        StockCreateRequest: {
+            stockCode: string;
+            stockName: string;
+            typeCode?: string | null;
+            typeName?: string | null;
+            market?: string | null;
+            securities?: string | null;
+            bank?: string | null;
+            date?: string | null;
+            settlement?: string | null;
+            settlementDay?: string | null;
+            established?: string | null;
+            listed?: string | null;
+            stockPrice?: string | null;
+            tradingUnit?: string | null;
+            totalZika?: string | null;
+            dividend?: string | null;
+            expectedDividend?: string | null;
+            fixedDividend?: string | null;
+            per?: string | null;
+            eps?: string | null;
+            pbr?: string | null;
+            roe?: string | null;
+            roa?: string | null;
+            /** @enum {string|null} */
+            preferentialFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            dividendFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            ichimokuUpperFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            ichimokuDowloadFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            delFlg?: "0" | "1" | "Y" | "N" | null;
+            homepage?: string | null;
+            newsUrl?: string | null;
+            irUrl?: string | null;
+            tekusyoku?: string | null;
+            renketuZigyo?: string | null;
+            supplier?: string | null;
+            salesDestination?: string | null;
+        };
+        StockUpdateRequest: {
+            stockCode: string;
+            stockName: string;
+            typeCode?: string | null;
+            typeName?: string | null;
+            market?: string | null;
+            securities?: string | null;
+            bank?: string | null;
+            date?: string | null;
+            settlement?: string | null;
+            settlementDay?: string | null;
+            established?: string | null;
+            listed?: string | null;
+            stockPrice?: string | null;
+            tradingUnit?: string | null;
+            totalZika?: string | null;
+            dividend?: string | null;
+            expectedDividend?: string | null;
+            fixedDividend?: string | null;
+            per?: string | null;
+            eps?: string | null;
+            pbr?: string | null;
+            roe?: string | null;
+            roa?: string | null;
+            /** @enum {string|null} */
+            preferentialFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            dividendFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            ichimokuUpperFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            ichimokuDowloadFlg?: "0" | "1" | "Y" | "N" | null;
+            /** @enum {string|null} */
+            delFlg?: "0" | "1" | "Y" | "N" | null;
+            homepage?: string | null;
+            newsUrl?: string | null;
+            irUrl?: string | null;
+            tekusyoku?: string | null;
+            renketuZigyo?: string | null;
+            supplier?: string | null;
+            salesDestination?: string | null;
+        };
+        StockResponse: {
+            /** Format: int64 */
+            id: number;
+            stockCode: string;
+            stockName: string;
+            typeCode?: string | null;
+            typeName?: string | null;
+            market?: string | null;
+            securities?: string | null;
+            bank?: string | null;
+            date?: string | null;
+            settlement?: string | null;
+            settlementDay?: string | null;
+            established?: string | null;
+            listed?: string | null;
+            stockPrice?: string | null;
+            tradingUnit?: string | null;
+            totalZika?: string | null;
+            dividend?: string | null;
+            expectedDividend?: string | null;
+            fixedDividend?: string | null;
+            per?: string | null;
+            eps?: string | null;
+            pbr?: string | null;
+            roe?: string | null;
+            roa?: string | null;
+            preferentialFlg?: string | null;
+            dividendFlg?: string | null;
+            ichimokuUpperFlg?: string | null;
+            ichimokuDowloadFlg?: string | null;
+            delFlg: string;
+            homepage?: string | null;
+            newsUrl?: string | null;
+            irUrl?: string | null;
+            tekusyoku?: string | null;
+            renketuZigyo?: string | null;
+            supplier?: string | null;
+            salesDestination?: string | null;
+        };
+        StockListResponse: {
+            items: components["schemas"]["StockResponse"][];
+            /** Format: int64 */
+            total: number;
+            page: number;
+            size: number;
+        };
+        StockDeleteFlagPatchRequest: {
+            /** @enum {string} */
+            delFlg: "0" | "1" | "Y" | "N";
+        };
+        StockOptionResponse: {
+            /** Format: int64 */
+            id: number;
+            stockCode: string;
+            stockName: string;
+            market?: string | null;
+        };
+        StockImportRequest: {
+            /** @enum {string} */
+            mode: "INCREMENTAL" | "FULL";
+            items: components["schemas"]["StockCreateRequest"][];
+        };
+        StockImportFailure: {
+            stockCode: string;
+            reason: string;
+        };
+        StockImportResponse: {
+            total: number;
+            success: number;
+            created: number;
+            updated: number;
+            failed: number;
+            failures: components["schemas"]["StockImportFailure"][];
+        };
+        StockPriceHistoryCreateRequest: {
+            stockCode: string;
+            /** Format: date */
+            transDate: string;
+            beforeDayPrice?: number | null;
+            openPrice?: number | null;
+            highPrice?: number | null;
+            lowPrice?: number | null;
+            closePrice?: number | null;
+            adjustedClosePrice?: number | null;
+            beforeDayDiff?: number | null;
+            /** Format: double */
+            beforeDayDiffPercent?: number | null;
+            volume?: number | null;
+            remark?: string | null;
+        };
+        StockPriceHistoryUpdateRequest: {
+            stockCode: string;
+            /** Format: date */
+            transDate: string;
+            beforeDayPrice?: number | null;
+            openPrice?: number | null;
+            highPrice?: number | null;
+            lowPrice?: number | null;
+            closePrice?: number | null;
+            adjustedClosePrice?: number | null;
+            beforeDayDiff?: number | null;
+            /** Format: double */
+            beforeDayDiffPercent?: number | null;
+            volume?: number | null;
+            remark?: string | null;
+        };
+        StockPriceHistoryResponse: {
+            /** Format: int64 */
+            id: number;
+            stockCode: string;
+            /** Format: date */
+            transDate: string;
+            beforeDayPrice?: number | null;
+            openPrice?: number | null;
+            highPrice?: number | null;
+            lowPrice?: number | null;
+            closePrice?: number | null;
+            adjustedClosePrice?: number | null;
+            beforeDayDiff?: number | null;
+            /** Format: double */
+            beforeDayDiffPercent?: number | null;
+            volume?: number | null;
+            remark?: string | null;
+        };
+        StockPriceHistoryListResponse: {
+            items: components["schemas"]["StockPriceHistoryResponse"][];
+            /** Format: int64 */
+            total: number;
+            page: number;
+            size: number;
+        };
+        StockPriceHistoryImportRequest: {
+            /** @enum {string} */
+            mode: "OVERWRITE" | "SKIP_DUPLICATE";
+            items: components["schemas"]["StockPriceHistoryCreateRequest"][];
+        };
+        StockPriceHistoryImportFailure: {
+            stockCode: string;
+            transDate: string;
+            reason: string;
+        };
+        StockPriceHistoryImportResponse: {
+            total: number;
+            success: number;
+            created: number;
+            updated: number;
+            skipped: number;
+            failed: number;
+            failures: components["schemas"]["StockPriceHistoryImportFailure"][];
+        };
+        StockDividendConfirmedCreateRequest: {
+            stockCode: string;
+            /** Format: double */
+            dividendAmount: number;
+            /** Format: double */
+            dividendYield?: number | null;
+            /** Format: date */
+            rightsLastDay?: string | null;
+            /** Format: date */
+            exDividendDate?: string | null;
+            /** Format: date */
+            recordDate: string;
+            /** @enum {string|null} */
+            confirmedFlg?: "0" | "1" | "N" | "Y" | null;
+        };
+        StockDividendConfirmedUpdateRequest: {
+            stockCode: string;
+            /** Format: double */
+            dividendAmount: number;
+            /** Format: double */
+            dividendYield?: number | null;
+            /** Format: date */
+            rightsLastDay?: string | null;
+            /** Format: date */
+            exDividendDate?: string | null;
+            /** Format: date */
+            recordDate: string;
+            /** @enum {string|null} */
+            confirmedFlg?: "0" | "1" | "N" | "Y" | null;
+        };
+        StockDividendConfirmedResponse: {
+            /** Format: int64 */
+            id: number;
+            stockCode: string;
+            stockName?: string | null;
+            typeName?: string | null;
+            stockPrice?: string | null;
+            /** Format: double */
+            dividendAmount: number;
+            /** Format: double */
+            dividendYield?: number | null;
+            /** Format: date */
+            rightsLastDay?: string | null;
+            /** Format: date */
+            exDividendDate?: string | null;
+            /** Format: date */
+            recordDate: string;
+            /** @enum {string} */
+            confirmedFlg: "0" | "1";
+        };
+        StockDividendConfirmedListResponse: {
+            items: components["schemas"]["StockDividendConfirmedResponse"][];
+            /** Format: int64 */
+            total: number;
+            page: number;
+            size: number;
+        };
+        StockDividendConfirmedImportRequest: {
+            /** @enum {string} */
+            mode: "OVERWRITE" | "SKIP_DUPLICATE";
+            items: components["schemas"]["StockDividendConfirmedCreateRequest"][];
+        };
+        StockDividendConfirmedImportFailure: {
+            stockCode: string;
+            recordDate: string;
+            reason: string;
+        };
+        StockDividendConfirmedImportResponse: {
+            total: number;
+            success: number;
+            created: number;
+            updated: number;
+            skipped: number;
+            failed: number;
+            failures: components["schemas"]["StockDividendConfirmedImportFailure"][];
+        };
+        StockDividendConfirmedRightsLastDayStatsResponse: {
+            /** Format: date */
+            rightsLastDay: string;
+            /** Format: int64 */
+            totalCount: number;
+            /** Format: int64 */
+            confirmedCount: number;
+            /** Format: double */
+            avgDividendAmount?: number | null;
+            /** Format: double */
+            avgDividendYield?: number | null;
+        };
+        StockDividendConfirmedRightsLastDayStatsListResponse: {
+            items: components["schemas"]["StockDividendConfirmedRightsLastDayStatsResponse"][];
+            /** Format: int64 */
+            totalDays: number;
         };
         ErrorResponse: {
             code: string;
@@ -98,6 +1050,8 @@ export interface operations {
                 username?: string;
                 email?: string;
                 status?: number;
+                locked?: number;
+                tenantId?: string;
                 page?: number;
                 size?: number;
             };
@@ -107,7 +1061,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User list */
+            /** @description 用户列表 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -116,7 +1070,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserListResponse"];
                 };
             };
-            /** @description Bad request */
+            /** @description 请求参数错误 */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -140,7 +1094,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description User created */
+            /** @description 用户创建成功 */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -149,7 +1103,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponse"];
                 };
             };
-            /** @description Bad request */
+            /** @description 请求参数错误 */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -158,7 +1112,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description User already exists */
+            /** @description 用户已存在 */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -180,7 +1134,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User detail */
+            /** @description 用户详情 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -189,7 +1143,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponse"];
                 };
             };
-            /** @description User not found */
+            /** @description 用户不存在 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -215,7 +1169,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description User updated */
+            /** @description 用户更新成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -224,7 +1178,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponse"];
                 };
             };
-            /** @description Bad request */
+            /** @description 请求参数错误 */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -233,7 +1187,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description User not found */
+            /** @description 用户不存在 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -242,7 +1196,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description User already exists */
+            /** @description 用户已存在 */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -264,20 +1218,1585 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User deleted */
+            /** @description 用户删除成功 */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description User not found */
+            /** @description 用户不存在 */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateUserStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 用户状态更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponse"];
+                };
+            };
+            /** @description 用户不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateUserLock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LockPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 用户锁定状态更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponse"];
+                };
+            };
+            /** @description 用户不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listRoles: {
+        parameters: {
+            query?: {
+                roleCode?: string;
+                roleName?: string;
+                status?: number;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 角色列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleListResponse"];
+                };
+            };
+        };
+    };
+    createRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 角色创建成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 角色已存在 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getRoleById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 角色详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleResponse"];
+                };
+            };
+            /** @description 角色不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description 角色更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 角色不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 角色已存在 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    deleteRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 角色删除成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 角色不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateRoleStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 角色状态更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleResponse"];
+                };
+            };
+            /** @description 角色不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listPermissions: {
+        parameters: {
+            query?: {
+                permissionCode?: string;
+                permissionName?: string;
+                resourceType?: string;
+                status?: number;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 权限列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionListResponse"];
+                };
+            };
+        };
+    };
+    createPermission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PermissionCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 权限创建成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 权限已存在 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getPermissionById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 权限详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionResponse"];
+                };
+            };
+            /** @description 权限不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updatePermission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PermissionUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description 权限更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 权限不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 权限已存在 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    deletePermission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 权限删除成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 权限不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updatePermissionStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 权限状态更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionResponse"];
+                };
+            };
+            /** @description 权限不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listUserRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 用户角色ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRoleListResponse"];
+                };
+            };
+        };
+    };
+    replaceUserRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 用户角色ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRoleListResponse"];
+                };
+            };
+        };
+    };
+    addUserRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 用户角色ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRoleListResponse"];
+                };
+            };
+        };
+    };
+    removeUserRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 用户角色ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRoleListResponse"];
+                };
+            };
+        };
+    };
+    listRolePermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 角色权限ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolePermissionListResponse"];
+                };
+            };
+        };
+    };
+    replaceRolePermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 角色权限ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolePermissionListResponse"];
+                };
+            };
+        };
+    };
+    addRolePermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 角色权限ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolePermissionListResponse"];
+                };
+            };
+        };
+    };
+    removeRolePermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                roleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 角色权限ID列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolePermissionListResponse"];
+                };
+            };
+        };
+    };
+    login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/x-www-form-urlencoded": components["schemas"]["AuthLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description 登录成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthLoginResponse"];
+                };
+            };
+            /** @description 用户名或密码错误 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 已退出登录 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getCurrentUserPermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 当前用户权限 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthPermissionResponse"];
+                };
+            };
+        };
+    };
+    listStocks: {
+        parameters: {
+            query?: {
+                stockCode?: string;
+                stockName?: string;
+                typeCode?: string;
+                market?: string;
+                delFlg?: string;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 股票列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockListResponse"];
+                };
+            };
+        };
+    };
+    createStock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 股票创建成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 股票代码冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getStockById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 股票详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockResponse"];
+                };
+            };
+            /** @description 股票不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateStock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description 股票更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 股票不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 股票代码冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    deleteStock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 股票删除成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 股票不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateStockDeleteFlag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockDeleteFlagPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 删除标记更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockResponse"];
+                };
+            };
+            /** @description 股票不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listStockOptions: {
+        parameters: {
+            query?: {
+                keyword?: string;
+                market?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 股票候选列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockOptionResponse"][];
+                };
+            };
+        };
+    };
+    importStocks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockImportRequest"];
+            };
+        };
+        responses: {
+            /** @description 导入结果 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockImportResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listStockPriceHistoryByStockCode: {
+        parameters: {
+            query?: {
+                dateFrom?: string;
+                dateTo?: string;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path: {
+                stockCode: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 股票历史行情列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockPriceHistoryListResponse"];
+                };
+            };
+        };
+    };
+    getStockPriceHistoryById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 历史行情详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockPriceHistoryResponse"];
+                };
+            };
+            /** @description 历史行情不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateStockPriceHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockPriceHistoryUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description 更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockPriceHistoryResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 历史行情不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 历史行情冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    deleteStockPriceHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 删除成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 历史行情不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    createStockPriceHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockPriceHistoryCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 创建成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockPriceHistoryResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 历史行情冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    importStockPriceHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockPriceHistoryImportRequest"];
+            };
+        };
+        responses: {
+            /** @description 导入结果 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockPriceHistoryImportResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listStockDividendConfirmed: {
+        parameters: {
+            query?: {
+                stockCode?: string;
+                rightsLastDay?: string;
+                recordDateFrom?: string;
+                recordDateTo?: string;
+                confirmedFlg?: "0" | "1" | "N" | "Y";
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 配当确权列表 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedListResponse"];
+                };
+            };
+        };
+    };
+    createStockDividendConfirmed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockDividendConfirmedCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 创建成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 记录冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getStockDividendConfirmedById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 配当确权详情 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedResponse"];
+                };
+            };
+            /** @description 记录不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateStockDividendConfirmed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockDividendConfirmedUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description 更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 记录不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 记录冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    deleteStockDividendConfirmed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 删除成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 记录不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    confirmStockDividendConfirmed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 确权成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedResponse"];
+                };
+            };
+            /** @description 记录不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    unconfirmStockDividendConfirmed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 反确权成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedResponse"];
+                };
+            };
+            /** @description 记录不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    importStockDividendConfirmed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockDividendConfirmedImportRequest"];
+            };
+        };
+        responses: {
+            /** @description 导入结果 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedImportResponse"];
+                };
+            };
+            /** @description 请求参数错误 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listStockDividendConfirmedRightsLastDayStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 统计结果 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockDividendConfirmedRightsLastDayStatsListResponse"];
                 };
             };
         };

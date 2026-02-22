@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.permission.mapper.PermissionMapper">
+
+    <sql id="permissionColumns">
+        ID,
+        PERMISSION_CODE,
+        PERMISSION_NAME,
+        DESCRIPTION,
+        STATUS,
+        RESOURCE_TYPE,
+        RESOURCE,
+        HTTP_METHOD,
+        ACTION,
+        PERMISSION_GROUP,
+        SORT_ORDER,
+        UI_MENU_KEY,
+        UI_ROUTE,
+        CREATED_AT,
+        UPDATED_AT,
+        DELETED_AT
+    </sql>
+
+    <resultMap id="permissionResultMap" type="com.kabu.admin.permission.model.Permission">
+        <id property="id" column="ID"/>
+        <result property="permissionCode" column="PERMISSION_CODE"/>
+        <result property="permissionName" column="PERMISSION_NAME"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="status" column="STATUS"/>
+        <result property="resourceType" column="RESOURCE_TYPE"/>
+        <result property="resource" column="RESOURCE"/>
+        <result property="httpMethod" column="HTTP_METHOD"/>
+        <result property="action" column="ACTION"/>
+        <result property="permissionGroup" column="PERMISSION_GROUP"/>
+        <result property="sortOrder" column="SORT_ORDER"/>
+        <result property="uiMenuKey" column="UI_MENU_KEY"/>
+        <result property="uiRoute" column="UI_ROUTE"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+        <result property="deletedAt" column="DELETED_AT"/>
+    </resultMap>
+
+    <select id="findByCriteria" resultMap="permissionResultMap">
+        SELECT
+            <include refid="permissionColumns"/>
+        FROM M_PERMISSION
+        <where>
+            DELETED_AT IS NULL
+            <if test="permissionCode != null and permissionCode != ''">
+                AND PERMISSION_CODE LIKE CONCAT('%', #{permissionCode}, '%')
+            </if>
+            <if test="permissionName != null and permissionName != ''">
+                AND PERMISSION_NAME LIKE CONCAT('%', #{permissionName}, '%')
+            </if>
+            <if test="resourceType != null and resourceType != ''">
+                AND RESOURCE_TYPE = #{resourceType}
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status}
+            </if>
+        </where>
+        ORDER BY SORT_ORDER ASC, ID DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByCriteria" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM M_PERMISSION
+        <where>
+            DELETED_AT IS NULL
+            <if test="permissionCode != null and permissionCode != ''">
+                AND PERMISSION_CODE LIKE CONCAT('%', #{permissionCode}, '%')
+            </if>
+            <if test="permissionName != null and permissionName != ''">
+                AND PERMISSION_NAME LIKE CONCAT('%', #{permissionName}, '%')
+            </if>
+            <if test="resourceType != null and resourceType != ''">
+                AND RESOURCE_TYPE = #{resourceType}
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="permissionResultMap">
+        SELECT
+            <include refid="permissionColumns"/>
+        FROM M_PERMISSION
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <select id="findByPermissionCode" resultMap="permissionResultMap">
+        SELECT
+            <include refid="permissionColumns"/>
+        FROM M_PERMISSION
+        WHERE PERMISSION_CODE = #{permissionCode}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <insert id="insert" parameterType="com.kabu.admin.permission.model.Permission" useGeneratedKeys="true" keyProperty="id"
+        keyColumn="ID">
+        INSERT INTO M_PERMISSION (
+            PERMISSION_CODE,
+            PERMISSION_NAME,
+            DESCRIPTION,
+            STATUS,
+            RESOURCE_TYPE,
+            RESOURCE,
+            HTTP_METHOD,
+            ACTION,
+            PERMISSION_GROUP,
+            SORT_ORDER,
+            UI_MENU_KEY,
+            UI_ROUTE,
+            CREATED_AT,
+            UPDATED_AT
+        ) VALUES (
+            #{permissionCode},
+            #{permissionName},
+            #{description},
+            #{status},
+            #{resourceType},
+            #{resource},
+            #{httpMethod},
+            #{action},
+            #{permissionGroup},
+            #{sortOrder},
+            #{uiMenuKey},
+            #{uiRoute},
+            #{createdAt},
+            #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.kabu.admin.permission.model.Permission">
+        UPDATE M_PERMISSION
+        SET
+            PERMISSION_CODE = #{permissionCode},
+            PERMISSION_NAME = #{permissionName},
+            DESCRIPTION = #{description},
+            STATUS = #{status},
+            RESOURCE_TYPE = #{resourceType},
+            RESOURCE = #{resource},
+            HTTP_METHOD = #{httpMethod},
+            ACTION = #{action},
+            PERMISSION_GROUP = #{permissionGroup},
+            SORT_ORDER = #{sortOrder},
+            UI_MENU_KEY = #{uiMenuKey},
+            UI_ROUTE = #{uiRoute},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
+
+    <update id="updateStatus">
+        UPDATE M_PERMISSION
+        SET
+            STATUS = #{status},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
+
+    <update id="softDelete">
+        UPDATE M_PERMISSION
+        SET
+            DELETED_AT = #{deletedAt},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
+
+    <select id="findExistingEnabledIds" resultType="long">
+        SELECT
+            ID
+        FROM M_PERMISSION
+        WHERE STATUS = 1
+          AND DELETED_AT IS NULL
+          <if test="ids != null and ids.size() > 0">
+            AND ID IN
+            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+          </if>
+    </select>
+
+</mapper>

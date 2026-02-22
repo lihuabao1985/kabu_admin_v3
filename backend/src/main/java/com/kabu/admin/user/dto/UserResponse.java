@@ -7,7 +7,9 @@ public record UserResponse(
     String username,
     String displayName,
     String email,
+    String phone,
     Integer status,
+    Integer accountLocked,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {

@@ -2,9 +2,9 @@ spring:
   application:
     name: kabu-admin-v3
   datasource:
-    url: jdbc:mysql://localhost:3306/kabu_admin_v3?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: kabu
-    password: kabu
+    url: jdbc:mysql://160.16.135.58:3306/kabu_web?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: Ly$20240301
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis:

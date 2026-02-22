@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.auth.mapper.AuthUserMapper">
+
+    <resultMap id="authUserResultMap" type="com.kabu.admin.auth.model.AuthUser">
+        <result property="username" column="USERNAME"/>
+        <result property="passwordHash" column="PASSWORD_HASH"/>
+        <result property="status" column="STATUS"/>
+        <result property="accountLocked" column="ACCOUNT_LOCKED"/>
+        <result property="deletedAt" column="DELETED_AT"/>
+    </resultMap>
+
+    <select id="findByUsername" resultMap="authUserResultMap">
+        SELECT
+            USERNAME,
+            PASSWORD_HASH,
+            STATUS,
+            ACCOUNT_LOCKED,
+            DELETED_AT
+        FROM M_USER
+        WHERE USERNAME = #{username}
+    </select>
+
+    <select id="findAuthoritiesByUsername" resultType="string">
+        SELECT
+            authority
+        FROM (
+            SELECT DISTINCT
+                CASE
+                    WHEN r.ROLE_CODE LIKE 'ROLE_%' THEN r.ROLE_CODE
+                    ELSE CONCAT('ROLE_', r.ROLE_CODE)
+                END AS authority
+            FROM M_USER u
+            INNER JOIN M_USER_ROLE ur ON ur.USER_ID = u.ID
+            INNER JOIN M_ROLE r ON r.ID = ur.ROLE_ID
+            WHERE u.USERNAME = #{username}
+              AND u.DELETED_AT IS NULL
+              AND r.DELETED_AT IS NULL
+              AND r.STATUS = 1
+
+            UNION
+
+            SELECT DISTINCT
+                p.PERMISSION_CODE AS authority
+            FROM M_USER u
+            INNER JOIN M_USER_ROLE ur ON ur.USER_ID = u.ID
+            INNER JOIN M_ROLE r ON r.ID = ur.ROLE_ID
+            INNER JOIN M_ROLE_PERMISSION rp ON rp.ROLE_ID = ur.ROLE_ID
+            INNER JOIN M_PERMISSION p ON p.ID = rp.PERMISSION_ID
+            WHERE u.USERNAME = #{username}
+              AND u.DELETED_AT IS NULL
+              AND r.DELETED_AT IS NULL
+              AND r.STATUS = 1
+              AND p.DELETED_AT IS NULL
+              AND p.STATUS = 1
+        ) authorities
+    </select>
+
+</mapper>

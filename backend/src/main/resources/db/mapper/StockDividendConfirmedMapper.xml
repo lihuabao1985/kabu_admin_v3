@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.stock.dividendconfirmed.mapper.StockDividendConfirmedMapper">
+
+    <sql id="columns">
+        TSDC.ID,
+        TSDC.STOCK_CODE,
+        MS.STOCK_NAME,
+        MS.TYPE_NAME,
+        MS.STOCK_PRICE,
+        TSDC.DIVIDEND_AMOUNT,
+        TSDC.DIVIDEND_YIELD,
+        TSDC.RIGHTS_LAST_DAY,
+        TSDC.EX_DIVIDEND_DATE,
+        TSDC.RECORD_DATE,
+        TSDC.CONFIRMED_FLG
+    </sql>
+
+    <resultMap id="resultMap" type="com.kabu.admin.stock.dividendconfirmed.model.StockDividendConfirmed">
+        <id property="id" column="ID"/>
+        <result property="stockCode" column="STOCK_CODE"/>
+        <result property="stockName" column="STOCK_NAME"/>
+        <result property="typeName" column="TYPE_NAME"/>
+        <result property="stockPrice" column="STOCK_PRICE"/>
+        <result property="dividendAmount" column="DIVIDEND_AMOUNT"/>
+        <result property="dividendYield" column="DIVIDEND_YIELD"/>
+        <result property="rightsLastDay" column="RIGHTS_LAST_DAY"/>
+        <result property="exDividendDate" column="EX_DIVIDEND_DATE"/>
+        <result property="recordDate" column="RECORD_DATE"/>
+        <result property="confirmedFlg" column="CONFIRMED_FLG"/>
+    </resultMap>
+
+    <select id="findByCriteria" resultMap="resultMap">
+        SELECT
+            <include refid="columns"/>
+        FROM T_STOCK_DIVIDEND_CONFIRMED TSDC
+        LEFT JOIN M_STOCK MS ON TSDC.STOCK_CODE = MS.STOCK_CODE
+        <where>
+            (MS.TYPE_CODE IS NULL OR MS.TYPE_CODE &lt;&gt; '9999')
+            <if test="stockCode != null and stockCode != ''">
+                AND TSDC.STOCK_CODE = #{stockCode}
+            </if>
+            <if test="rightsLastDay != null">
+                AND TSDC.RIGHTS_LAST_DAY = #{rightsLastDay}
+            </if>
+            <if test="recordDateFrom != null">
+                AND TSDC.RECORD_DATE <![CDATA[>=]]> #{recordDateFrom}
+            </if>
+            <if test="recordDateTo != null">
+                AND TSDC.RECORD_DATE <![CDATA[<=]]> #{recordDateTo}
+            </if>
+            <if test="confirmedFlg != null and confirmedFlg != ''">
+                AND TSDC.CONFIRMED_FLG = #{confirmedFlg}
+            </if>
+        </where>
+        ORDER BY
+            <choose>
+                <when test="sortBy == 'ID'">TSDC.ID</when>
+                <when test="sortBy == 'STOCK_CODE'">TSDC.STOCK_CODE</when>
+                <when test="sortBy == 'TYPE_NAME'">MS.TYPE_NAME</when>
+                <when test="sortBy == 'DIVIDEND_YIELD'">TSDC.DIVIDEND_YIELD</when>
+                <when test="sortBy == 'RIGHTS_LAST_DAY'">TSDC.RIGHTS_LAST_DAY</when>
+                <otherwise>TSDC.RECORD_DATE</otherwise>
+            </choose>
+            <choose>
+                <when test="sortDirection == 'ASC'">ASC</when>
+                <otherwise>DESC</otherwise>
+            </choose>,
+            TSDC.ID DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByCriteria" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM T_STOCK_DIVIDEND_CONFIRMED TSDC
+        LEFT JOIN M_STOCK MS ON TSDC.STOCK_CODE = MS.STOCK_CODE
+        <where>
+            (MS.TYPE_CODE IS NULL OR MS.TYPE_CODE &lt;&gt; '9999')
+            <if test="stockCode != null and stockCode != ''">
+                AND TSDC.STOCK_CODE = #{stockCode}
+            </if>
+            <if test="rightsLastDay != null">
+                AND TSDC.RIGHTS_LAST_DAY = #{rightsLastDay}
+            </if>
+            <if test="recordDateFrom != null">
+                AND TSDC.RECORD_DATE <![CDATA[>=]]> #{recordDateFrom}
+            </if>
+            <if test="recordDateTo != null">
+                AND TSDC.RECORD_DATE <![CDATA[<=]]> #{recordDateTo}
+            </if>
+            <if test="confirmedFlg != null and confirmedFlg != ''">
+                AND TSDC.CONFIRMED_FLG = #{confirmedFlg}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="resultMap">
+        SELECT
+            <include refid="columns"/>
+        FROM T_STOCK_DIVIDEND_CONFIRMED TSDC
+        LEFT JOIN M_STOCK MS ON TSDC.STOCK_CODE = MS.STOCK_CODE
+        WHERE TSDC.ID = #{id}
+    </select>
+
+    <select id="findByStockCodeAndRecordDate" resultMap="resultMap">
+        SELECT
+            <include refid="columns"/>
+        FROM T_STOCK_DIVIDEND_CONFIRMED TSDC
+        LEFT JOIN M_STOCK MS ON TSDC.STOCK_CODE = MS.STOCK_CODE
+        WHERE TSDC.STOCK_CODE = #{stockCode}
+          AND TSDC.RECORD_DATE = #{recordDate}
+    </select>
+
+    <insert id="insert" parameterType="com.kabu.admin.stock.dividendconfirmed.model.StockDividendConfirmed" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+        INSERT INTO T_STOCK_DIVIDEND_CONFIRMED (
+            STOCK_CODE,
+            DIVIDEND_AMOUNT,
+            DIVIDEND_YIELD,
+            RIGHTS_LAST_DAY,
+            EX_DIVIDEND_DATE,
+            RECORD_DATE,
+            CONFIRMED_FLG
+        ) VALUES (
+            #{stockCode},
+            #{dividendAmount},
+            #{dividendYield},
+            #{rightsLastDay},
+            #{exDividendDate},
+            #{recordDate},
+            #{confirmedFlg}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.kabu.admin.stock.dividendconfirmed.model.StockDividendConfirmed">
+        UPDATE T_STOCK_DIVIDEND_CONFIRMED
+        SET
+            STOCK_CODE = #{stockCode},
+            DIVIDEND_AMOUNT = #{dividendAmount},
+            DIVIDEND_YIELD = #{dividendYield},
+            RIGHTS_LAST_DAY = #{rightsLastDay},
+            EX_DIVIDEND_DATE = #{exDividendDate},
+            RECORD_DATE = #{recordDate},
+            CONFIRMED_FLG = #{confirmedFlg}
+        WHERE ID = #{id}
+    </update>
+
+    <update id="updateConfirmedFlag">
+        UPDATE T_STOCK_DIVIDEND_CONFIRMED
+        SET CONFIRMED_FLG = #{confirmedFlg}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM T_STOCK_DIVIDEND_CONFIRMED
+        WHERE ID = #{id}
+    </delete>
+
+    <resultMap id="rightsLastDayStatsResultMap" type="com.kabu.admin.stock.dividendconfirmed.model.StockDividendConfirmedRightsLastDayStats">
+        <result property="rightsLastDay" column="RIGHTS_LAST_DAY"/>
+        <result property="totalCount" column="TOTAL_COUNT"/>
+        <result property="confirmedCount" column="CONFIRMED_COUNT"/>
+        <result property="avgDividendAmount" column="AVG_DIVIDEND_AMOUNT"/>
+        <result property="avgDividendYield" column="AVG_DIVIDEND_YIELD"/>
+    </resultMap>
+
+    <select id="aggregateByRightsLastDay" resultMap="rightsLastDayStatsResultMap">
+        SELECT
+            SDC.RIGHTS_LAST_DAY,
+            COUNT(1) AS TOTAL_COUNT,
+            SUM(CASE WHEN SDC.CONFIRMED_FLG = '1' THEN 1 ELSE 0 END) AS CONFIRMED_COUNT,
+            AVG(SDC.DIVIDEND_AMOUNT) AS AVG_DIVIDEND_AMOUNT,
+            AVG(SDC.DIVIDEND_YIELD) AS AVG_DIVIDEND_YIELD
+        FROM T_STOCK_DIVIDEND_CONFIRMED SDC
+        LEFT JOIN M_STOCK MS ON SDC.STOCK_CODE = MS.STOCK_CODE
+        <where>
+            SDC.RIGHTS_LAST_DAY IS NOT NULL
+            AND (MS.TYPE_CODE IS NULL OR MS.TYPE_CODE &lt;&gt; '9999')
+        </where>
+        GROUP BY SDC.RIGHTS_LAST_DAY
+        ORDER BY SDC.RIGHTS_LAST_DAY DESC
+    </select>
+
+</mapper>

@@ -16,5 +16,9 @@ public interface UserService {
 
     UserResponse updateUser(Long id, UserUpdateRequest request);
 
+    UserResponse updateUserStatus(Long id, Integer status);
+
+    UserResponse updateUserLock(Long id, Integer locked);
+
     void deleteUser(Long id);
 }

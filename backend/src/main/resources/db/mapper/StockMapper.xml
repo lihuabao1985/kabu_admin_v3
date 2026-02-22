@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.stock.mapper.StockMapper">
+
+    <sql id="stockColumns">
+        ID,
+        STOCK_CODE,
+        STOCK_NAME,
+        TYPE_CODE,
+        TYPE_NAME,
+        MARKET,
+        SECURITIES,
+        BANK,
+        `DATE`,
+        SETTLEMENT,
+        SETTLEMENT_DAY,
+        ESTABLISHED,
+        LISTED,
+        STOCK_PRICE,
+        TRADING_UNIT,
+        TOTAL_ZIKA,
+        DIVIDEND,
+        EXPECTED_DIVIDEND,
+        FIXED_DIVIDEND,
+        PER,
+        EPS,
+        PBR,
+        ROE,
+        ROA,
+        PREFERENTIAL_FLG,
+        DIVIDEND_FLG,
+        ICHIMOKU_UPPER_FLG,
+        ICHIMOKU_DOWLOAD_FLG,
+        DEL_FLG,
+        HOMEPAGE,
+        NEWS_URL,
+        IR_URL,
+        TEKUSYOKU,
+        RENKETU_ZIGYO,
+        SUPPLIER,
+        SALES_DESTINATION
+    </sql>
+
+    <resultMap id="stockResultMap" type="com.kabu.admin.stock.model.Stock">
+        <id property="id" column="ID"/>
+        <result property="stockCode" column="STOCK_CODE"/>
+        <result property="stockName" column="STOCK_NAME"/>
+        <result property="typeCode" column="TYPE_CODE"/>
+        <result property="typeName" column="TYPE_NAME"/>
+        <result property="market" column="MARKET"/>
+        <result property="securities" column="SECURITIES"/>
+        <result property="bank" column="BANK"/>
+        <result property="date" column="DATE"/>
+        <result property="settlement" column="SETTLEMENT"/>
+        <result property="settlementDay" column="SETTLEMENT_DAY"/>
+        <result property="established" column="ESTABLISHED"/>
+        <result property="listed" column="LISTED"/>
+        <result property="stockPrice" column="STOCK_PRICE"/>
+        <result property="tradingUnit" column="TRADING_UNIT"/>
+        <result property="totalZika" column="TOTAL_ZIKA"/>
+        <result property="dividend" column="DIVIDEND"/>
+        <result property="expectedDividend" column="EXPECTED_DIVIDEND"/>
+        <result property="fixedDividend" column="FIXED_DIVIDEND"/>
+        <result property="per" column="PER"/>
+        <result property="eps" column="EPS"/>
+        <result property="pbr" column="PBR"/>
+        <result property="roe" column="ROE"/>
+        <result property="roa" column="ROA"/>
+        <result property="preferentialFlg" column="PREFERENTIAL_FLG"/>
+        <result property="dividendFlg" column="DIVIDEND_FLG"/>
+        <result property="ichimokuUpperFlg" column="ICHIMOKU_UPPER_FLG"/>
+        <result property="ichimokuDowloadFlg" column="ICHIMOKU_DOWLOAD_FLG"/>
+        <result property="delFlg" column="DEL_FLG"/>
+        <result property="homepage" column="HOMEPAGE"/>
+        <result property="newsUrl" column="NEWS_URL"/>
+        <result property="irUrl" column="IR_URL"/>
+        <result property="tekusyoku" column="TEKUSYOKU"/>
+        <result property="renketuZigyo" column="RENKETU_ZIGYO"/>
+        <result property="supplier" column="SUPPLIER"/>
+        <result property="salesDestination" column="SALES_DESTINATION"/>
+    </resultMap>
+
+    <resultMap id="stockOptionResultMap" type="com.kabu.admin.stock.model.StockOption">
+        <id property="id" column="ID"/>
+        <result property="stockCode" column="STOCK_CODE"/>
+        <result property="stockName" column="STOCK_NAME"/>
+        <result property="market" column="MARKET"/>
+    </resultMap>
+
+    <resultMap id="stockPriceChangeRankingResultMap" type="com.kabu.admin.stock.model.StockPriceChangeRanking">
+        <result property="stockCode" column="STOCK_CODE"/>
+        <result property="stockName" column="STOCK_NAME"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="startClosePrice" column="START_CLOSE_PRICE"/>
+        <result property="endClosePrice" column="END_CLOSE_PRICE"/>
+        <result property="changeAmount" column="CHANGE_AMOUNT"/>
+        <result property="changePercent" column="CHANGE_PERCENT"/>
+    </resultMap>
+
+    <resultMap id="stockRealtimeChangeResultMap" type="com.kabu.admin.stock.model.StockRealtimeChange">
+        <result property="stockCode" column="STOCK_CODE"/>
+        <result property="stockName" column="STOCK_NAME"/>
+        <result property="currentPriceText" column="CURRENT_PRICE_TEXT"/>
+        <result property="referenceDate" column="REFERENCE_DATE"/>
+        <result property="referenceClosePrice" column="REFERENCE_CLOSE_PRICE"/>
+    </resultMap>
+
+    <resultMap id="stockFavoriteResultMap" type="com.kabu.admin.stock.model.StockFavorite">
+        <id property="id" column="ID"/>
+        <result property="stockCode" column="STOCK_CODE"/>
+        <result property="stockName" column="STOCK_NAME"/>
+        <result property="typeName" column="TYPE_NAME"/>
+        <result property="market" column="MARKET"/>
+        <result property="stockPrice" column="STOCK_PRICE"/>
+        <result property="createdAt" column="CREATED_AT"/>
+    </resultMap>
+
+    <select id="findByCriteria" resultMap="stockResultMap">
+        SELECT
+            <include refid="stockColumns"/>
+        FROM M_STOCK
+        <where>
+            <if test="stockCode != null and stockCode != ''">
+                AND STOCK_CODE = #{stockCode}
+            </if>
+            <if test="stockName != null and stockName != ''">
+                AND STOCK_NAME LIKE CONCAT('%', #{stockName}, '%')
+            </if>
+            <if test="typeCode != null and typeCode != ''">
+                AND TYPE_CODE = #{typeCode}
+            </if>
+            <if test="market != null and market != ''">
+                AND MARKET = #{market}
+            </if>
+            <if test="delFlg != null and delFlg != ''">
+                AND DEL_FLG = #{delFlg}
+            </if>
+        </where>
+        ORDER BY
+            <choose>
+                <when test="sortBy == 'STOCK_CODE'">STOCK_CODE</when>
+                <otherwise>ID</otherwise>
+            </choose>
+            <choose>
+                <when test="sortDirection == 'ASC'">ASC</when>
+                <otherwise>DESC</otherwise>
+            </choose>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByCriteria" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM M_STOCK
+        <where>
+            <if test="stockCode != null and stockCode != ''">
+                AND STOCK_CODE = #{stockCode}
+            </if>
+            <if test="stockName != null and stockName != ''">
+                AND STOCK_NAME LIKE CONCAT('%', #{stockName}, '%')
+            </if>
+            <if test="typeCode != null and typeCode != ''">
+                AND TYPE_CODE = #{typeCode}
+            </if>
+            <if test="market != null and market != ''">
+                AND MARKET = #{market}
+            </if>
+            <if test="delFlg != null and delFlg != ''">
+                AND DEL_FLG = #{delFlg}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="stockResultMap">
+        SELECT
+            <include refid="stockColumns"/>
+        FROM M_STOCK
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findByStockCode" resultMap="stockResultMap">
+        SELECT
+            <include refid="stockColumns"/>
+        FROM M_STOCK
+        WHERE STOCK_CODE = #{stockCode}
+    </select>
+
+    <select id="findOptions" resultMap="stockOptionResultMap">
+        SELECT
+            ID,
+            STOCK_CODE,
+            STOCK_NAME,
+            MARKET
+        FROM M_STOCK
+        <where>
+            DEL_FLG = '0'
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    STOCK_CODE LIKE CONCAT('%', #{keyword}, '%')
+                    OR STOCK_NAME LIKE CONCAT('%', #{keyword}, '%')
+                )
+            </if>
+            <if test="market != null and market != ''">
+                AND MARKET = #{market}
+            </if>
+        </where>
+        ORDER BY STOCK_CODE ASC
+        LIMIT #{limit}
+    </select>
+
+    <select id="findPriceChangeRanking" resultMap="stockPriceChangeRankingResultMap">
+        SELECT
+            RP.STOCK_CODE,
+            MS.STOCK_NAME,
+            RP.START_DATE,
+            RP.END_DATE,
+            RP.START_CLOSE_PRICE,
+            RP.END_CLOSE_PRICE,
+            (RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) AS CHANGE_AMOUNT,
+            ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) AS CHANGE_PERCENT
+        FROM (
+            SELECT
+                P.STOCK_CODE,
+                P.START_DATE,
+                P.END_DATE,
+                START_HISTORY.CLOSE_PRICE AS START_CLOSE_PRICE,
+                END_HISTORY.CLOSE_PRICE AS END_CLOSE_PRICE
+            FROM (
+                SELECT
+                    STOCK_CODE,
+                    MIN(TRANS_DATE) AS START_DATE,
+                    MAX(TRANS_DATE) AS END_DATE
+                FROM M_STOCK_PRICE_HISTORY
+                WHERE TRANS_DATE BETWEEN #{startDate} AND #{endDate}
+                GROUP BY STOCK_CODE
+                HAVING MIN(TRANS_DATE) <![CDATA[<]]> MAX(TRANS_DATE)
+            ) P
+            JOIN M_STOCK_PRICE_HISTORY START_HISTORY
+              ON START_HISTORY.STOCK_CODE = P.STOCK_CODE
+             AND START_HISTORY.TRANS_DATE = P.START_DATE
+            JOIN M_STOCK_PRICE_HISTORY END_HISTORY
+              ON END_HISTORY.STOCK_CODE = P.STOCK_CODE
+             AND END_HISTORY.TRANS_DATE = P.END_DATE
+            WHERE START_HISTORY.CLOSE_PRICE IS NOT NULL
+              AND START_HISTORY.CLOSE_PRICE <![CDATA[<>]]> 0
+              AND END_HISTORY.CLOSE_PRICE IS NOT NULL
+        ) RP
+        LEFT JOIN M_STOCK MS ON RP.STOCK_CODE = MS.STOCK_CODE
+        <where>
+            <if test="changeType == 'RISE'">
+                ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[>=]]> #{threshold}
+            </if>
+            <if test="changeType == 'FALL'">
+                ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[<=]]> -#{threshold}
+            </if>
+        </where>
+        ORDER BY
+            <choose>
+                <when test="changeType == 'RISE'">CHANGE_PERCENT DESC</when>
+                <otherwise>CHANGE_PERCENT ASC</otherwise>
+            </choose>,
+            RP.STOCK_CODE ASC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countPriceChangeRanking" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM (
+            SELECT
+                RP.STOCK_CODE
+            FROM (
+                SELECT
+                    P.STOCK_CODE,
+                    START_HISTORY.CLOSE_PRICE AS START_CLOSE_PRICE,
+                    END_HISTORY.CLOSE_PRICE AS END_CLOSE_PRICE
+                FROM (
+                    SELECT
+                        STOCK_CODE,
+                        MIN(TRANS_DATE) AS START_DATE,
+                        MAX(TRANS_DATE) AS END_DATE
+                    FROM M_STOCK_PRICE_HISTORY
+                    WHERE TRANS_DATE BETWEEN #{startDate} AND #{endDate}
+                    GROUP BY STOCK_CODE
+                    HAVING MIN(TRANS_DATE) <![CDATA[<]]> MAX(TRANS_DATE)
+                ) P
+                JOIN M_STOCK_PRICE_HISTORY START_HISTORY
+                  ON START_HISTORY.STOCK_CODE = P.STOCK_CODE
+                 AND START_HISTORY.TRANS_DATE = P.START_DATE
+                JOIN M_STOCK_PRICE_HISTORY END_HISTORY
+                  ON END_HISTORY.STOCK_CODE = P.STOCK_CODE
+                 AND END_HISTORY.TRANS_DATE = P.END_DATE
+                WHERE START_HISTORY.CLOSE_PRICE IS NOT NULL
+                  AND START_HISTORY.CLOSE_PRICE <![CDATA[<>]]> 0
+                  AND END_HISTORY.CLOSE_PRICE IS NOT NULL
+            ) RP
+            <where>
+                <if test="changeType == 'RISE'">
+                    ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[>=]]> #{threshold}
+                </if>
+                <if test="changeType == 'FALL'">
+                    ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[<=]]> -#{threshold}
+                </if>
+            </where>
+        ) C
+    </select>
+
+    <select id="findRealtimeChangeByStockCode" resultMap="stockRealtimeChangeResultMap">
+        SELECT
+            MS.STOCK_CODE,
+            MS.STOCK_NAME,
+            MS.STOCK_PRICE AS CURRENT_PRICE_TEXT,
+            LATEST.TRANS_DATE AS REFERENCE_DATE,
+            LATEST.CLOSE_PRICE AS REFERENCE_CLOSE_PRICE
+        FROM M_STOCK MS
+        LEFT JOIN M_STOCK_PRICE_HISTORY LATEST
+          ON LATEST.STOCK_CODE = MS.STOCK_CODE
+         AND LATEST.TRANS_DATE = (
+            SELECT MAX(H2.TRANS_DATE)
+            FROM M_STOCK_PRICE_HISTORY H2
+            WHERE H2.STOCK_CODE = MS.STOCK_CODE
+              AND H2.CLOSE_PRICE IS NOT NULL
+         )
+        WHERE MS.STOCK_CODE = #{stockCode}
+    </select>
+
+    <select id="findFavorites" resultMap="stockFavoriteResultMap">
+        SELECT
+            SF.ID,
+            SF.STOCK_CODE,
+            MS.STOCK_NAME,
+            MS.TYPE_NAME,
+            MS.MARKET,
+            MS.STOCK_PRICE,
+            SF.CREATED_AT
+        FROM M_STOCK_FAVORITE SF
+        LEFT JOIN M_STOCK MS ON SF.STOCK_CODE = MS.STOCK_CODE
+        ORDER BY SF.CREATED_AT DESC, SF.ID DESC
+    </select>
+
+    <select id="countFavorites" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM M_STOCK_FAVORITE
+    </select>
+
+    <select id="findFavoriteById" resultMap="stockFavoriteResultMap">
+        SELECT
+            SF.ID,
+            SF.STOCK_CODE,
+            MS.STOCK_NAME,
+            MS.TYPE_NAME,
+            MS.MARKET,
+            MS.STOCK_PRICE,
+            SF.CREATED_AT
+        FROM M_STOCK_FAVORITE SF
+        LEFT JOIN M_STOCK MS ON SF.STOCK_CODE = MS.STOCK_CODE
+        WHERE SF.ID = #{id}
+    </select>
+
+    <select id="findFavoriteByStockCode" resultMap="stockFavoriteResultMap">
+        SELECT
+            SF.ID,
+            SF.STOCK_CODE,
+            MS.STOCK_NAME,
+            MS.TYPE_NAME,
+            MS.MARKET,
+            MS.STOCK_PRICE,
+            SF.CREATED_AT
+        FROM M_STOCK_FAVORITE SF
+        LEFT JOIN M_STOCK MS ON SF.STOCK_CODE = MS.STOCK_CODE
+        WHERE SF.STOCK_CODE = #{stockCode}
+    </select>
+
+    <insert id="insertFavorite">
+        INSERT INTO M_STOCK_FAVORITE (
+            STOCK_CODE
+        ) VALUES (
+            #{stockCode}
+        )
+    </insert>
+
+    <delete id="deleteFavoriteById">
+        DELETE FROM M_STOCK_FAVORITE
+        WHERE ID = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.kabu.admin.stock.model.Stock" useGeneratedKeys="true" keyProperty="id"
+        keyColumn="ID">
+        INSERT INTO M_STOCK (
+            STOCK_CODE,
+            STOCK_NAME,
+            TYPE_CODE,
+            TYPE_NAME,
+            MARKET,
+            SECURITIES,
+            BANK,
+            `DATE`,
+            SETTLEMENT,
+            SETTLEMENT_DAY,
+            ESTABLISHED,
+            LISTED,
+            STOCK_PRICE,
+            TRADING_UNIT,
+            TOTAL_ZIKA,
+            DIVIDEND,
+            EXPECTED_DIVIDEND,
+            FIXED_DIVIDEND,
+            PER,
+            EPS,
+            PBR,
+            ROE,
+            ROA,
+            PREFERENTIAL_FLG,
+            DIVIDEND_FLG,
+            ICHIMOKU_UPPER_FLG,
+            ICHIMOKU_DOWLOAD_FLG,
+            DEL_FLG,
+            HOMEPAGE,
+            NEWS_URL,
+            IR_URL,
+            TEKUSYOKU,
+            RENKETU_ZIGYO,
+            SUPPLIER,
+            SALES_DESTINATION
+        ) VALUES (
+            #{stockCode},
+            #{stockName},
+            #{typeCode},
+            #{typeName},
+            #{market},
+            #{securities},
+            #{bank},
+            #{date},
+            #{settlement},
+            #{settlementDay},
+            #{established},
+            #{listed},
+            #{stockPrice},
+            #{tradingUnit},
+            #{totalZika},
+            #{dividend},
+            #{expectedDividend},
+            #{fixedDividend},
+            #{per},
+            #{eps},
+            #{pbr},
+            #{roe},
+            #{roa},
+            #{preferentialFlg},
+            #{dividendFlg},
+            #{ichimokuUpperFlg},
+            #{ichimokuDowloadFlg},
+            #{delFlg},
+            #{homepage},
+            #{newsUrl},
+            #{irUrl},
+            #{tekusyoku},
+            #{renketuZigyo},
+            #{supplier},
+            #{salesDestination}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.kabu.admin.stock.model.Stock">
+        UPDATE M_STOCK
+        SET
+            STOCK_CODE = #{stockCode},
+            STOCK_NAME = #{stockName},
+            TYPE_CODE = #{typeCode},
+            TYPE_NAME = #{typeName},
+            MARKET = #{market},
+            SECURITIES = #{securities},
+            BANK = #{bank},
+            `DATE` = #{date},
+            SETTLEMENT = #{settlement},
+            SETTLEMENT_DAY = #{settlementDay},
+            ESTABLISHED = #{established},
+            LISTED = #{listed},
+            STOCK_PRICE = #{stockPrice},
+            TRADING_UNIT = #{tradingUnit},
+            TOTAL_ZIKA = #{totalZika},
+            DIVIDEND = #{dividend},
+            EXPECTED_DIVIDEND = #{expectedDividend},
+            FIXED_DIVIDEND = #{fixedDividend},
+            PER = #{per},
+            EPS = #{eps},
+            PBR = #{pbr},
+            ROE = #{roe},
+            ROA = #{roa},
+            PREFERENTIAL_FLG = #{preferentialFlg},
+            DIVIDEND_FLG = #{dividendFlg},
+            ICHIMOKU_UPPER_FLG = #{ichimokuUpperFlg},
+            ICHIMOKU_DOWLOAD_FLG = #{ichimokuDowloadFlg},
+            DEL_FLG = #{delFlg},
+            HOMEPAGE = #{homepage},
+            NEWS_URL = #{newsUrl},
+            IR_URL = #{irUrl},
+            TEKUSYOKU = #{tekusyoku},
+            RENKETU_ZIGYO = #{renketuZigyo},
+            SUPPLIER = #{supplier},
+            SALES_DESTINATION = #{salesDestination}
+        WHERE ID = #{id}
+    </update>
+
+    <update id="updateDeleteFlag">
+        UPDATE M_STOCK
+        SET
+            DEL_FLG = #{delFlg}
+        WHERE ID = #{id}
+    </update>
+
+    <update id="markDeletedExceptCodes">
+        UPDATE M_STOCK
+        SET
+            DEL_FLG = '1'
+        WHERE DEL_FLG = '0'
+        <if test="stockCodes != null and stockCodes.size() > 0">
+            AND STOCK_CODE NOT IN
+            <foreach item="code" collection="stockCodes" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+    </update>
+
+</mapper>

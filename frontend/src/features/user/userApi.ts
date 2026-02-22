@@ -1,22 +1,13 @@
 import type { components, operations } from '../../types/openapi'
+import { request } from '../../lib/apiClient'
 
-type ErrorResponse = components['schemas']['ErrorResponse']
 export type UserCreateRequest = components['schemas']['UserCreateRequest']
 export type UserUpdateRequest = components['schemas']['UserUpdateRequest']
 export type UserListResponse = components['schemas']['UserListResponse']
 export type UserResponse = components['schemas']['UserResponse']
 export type ListUsersQuery = operations['listUsers']['parameters']['query']
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
-
-class ApiError extends Error {
-  status: number
-
-  constructor(message: string, status: number) {
-    super(message)
-    this.status = status
-  }
-}
+export type StatusPatchRequest = components['schemas']['StatusPatchRequest']
+export type LockPatchRequest = components['schemas']['LockPatchRequest']
 
 const toQueryString = (query: ListUsersQuery | undefined): string => {
   if (!query) {
@@ -33,6 +24,12 @@ const toQueryString = (query: ListUsersQuery | undefined): string => {
   if (query.status !== undefined) {
     params.set('status', String(query.status))
   }
+  if (query.locked !== undefined) {
+    params.set('locked', String(query.locked))
+  }
+  if (query.tenantId) {
+    params.set('tenantId', query.tenantId)
+  }
   if (query.page !== undefined) {
     params.set('page', String(query.page))
   }
@@ -41,34 +38,6 @@ const toQueryString = (query: ListUsersQuery | undefined): string => {
   }
   const queryString = params.toString()
   return queryString ? `?${queryString}` : ''
-}
-
-const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(init?.headers ?? {})
-    }
-  })
-
-  if (!response.ok) {
-    let message = `Request failed with status ${response.status}`
-    try {
-      const errorBody = (await response.json()) as ErrorResponse
-      if (errorBody.message) {
-        message = errorBody.message
-      }
-    } catch {
-      // Keep the generic message when body cannot be parsed.
-    }
-    throw new ApiError(message, response.status)
-  }
-
-  if (response.status === 204) {
-    return undefined as T
-  }
-  return (await response.json()) as T
 }
 
 export const listUsers = (query: ListUsersQuery | undefined): Promise<UserListResponse> =>
@@ -89,4 +58,16 @@ export const updateUser = (id: number, payload: UserUpdateRequest): Promise<User
 export const deleteUser = (id: number): Promise<void> =>
   request<void>(`/api/users/${id}`, {
     method: 'DELETE'
+  })
+
+export const updateUserStatus = (id: number, payload: StatusPatchRequest): Promise<UserResponse> =>
+  request<UserResponse>(`/api/users/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload)
+  })
+
+export const updateUserLock = (id: number, payload: LockPatchRequest): Promise<UserResponse> =>
+  request<UserResponse>(`/api/users/${id}/lock`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload)
   })

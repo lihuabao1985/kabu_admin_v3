@@ -1,16 +1,16 @@
 openapi: 3.0.3
 info:
-  title: Kabu Admin V3 API
+  title: Kabu 鬩阪ｑ・ｽ・｡鬨ｾ繝ｻ繝ｻ鬪ｭ蛟ｩ諢ｾ繝ｻ・ｰ V3 API
   version: 0.0.1
-  description: Initial OpenAPI-first contract skeleton.
+  description: 
 servers:
   - url: http://localhost:8080
 paths:
   /api/users:
     get:
       tags:
-        - User
-      summary: List users
+        - 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
       operationId: listUsers
       parameters:
         - name: username
@@ -19,6 +19,255 @@ paths:
           schema:
             type: string
         - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1
+        - name: locked
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1
+        - name: tenantId
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 36
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      summary: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '201':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯晢ｽｾ繝ｻ・ｲ髯昴・・ｼ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users/{id}:
+    get:
+      tags:
+        - 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      summary: 髫ｴ・ｬ繝ｻ・ｹ髫ｰ謦ｰ・ｽ・ｮID鬮｣雋ｻ・ｽ・ｷ髯ｷ・ｿ闕ｵ貅ｽ闊樣垈魃会ｽｽ・ｷ
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ・ｸ繝ｻ・ｦ髫ｲ・ｰ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯晢ｽｾ繝ｻ・ｲ髯昴・・ｼ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      summary: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+        '404':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users/{id}/status:
+    patch:
+      tags:
+        - 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髴托ｽ･繝ｻ・ｶ髫ｲ・､郢晢ｽｻ
+      operationId: updateUserStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusPatchRequest'
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髴托ｽ･繝ｻ・ｶ髫ｲ・､遶擾ｽｵ陝ｲ・ｩ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users/{id}/lock:
+    patch:
+      tags:
+        - 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬯ｮ讓槭・繝ｻ・ｮ陞溘ｈ繝ｻ髫ｲ・､郢晢ｽｻ
+      operationId: updateUserLock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockPatchRequest'
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬯ｮ讓槭・繝ｻ・ｮ陞溘ｈ繝ｻ髫ｲ・､遶擾ｽｵ陝ｲ・ｩ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/roles:
+    get:
+      tags:
+        - 鬮ｫ諤懶ｽｮ螟よｨｪ
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢鬮ｫ諤懶ｽｮ螟よｨｪ髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+      operationId: listRoles
+      parameters:
+        - name: roleCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: roleName
           in: query
           required: false
           schema:
@@ -47,53 +296,47 @@ paths:
             default: 20
       responses:
         '200':
-          description: User list
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserListResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RoleListResponse'
     post:
       tags:
-        - User
-      summary: Create user
-      operationId: createUser
+        - 鬮ｫ諤懶ｽｮ螟よｨｪ
+      summary: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ鬮ｫ諤懶ｽｮ螟よｨｪ
+      operationId: createRole
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCreateRequest'
+              $ref: '#/components/schemas/RoleCreateRequest'
       responses:
         '201':
-          description: User created
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/RoleResponse'
         '400':
-          description: Bad request
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '409':
-          description: User already exists
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髯晢ｽｾ繝ｻ・ｲ髯昴・・ｼ諛夷・
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /api/users/{id}:
+  /api/roles/{id}:
     get:
       tags:
-        - User
-      summary: Get user by id
-      operationId: getUserById
+        - 鬮ｫ諤懶ｽｮ螟よｨｪ
+      summary: 髫ｴ・ｬ繝ｻ・ｹ髫ｰ謦ｰ・ｽ・ｮID鬮｣雋ｻ・ｽ・ｷ髯ｷ・ｿ陷・ｶ繝ｻ・ｧ陞ｳ螟よｨｪ
+      operationId: getRoleById
       parameters:
         - name: id
           in: path
@@ -103,22 +346,22 @@ paths:
             format: int64
       responses:
         '200':
-          description: User detail
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ鬮ｫ・ｸ繝ｻ・ｦ髫ｲ・ｰ郢晢ｽｻ
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/RoleResponse'
         '404':
-          description: User not found
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     put:
       tags:
-        - User
-      summary: Update user
-      operationId: updateUser
+        - 鬮ｫ諤懶ｽｮ螟よｨｪ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬮ｫ諤懶ｽｮ螟よｨｪ
+      operationId: updateRole
       parameters:
         - name: id
           in: path
@@ -131,37 +374,37 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserUpdateRequest'
+              $ref: '#/components/schemas/RoleUpdateRequest'
       responses:
         '200':
-          description: User updated
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/RoleResponse'
         '400':
-          description: Bad request
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: User not found
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '409':
-          description: User already exists
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髯晢ｽｾ繝ｻ・ｲ髯昴・・ｼ諛夷・
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
-        - User
-      summary: Delete user
-      operationId: deleteUser
+        - 鬮ｫ諤懶ｽｮ螟よｨｪ
+      summary: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､鬮ｫ諤懶ｽｮ螟よｨｪ
+      operationId: deleteRole
       parameters:
         - name: id
           in: path
@@ -171,19 +414,1385 @@ paths:
             format: int64
       responses:
         '204':
-          description: User deleted
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
         '404':
-          description: User not found
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/roles/{id}/status:
+    patch:
+      tags:
+        - 鬮ｫ諤懶ｽｮ螟よｨｪ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬮ｫ諤懶ｽｮ螟よｨｪ髴托ｽ･繝ｻ・ｶ髫ｲ・､郢晢ｽｻ
+      operationId: updateRoleStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusPatchRequest'
+      responses:
+        '200':
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髴托ｽ･繝ｻ・ｶ髫ｲ・､遶擾ｽｵ陝ｲ・ｩ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleResponse'
+        '404':
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/permissions:
+    get:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷代・
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢髫ｴ螢ｹ繝ｻ陷第ｫ∝ｴ暮絡髮｣・ｽ・｡繝ｻ・ｨ
+      operationId: listPermissions
+      parameters:
+        - name: permissionCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: permissionName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: resourceType
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∝ｴ暮絡髮｣・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionListResponse'
+    post:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷代・
+      summary: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ髫ｴ螢ｹ繝ｻ陷代・
+      operationId: createPermission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionCreateRequest'
+      responses:
+        '201':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∝ｴ戊涕蟷｢・ｽ・ｻ繝ｻ・ｺ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∵ｷｦ繝ｻ・ｲ髯昴・・ｼ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/permissions/{id}:
+    get:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷代・
+      summary: 髫ｴ・ｬ繝ｻ・ｹ髫ｰ謦ｰ・ｽ・ｮID鬮｣雋ｻ・ｽ・ｷ髯ｷ・ｿ陋ｹ竏ｵ貅夜ｬｮ・ｯ郢晢ｽｻ
+      operationId: getPermissionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｨ｣蝙ｪ繝ｻ・ｦ髫ｲ・ｰ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionResponse'
+        '404':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∝初隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷代・
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｴ螢ｹ繝ｻ陷代・
+      operationId: updatePermission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionUpdateRequest'
+      responses:
+        '200':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ・ｽｭ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∝初隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∵ｷｦ繝ｻ・ｲ髯昴・・ｼ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷代・
+      summary: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｴ螢ｹ繝ｻ陷代・
+      operationId: deletePermission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∝ｴ輔・・ｰ鬯ｮ・ｯ繝ｻ・､髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+        '404':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∝初隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/permissions/{id}/status:
+    patch:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷代・
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｴ螢ｹ繝ｻ陷第ｫ・ｽｿ・･繝ｻ・ｶ髫ｲ・､郢晢ｽｻ
+      operationId: updatePermissionStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusPatchRequest'
+      responses:
+        '200':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ・ｽｿ・･繝ｻ・ｶ髫ｲ・､遶擾ｽｵ陝ｲ・ｩ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionResponse'
+        '404':
+          description: 髫ｴ螢ｹ繝ｻ陷第ｫ∝初隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users/{userId}/roles:
+    get:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪID髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+      operationId: listUserRoles
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪID髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRoleListResponse'
+    put:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 髫ｴ蜴・ｽｽ・ｿ髫ｰ謦ｰ・ｽ・｢鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪ
+      operationId: replaceUserRoles
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdBatchRequest'
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪID髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRoleListResponse'
+    post:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 髫ｴ繝ｻ・ｽ・ｰ髯溘・・ｨ蝣､闊樣垈魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪ
+      operationId: addUserRoles
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdBatchRequest'
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪID髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRoleListResponse'
+    delete:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 鬩募∞・ｽ・ｻ鬯ｮ・ｯ繝ｻ・､鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪ
+      operationId: removeUserRoles
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdBatchRequest'
+      responses:
+        '200':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ鬮ｫ諤懶ｽｮ螟よｨｪID髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRoleListResponse'
+  /api/roles/{roleId}/permissions:
+    get:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ螢ｹ繝ｻ陷第峽D髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+      operationId: listRolePermissions
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ螢ｹ繝ｻ陷第峽D髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RolePermissionListResponse'
+    put:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 髫ｴ蜴・ｽｽ・ｿ髫ｰ謦ｰ・ｽ・｢鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ螢ｹ繝ｻ陷代・
+      operationId: replaceRolePermissions
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdBatchRequest'
+      responses:
+        '200':
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ螢ｹ繝ｻ陷第峽D髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RolePermissionListResponse'
+    post:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 髫ｴ繝ｻ・ｽ・ｰ髯溘・・ｫ繝ｻ・ｽ・ｧ陞ｳ螟よｨｪ髫ｴ螢ｹ繝ｻ陷代・
+      operationId: addRolePermissions
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdBatchRequest'
+      responses:
+        '200':
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ螢ｹ繝ｻ陷第峽D髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RolePermissionListResponse'
+    delete:
+      tags:
+        - 髫ｴ螢ｹ繝ｻ陷第ｨ頑ｲｿ陞滂ｽｧ繝ｻ・ｮ郢晢ｽｻ
+      summary: 鬩募∞・ｽ・ｻ鬯ｮ・ｯ繝ｻ・､鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ螢ｹ繝ｻ陷代・
+      operationId: removeRolePermissions
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdBatchRequest'
+      responses:
+        '200':
+          description: 鬮ｫ諤懶ｽｮ螟よｨｪ髫ｴ螢ｹ繝ｻ陷第峽D髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RolePermissionListResponse'
+  /api/auth/login:
+    post:
+      tags:
+        - 鬮ｫ・ｶ繝ｻ・､鬮ｫ・ｸ郢晢ｽｻ
+      summary: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯ｷ・ｷ隶主･・ｽｽ・ｯ郢晢ｽｻ繝ｻ・ｰ遶擾ｽｫ陋ｹ・ｳ髯滓じ繝ｻ
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthLoginRequest'
+      responses:
+        '200':
+          description: 鬨ｾ蜈ｷ・ｽ・ｻ髯滄摩・｢阮吶・髯ｷ蟲ｨ繝ｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthLoginResponse'
+        '401':
+          description: 鬨ｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髯ｷ・ｷ髢ｧ・ｴ郢晢ｽｻ髯昴・繝ｻ繝ｻ・ｰ郢晢ｽｻ雋搾｣ｰ鬮ｫ・ｸ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/logout:
+    post:
+      tags:
+        - 鬮ｫ・ｶ繝ｻ・､鬮ｫ・ｸ郢晢ｽｻ
+      summary: 髮主桁・ｽ・ｨ鬯ｮ讌ｪﾂ髯滉ｹ淞ｧ霎ｯ謌願ｳ陞溷･・ｽｽ・ｯ郢晢ｽｻ
+      operationId: logout
+      responses:
+        '204':
+          description: 髯晢ｽｾ繝ｻ・ｲ鬯ｨ・ｾ・つ髯ｷ繝ｻ・ｽ・ｺ鬨ｾ蜈ｷ・ｽ・ｻ髯滓じ繝ｻ  /api/auth/me/permissions:
+    get:
+      tags:
+        - 鬮ｫ・ｶ繝ｻ・､鬮ｫ・ｸ郢晢ｽｻ
+      summary: 鬮｣雋ｻ・ｽ・ｷ髯ｷ・ｿ鬮｢ﾂ繝ｻ・ｽ霓｣蛟｡竏夐ｨｾ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髫ｴ螢ｹ繝ｻ陷代・
+      operationId: getCurrentUserPermissions
+      responses:
+        '200':
+          description: 髯滉ｹ淞ｧ霎ｯ證ｮﾂ蛹・ｽｽ・ｨ髫ｰ魃会ｽｽ・ｷ髫ｴ螢ｹ繝ｻ陷代・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthPermissionResponse'
+  /api/stocks:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+      operationId: listStocks
+      parameters:
+        - name: stockCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: stockName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: typeCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: market
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: delFlg
+          in: query
+          required: false
+          schema:
+            type: string
+            description: 0/1/ALL郢晢ｽｻ驕偵・・ｽ・ｻ陋滂ｽｩ繝ｻ・ｮ繝ｻ・､0
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            example: id,desc
+      responses:
+        '200':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockListResponse'
+    post:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      operationId: createStock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockCreateRequest'
+      responses:
+        '201':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髣比ｼ夲ｽｽ・｣鬩慕ｵｶ繝ｻ郢晢ｽｻ鬩包ｽｯ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stocks/{id}:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髫ｴ・ｬ繝ｻ・ｹ髫ｰ謦ｰ・ｽ・ｮID鬮｣雋ｻ・ｽ・ｷ髯ｷ・ｿ陷・ｶ邵ｺ繝ｻﾂ・ｾ繝ｻ・ｨ
+      operationId: getStockById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬮ｫ・ｸ繝ｻ・ｦ髫ｲ・ｰ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockResponse'
+        '404':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      operationId: updateStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockUpdateRequest'
+      responses:
+        '200':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髣比ｼ夲ｽｽ・｣鬩慕ｵｶ繝ｻ郢晢ｽｻ鬩包ｽｯ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ郢晢ｽｻ騾趣ｽｯ・つ繝ｻ・ｻ鬮ｴ荳ｻ・､・ｧ陷壼､懶ｽｫ・ｯ繝ｻ・､郢晢ｽｻ郢晢ｽｻ
+      operationId: deleteStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+        '404':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stocks/{id}/delete-flag:
+    patch:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｴ・ｬ郢晢ｽｻ繝ｻ・ｮ繝ｻ・ｰ
+      operationId: updateStockDeleteFlag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockDeleteFlagPatchRequest'
+      responses:
+        '200':
+          description: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｴ・ｬ郢晢ｽｻ繝ｻ・ｮ繝ｻ・ｰ髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockResponse'
+        '404':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stocks/options:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髣包ｽｳ陋ｹ・ｺ驍丞､雁ｱ占悋遽ﾂ郢晢ｽｻ
+      operationId: listStockOptions
+      parameters:
+        - name: keyword
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: market
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 20
+      responses:
+        '200':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯区ｺｷ陌ｫ・つ霑壼生繝ｻ鬮ｯ・ｦ繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockOptionResponse'
+  /api/stocks/price-change-ranking:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 隴滂ｽ･髫ｸ・｢隰悶・・ｮ螢ｽ謔・ｫ｣・ｴ雎ｸ・ｨ髴肴ぁ・ｹ繝ｻ雉憺勗譴ｧ・ｦ繝ｻ
+      operationId: listStockPriceChangeRanking
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: changeType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - RISE
+              - FALL
+        - name: changePercent
+          in: query
+          required: false
+          schema:
+            type: string
+            example: '5'
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: 雎ｸ・ｨ髴肴ぁ・ｹ繝ｻ雉憺勗譴ｧ・ｦ繝ｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockPriceChangeRankingListResponse'
+  /api/stocks/realtime-change:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 陞ｳ讓頑・隴滂ｽ･髫ｸ・｢陷雁供螳ｵ髢ｧ・｡騾ｾ・ｨ雎ｸ・ｨ髴肴ぁ・ｹ繝ｻ
+      operationId: getStockRealtimeChange
+      parameters:
+        - name: stockCode
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 陞ｳ讓頑・雎ｸ・ｨ髴肴ぁ・ｹ繝ｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockRealtimeChangeResponse'
+        '404':
+          description: 髢ｧ・｡騾ｾ・ｨ闕ｳ讎奇ｽｭ莨懈Β
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stocks/favorites:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 隴滂ｽ･髫ｸ・｢髢ｧ・｡騾ｾ・ｨ隰ｾ・ｶ髦ｯ荳茨ｽｸﾂ髫励・
+      operationId: listStockFavorites
+      responses:
+        '200':
+          description: 隰ｾ・ｶ髦ｯ荳茨ｽｸﾂ髫励・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockFavoriteListResponse'
+    post:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 隴・ｽｰ陟・ｫ√＜騾ｾ・ｨ隰ｾ・ｶ髦ｯ繝ｻ
+      operationId: addStockFavorite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockFavoriteCreateRequest'
+      responses:
+        '201':
+          description: 隰ｾ・ｶ髦ｯ荵礼悛陟・ｨ翫・陷峨・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockFavoriteResponse'
+        '404':
+          description: 髢ｧ・｡騾ｾ・ｨ闕ｳ讎奇ｽｭ莨懈Β
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 髢ｧ・｡騾ｾ・ｨ陝ｾ・ｲ隰ｾ・ｶ髦ｯ繝ｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stocks/favorites/{id}:
+    delete:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 陋ｻ・ｰ鬮ｯ・､髢ｧ・｡騾ｾ・ｨ隰ｾ・ｶ髦ｯ繝ｻ
+      operationId: removeStockFavorite
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 隰ｾ・ｶ髦ｯ荳槫薄鬮ｯ・､隰御ｻ咏ｲ･
+        '404':
+          description: 隰ｾ・ｶ髦ｯ蜑ｰ・ｮ・ｰ陟也ｩゑｽｸ讎奇ｽｭ莨懈Β
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stocks:import:
+    post:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      summary: 髫ｰ繝ｻ・ｽ・ｹ鬯ｩ・･闕ｳ讖ｸ・ｽ・ｯ繝ｻ・ｼ髯ｷ闌ｨ・ｽ・･鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
+      operationId: importStocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockImportRequest'
+      responses:
+        '200':
+          description: 髯昴・・ｽ・ｼ髯ｷ闌ｨ・ｽ・･隰・沺迹ｳ隴ｽ・｡
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockImportResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stocks/{stockCode}/price-history:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      summary: 髫ｰ蜀ｶ豁鍋ｸｺ繝ｻﾂ・ｾ繝ｻ・ｨ髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      operationId: listStockPriceHistoryByStockCode
+      parameters:
+        - name: stockCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dateFrom
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            example: transDate,desc
+      responses:
+        '200':
+          description: 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･髯具ｽｻ髣埼屮・ｽ・｡繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockPriceHistoryListResponse'
+  /api/stock-price-history/{id}:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      summary: 髫ｴ・ｬ繝ｻ・ｹ髫ｰ謦ｰ・ｽ・ｮID鬮｣雋ｻ・ｽ・ｷ髯ｷ・ｿ鬮｢ﾂ驍丞揃諢ｾ繝ｻ・ｲ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      operationId: getStockPriceHistoryById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･鬮ｫ・ｸ繝ｻ・ｦ髫ｲ・ｰ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockPriceHistoryResponse'
+        '404':
+          description: 髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      operationId: updateStockPriceHistory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockPriceHistoryUpdateRequest'
+      responses:
+        '200':
+          description: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockPriceHistoryResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･髯ｷﾂ繝ｻ・ｲ鬩包ｽｯ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      summary: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      operationId: deleteStockPriceHistory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+        '404':
+          description: 髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･髣包ｽｳ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-price-history:
+    post:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      summary: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      operationId: createStockPriceHistory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockPriceHistoryCreateRequest'
+      responses:
+        '201':
+          description: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockPriceHistoryResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･髯ｷﾂ繝ｻ・ｲ鬩包ｽｯ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-price-history:import:
+    post:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      summary: 髫ｰ繝ｻ・ｽ・ｹ鬯ｩ・･闕ｳ讖ｸ・ｽ・ｯ繝ｻ・ｼ髯ｷ闌ｨ・ｽ・･髯ｷ・ｴ郢晢ｽｻ陟厄ｽｰ鬮ｯ・ｦ隴ｴ・ｧ郢晢ｽ･
+      operationId: importStockPriceHistory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockPriceHistoryImportRequest'
+      responses:
+        '200':
+          description: 髯昴・・ｽ・ｼ髯ｷ闌ｨ・ｽ・･隰・沺迹ｳ隴ｽ・｡
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockPriceHistoryImportResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-dividend-confirmed:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髫ｴ貊ゑｽｽ・･鬮ｫ・ｸ繝ｻ・｢鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ郢晢ｽｻ鬮ｯ・ｦ繝ｻ・ｨ
+      operationId: listStockDividendConfirmed
+      parameters:
+        - name: stockCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: rightsLastDay
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: recordDateFrom
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: recordDateTo
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: confirmedFlg
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - '0'
+              - '1'
+              - N
+              - Y
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            example: rightsLastDay,desc
+      responses:
+        '200':
+          description: 鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ郢晢ｽｻ鬮ｯ・ｦ繝ｻ・ｨ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedListResponse'
+    post:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: createStockDividendConfirmed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockDividendConfirmedCreateRequest'
+      responses:
+        '201':
+          description: 髯具ｽｻ陝ｶ蟷｢・ｽ・ｻ繝ｻ・ｺ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 鬮ｫ・ｶ繝ｻ・ｰ髯滄摩萓帷ｹ晢ｽｻ鬩包ｽｯ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-dividend-confirmed/{id}:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髫ｴ・ｬ繝ｻ・ｹ髫ｰ謦ｰ・ｽ・ｮID鬮｣雋ｻ・ｽ・ｷ髯ｷ・ｿ陷・ｶ邵ｺ繝ｻﾂ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: getStockDividendConfirmedById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｯ繝ｻ・ｦ髫ｲ・ｰ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedResponse'
+        '404':
+          description: 鬮ｫ・ｶ繝ｻ・ｰ髯滉ｹ滂ｽｩ繧托ｽｽ・ｸ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: updateStockDividendConfirmed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockDividendConfirmedUpdateRequest'
+      responses:
+        '200':
+          description: 髫ｴ蜴・ｽｽ・ｴ髫ｴ繝ｻ・ｽ・ｰ髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 鬮ｫ・ｶ繝ｻ・ｰ髯滉ｹ滂ｽｩ繧托ｽｽ・ｸ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 鬮ｫ・ｶ繝ｻ・ｰ髯滄摩萓帷ｹ晢ｽｻ鬩包ｽｯ郢晢ｽｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: deleteStockDividendConfirmed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: 髯具ｽｻ繝ｻ・ｰ鬯ｮ・ｯ繝ｻ・､髫ｰ蠕｡・ｻ蜥擾ｽｲ・･
+        '404':
+          description: 鬮ｫ・ｶ繝ｻ・ｰ髯滉ｹ滂ｽｩ繧托ｽｽ・ｸ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-dividend-confirmed/{id}/confirmed:
+    patch:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 鬩墓汚・ｽ・ｮ鬮ｫ・ｶ繝ｻ・､鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: confirmStockDividendConfirmed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 鬩墓汚・ｽ・ｮ髫ｴ螢ｹ繝ｻ郢晢ｽｻ髯ｷ蟲ｨ繝ｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedResponse'
+        '404':
+          description: 鬮ｫ・ｶ繝ｻ・ｰ髯滉ｹ滂ｽｩ繧托ｽｽ・ｸ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-dividend-confirmed/{id}/unconfirmed:
+    patch:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髯ｷ・ｿ陷･・ｲ繝ｻ・｡繝ｻ・ｮ鬮ｫ・ｶ繝ｻ・､鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: unconfirmStockDividendConfirmed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 髯ｷ・ｿ陷･・ｲ繝ｻ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ郢晢ｽｻ髯ｷ蟲ｨ繝ｻ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedResponse'
+        '404':
+          description: 鬮ｫ・ｶ繝ｻ・ｰ髯滉ｹ滂ｽｩ繧托ｽｽ・ｸ隶主･・ｽｽ・ｭ闔ｨ諛夷・
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-dividend-confirmed:import:
+    post:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髫ｰ繝ｻ・ｽ・ｹ鬯ｩ・･闕ｳ讖ｸ・ｽ・ｯ繝ｻ・ｼ髯ｷ闌ｨ・ｽ・･鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: importStockDividendConfirmed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockDividendConfirmedImportRequest'
+      responses:
+        '200':
+          description: 髯昴・・ｽ・ｼ髯ｷ闌ｨ・ｽ・･隰・沺迹ｳ隴ｽ・｡
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedImportResponse'
+        '400':
+          description: 鬮ｫ・ｸ繝ｻ・ｷ髮主ｼｱ・・ｶ・ｾ髫ｰ・ｨ繝ｻ・ｰ鬯ｮ讒ｫ謠・・・ｯ繝ｻ・ｯ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stock-dividend-confirmed/stats/rights-last-day:
+    get:
+      tags:
+        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ鬪ｰ蜈ｷ・ｽ・｡繝ｻ・ｮ髫ｴ螢ｹ繝ｻ
+      summary: 髫ｰ荵溽櫨隲､・ｧ髫ｴ螢ｹ繝ｻ隲､蜻ｵ諠ｺ陷ｿ髢・ｾ蛹ｺ豐ｿ雋・ｽｯ繝ｻ・ｮ繝ｻ・｡鬯ｩ貊難ｽｦ螂・ｽｽ・ｽ隶鯉ｽ｢繝ｻ・ｮ繝ｻ・ｰ髯滓じ繝ｻ
+      operationId: listStockDividendConfirmedRightsLastDayStats
+      responses:
+        '200':
+          description: 隰・沺・ｺ・ｯ繝ｻ・ｮ繝ｻ・｡隰・沺迹ｳ隴ｽ・｡
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDividendConfirmedRightsLastDayStatsListResponse'
 components:
   schemas:
     UserCreateRequest:
       type: object
       required:
         - username
+        - password
       properties:
         username:
           type: string
@@ -195,6 +1804,13 @@ components:
         email:
           type: string
           format: email
+          maxLength: 100
+        phone:
+          type: string
+          maxLength: 30
+        password:
+          type: string
+          minLength: 6
           maxLength: 100
         status:
           type: integer
@@ -216,6 +1832,13 @@ components:
         email:
           type: string
           format: email
+          maxLength: 100
+        phone:
+          type: string
+          maxLength: 30
+        password:
+          type: string
+          minLength: 6
           maxLength: 100
         status:
           type: integer
@@ -239,7 +1862,12 @@ components:
         email:
           type: string
           nullable: true
+        phone:
+          type: string
+          nullable: true
         status:
+          type: integer
+        accountLocked:
           type: integer
         createdAt:
           type: string
@@ -268,6 +1896,1431 @@ components:
           type: integer
         size:
           type: integer
+    RoleCreateRequest:
+      type: object
+      required:
+        - roleCode
+        - roleName
+      properties:
+        roleCode:
+          type: string
+          minLength: 1
+          maxLength: 50
+        roleName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 255
+        status:
+          type: integer
+          minimum: 0
+          maximum: 1
+          default: 1
+        isSystem:
+          type: integer
+          minimum: 0
+          maximum: 1
+          default: 0
+        sortOrder:
+          type: integer
+          default: 0
+    RoleUpdateRequest:
+      type: object
+      required:
+        - roleCode
+        - roleName
+      properties:
+        roleCode:
+          type: string
+          minLength: 1
+          maxLength: 50
+        roleName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 255
+        status:
+          type: integer
+          minimum: 0
+          maximum: 1
+        isSystem:
+          type: integer
+          minimum: 0
+          maximum: 1
+        sortOrder:
+          type: integer
+    RoleResponse:
+      type: object
+      required:
+        - id
+        - roleCode
+        - roleName
+        - status
+        - isSystem
+        - sortOrder
+      properties:
+        id:
+          type: integer
+          format: int64
+        roleCode:
+          type: string
+        roleName:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: integer
+        isSystem:
+          type: integer
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+    RoleListResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - size
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleResponse'
+        total:
+          type: integer
+          format: int64
+        page:
+          type: integer
+        size:
+          type: integer
+    PermissionCreateRequest:
+      type: object
+      required:
+        - permissionCode
+        - permissionName
+        - resourceType
+        - resource
+      properties:
+        permissionCode:
+          type: string
+          minLength: 1
+          maxLength: 120
+        permissionName:
+          type: string
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 255
+        status:
+          type: integer
+          minimum: 0
+          maximum: 1
+          default: 1
+        resourceType:
+          type: string
+          maxLength: 20
+        resource:
+          type: string
+          maxLength: 200
+        httpMethod:
+          type: string
+          maxLength: 10
+          nullable: true
+        action:
+          type: string
+          maxLength: 50
+          nullable: true
+        permissionGroup:
+          type: string
+          maxLength: 60
+          nullable: true
+        sortOrder:
+          type: integer
+          default: 0
+        uiMenuKey:
+          type: string
+          maxLength: 120
+          nullable: true
+        uiRoute:
+          type: string
+          maxLength: 200
+          nullable: true
+    PermissionUpdateRequest:
+      type: object
+      required:
+        - permissionCode
+        - permissionName
+        - resourceType
+        - resource
+      properties:
+        permissionCode:
+          type: string
+          minLength: 1
+          maxLength: 120
+        permissionName:
+          type: string
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 255
+        status:
+          type: integer
+          minimum: 0
+          maximum: 1
+        resourceType:
+          type: string
+          maxLength: 20
+        resource:
+          type: string
+          maxLength: 200
+        httpMethod:
+          type: string
+          maxLength: 10
+          nullable: true
+        action:
+          type: string
+          maxLength: 50
+          nullable: true
+        permissionGroup:
+          type: string
+          maxLength: 60
+          nullable: true
+        sortOrder:
+          type: integer
+        uiMenuKey:
+          type: string
+          maxLength: 120
+          nullable: true
+        uiRoute:
+          type: string
+          maxLength: 200
+          nullable: true
+    PermissionResponse:
+      type: object
+      required:
+        - id
+        - permissionCode
+        - permissionName
+        - status
+        - resourceType
+        - resource
+        - sortOrder
+      properties:
+        id:
+          type: integer
+          format: int64
+        permissionCode:
+          type: string
+        permissionName:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: integer
+        resourceType:
+          type: string
+        resource:
+          type: string
+        httpMethod:
+          type: string
+          nullable: true
+        action:
+          type: string
+          nullable: true
+        permissionGroup:
+          type: string
+          nullable: true
+        sortOrder:
+          type: integer
+        uiMenuKey:
+          type: string
+          nullable: true
+        uiRoute:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+    PermissionListResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - size
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionResponse'
+        total:
+          type: integer
+          format: int64
+        page:
+          type: integer
+        size:
+          type: integer
+    StatusPatchRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: integer
+          minimum: 0
+          maximum: 1
+    LockPatchRequest:
+      type: object
+      required:
+        - locked
+      properties:
+        locked:
+          type: integer
+          minimum: 0
+          maximum: 1
+    IdBatchRequest:
+      type: object
+      required:
+        - ids
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+            format: int64
+    UserRoleListResponse:
+      type: object
+      required:
+        - roleIds
+      properties:
+        roleIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    RolePermissionListResponse:
+      type: object
+      required:
+        - permissionIds
+      properties:
+        permissionIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    AuthPermissionResponse:
+      type: object
+      required:
+        - permissions
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+    AuthLoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 50
+        password:
+          type: string
+          minLength: 1
+          maxLength: 100
+    AuthLoginResponse:
+      type: object
+      required:
+        - username
+        - message
+      properties:
+        username:
+          type: string
+        message:
+          type: string
+    StockCreateRequest:
+      type: object
+      required:
+        - stockCode
+        - stockName
+      properties:
+        stockCode:
+          type: string
+          minLength: 1
+          maxLength: 100
+        stockName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        typeCode:
+          type: string
+          maxLength: 100
+          nullable: true
+        typeName:
+          type: string
+          maxLength: 100
+          nullable: true
+        market:
+          type: string
+          maxLength: 100
+          nullable: true
+        securities:
+          type: string
+          maxLength: 100
+          nullable: true
+        bank:
+          type: string
+          maxLength: 100
+          nullable: true
+        date:
+          type: string
+          maxLength: 100
+          nullable: true
+        settlement:
+          type: string
+          maxLength: 100
+          nullable: true
+        settlementDay:
+          type: string
+          maxLength: 45
+          nullable: true
+        established:
+          type: string
+          maxLength: 100
+          nullable: true
+        listed:
+          type: string
+          maxLength: 100
+          nullable: true
+        stockPrice:
+          type: string
+          maxLength: 100
+          nullable: true
+        tradingUnit:
+          type: string
+          maxLength: 100
+          nullable: true
+        totalZika:
+          type: string
+          maxLength: 100
+          nullable: true
+        dividend:
+          type: string
+          maxLength: 10
+          nullable: true
+        expectedDividend:
+          type: string
+          maxLength: 100
+          nullable: true
+        fixedDividend:
+          type: string
+          maxLength: 100
+          nullable: true
+        per:
+          type: string
+          maxLength: 100
+          nullable: true
+        eps:
+          type: string
+          maxLength: 100
+          nullable: true
+        pbr:
+          type: string
+          maxLength: 100
+          nullable: true
+        roe:
+          type: string
+          maxLength: 100
+          nullable: true
+        roa:
+          type: string
+          maxLength: 100
+          nullable: true
+        preferentialFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        dividendFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        ichimokuUpperFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        ichimokuDowloadFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        delFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        homepage:
+          type: string
+          nullable: true
+        newsUrl:
+          type: string
+          nullable: true
+        irUrl:
+          type: string
+          nullable: true
+        tekusyoku:
+          type: string
+          nullable: true
+        renketuZigyo:
+          type: string
+          nullable: true
+        supplier:
+          type: string
+          maxLength: 100
+          nullable: true
+        salesDestination:
+          type: string
+          maxLength: 100
+          nullable: true
+    StockUpdateRequest:
+      type: object
+      required:
+        - stockCode
+        - stockName
+      properties:
+        stockCode:
+          type: string
+          minLength: 1
+          maxLength: 100
+        stockName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        typeCode:
+          type: string
+          maxLength: 100
+          nullable: true
+        typeName:
+          type: string
+          maxLength: 100
+          nullable: true
+        market:
+          type: string
+          maxLength: 100
+          nullable: true
+        securities:
+          type: string
+          maxLength: 100
+          nullable: true
+        bank:
+          type: string
+          maxLength: 100
+          nullable: true
+        date:
+          type: string
+          maxLength: 100
+          nullable: true
+        settlement:
+          type: string
+          maxLength: 100
+          nullable: true
+        settlementDay:
+          type: string
+          maxLength: 45
+          nullable: true
+        established:
+          type: string
+          maxLength: 100
+          nullable: true
+        listed:
+          type: string
+          maxLength: 100
+          nullable: true
+        stockPrice:
+          type: string
+          maxLength: 100
+          nullable: true
+        tradingUnit:
+          type: string
+          maxLength: 100
+          nullable: true
+        totalZika:
+          type: string
+          maxLength: 100
+          nullable: true
+        dividend:
+          type: string
+          maxLength: 10
+          nullable: true
+        expectedDividend:
+          type: string
+          maxLength: 100
+          nullable: true
+        fixedDividend:
+          type: string
+          maxLength: 100
+          nullable: true
+        per:
+          type: string
+          maxLength: 100
+          nullable: true
+        eps:
+          type: string
+          maxLength: 100
+          nullable: true
+        pbr:
+          type: string
+          maxLength: 100
+          nullable: true
+        roe:
+          type: string
+          maxLength: 100
+          nullable: true
+        roa:
+          type: string
+          maxLength: 100
+          nullable: true
+        preferentialFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        dividendFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        ichimokuUpperFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        ichimokuDowloadFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        delFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+          nullable: true
+        homepage:
+          type: string
+          nullable: true
+        newsUrl:
+          type: string
+          nullable: true
+        irUrl:
+          type: string
+          nullable: true
+        tekusyoku:
+          type: string
+          nullable: true
+        renketuZigyo:
+          type: string
+          nullable: true
+        supplier:
+          type: string
+          maxLength: 100
+          nullable: true
+        salesDestination:
+          type: string
+          maxLength: 100
+          nullable: true
+    StockResponse:
+      type: object
+      required:
+        - id
+        - stockCode
+        - stockName
+        - delFlg
+      properties:
+        id:
+          type: integer
+          format: int64
+        stockCode:
+          type: string
+        stockName:
+          type: string
+        typeCode:
+          type: string
+          nullable: true
+        typeName:
+          type: string
+          nullable: true
+        market:
+          type: string
+          nullable: true
+        securities:
+          type: string
+          nullable: true
+        bank:
+          type: string
+          nullable: true
+        date:
+          type: string
+          nullable: true
+        settlement:
+          type: string
+          nullable: true
+        settlementDay:
+          type: string
+          nullable: true
+        established:
+          type: string
+          nullable: true
+        listed:
+          type: string
+          nullable: true
+        stockPrice:
+          type: string
+          nullable: true
+        tradingUnit:
+          type: string
+          nullable: true
+        totalZika:
+          type: string
+          nullable: true
+        dividend:
+          type: string
+          nullable: true
+        expectedDividend:
+          type: string
+          nullable: true
+        fixedDividend:
+          type: string
+          nullable: true
+        per:
+          type: string
+          nullable: true
+        eps:
+          type: string
+          nullable: true
+        pbr:
+          type: string
+          nullable: true
+        roe:
+          type: string
+          nullable: true
+        roa:
+          type: string
+          nullable: true
+        preferentialFlg:
+          type: string
+          nullable: true
+        dividendFlg:
+          type: string
+          nullable: true
+        ichimokuUpperFlg:
+          type: string
+          nullable: true
+        ichimokuDowloadFlg:
+          type: string
+          nullable: true
+        delFlg:
+          type: string
+        homepage:
+          type: string
+          nullable: true
+        newsUrl:
+          type: string
+          nullable: true
+        irUrl:
+          type: string
+          nullable: true
+        tekusyoku:
+          type: string
+          nullable: true
+        renketuZigyo:
+          type: string
+          nullable: true
+        supplier:
+          type: string
+          nullable: true
+        salesDestination:
+          type: string
+          nullable: true
+    StockListResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - size
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockResponse'
+        total:
+          type: integer
+          format: int64
+        page:
+          type: integer
+        size:
+          type: integer
+    StockDeleteFlagPatchRequest:
+      type: object
+      required:
+        - delFlg
+      properties:
+        delFlg:
+          type: string
+          enum: [ '0', '1', 'Y', 'N' ]
+    StockOptionResponse:
+      type: object
+      required:
+        - id
+        - stockCode
+        - stockName
+      properties:
+        id:
+          type: integer
+          format: int64
+        stockCode:
+          type: string
+        stockName:
+          type: string
+        market:
+          type: string
+          nullable: true
+    StockPriceChangeRankingResponse:
+      type: object
+      required:
+        - stockCode
+        - startDate
+        - endDate
+        - startClosePrice
+        - endClosePrice
+        - changeAmount
+        - changePercent
+      properties:
+        stockCode:
+          type: string
+        stockName:
+          type: string
+          nullable: true
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        startClosePrice:
+          type: number
+          format: double
+        endClosePrice:
+          type: number
+          format: double
+        changeAmount:
+          type: number
+          format: double
+        changePercent:
+          type: number
+          format: double
+    StockPriceChangeRankingListResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - size
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockPriceChangeRankingResponse'
+        total:
+          type: integer
+          format: int64
+        page:
+          type: integer
+        size:
+          type: integer
+    StockRealtimeChangeResponse:
+      type: object
+      required:
+        - stockCode
+      properties:
+        stockCode:
+          type: string
+        stockName:
+          type: string
+          nullable: true
+        currentPrice:
+          type: number
+          format: double
+          nullable: true
+        referenceDate:
+          type: string
+          format: date
+          nullable: true
+        referenceClosePrice:
+          type: number
+          format: double
+          nullable: true
+        changeAmount:
+          type: number
+          format: double
+          nullable: true
+        changePercent:
+          type: number
+          format: double
+          nullable: true
+    StockFavoriteCreateRequest:
+      type: object
+      required:
+        - stockCode
+      properties:
+        stockCode:
+          type: string
+          minLength: 1
+          maxLength: 100
+    StockFavoriteResponse:
+      type: object
+      required:
+        - id
+        - stockCode
+        - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+        stockCode:
+          type: string
+        stockName:
+          type: string
+          nullable: true
+        typeName:
+          type: string
+          nullable: true
+        market:
+          type: string
+          nullable: true
+        stockPrice:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+    StockFavoriteListResponse:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockFavoriteResponse'
+        total:
+          type: integer
+          format: int64
+    StockImportRequest:
+      type: object
+      required:
+        - mode
+        - items
+      properties:
+        mode:
+          type: string
+          enum:
+            - INCREMENTAL
+            - FULL
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockCreateRequest'
+    StockImportFailure:
+      type: object
+      required:
+        - stockCode
+        - reason
+      properties:
+        stockCode:
+          type: string
+        reason:
+          type: string
+    StockImportResponse:
+      type: object
+      required:
+        - total
+        - success
+        - created
+        - updated
+        - failed
+        - failures
+      properties:
+        total:
+          type: integer
+        success:
+          type: integer
+        created:
+          type: integer
+        updated:
+          type: integer
+        failed:
+          type: integer
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockImportFailure'
+    StockPriceHistoryCreateRequest:
+      type: object
+      required:
+        - stockCode
+        - transDate
+      properties:
+        stockCode:
+          type: string
+          minLength: 1
+          maxLength: 100
+        transDate:
+          type: string
+          format: date
+        beforeDayPrice:
+          type: integer
+          nullable: true
+        openPrice:
+          type: integer
+          nullable: true
+        highPrice:
+          type: integer
+          nullable: true
+        lowPrice:
+          type: integer
+          nullable: true
+        closePrice:
+          type: integer
+          nullable: true
+        adjustedClosePrice:
+          type: integer
+          nullable: true
+        beforeDayDiff:
+          type: integer
+          nullable: true
+        beforeDayDiffPercent:
+          type: number
+          format: double
+          nullable: true
+        volume:
+          type: integer
+          nullable: true
+        remark:
+          type: string
+          nullable: true
+    StockPriceHistoryUpdateRequest:
+      type: object
+      required:
+        - stockCode
+        - transDate
+      properties:
+        stockCode:
+          type: string
+          minLength: 1
+          maxLength: 100
+        transDate:
+          type: string
+          format: date
+        beforeDayPrice:
+          type: integer
+          nullable: true
+        openPrice:
+          type: integer
+          nullable: true
+        highPrice:
+          type: integer
+          nullable: true
+        lowPrice:
+          type: integer
+          nullable: true
+        closePrice:
+          type: integer
+          nullable: true
+        adjustedClosePrice:
+          type: integer
+          nullable: true
+        beforeDayDiff:
+          type: integer
+          nullable: true
+        beforeDayDiffPercent:
+          type: number
+          format: double
+          nullable: true
+        volume:
+          type: integer
+          nullable: true
+        remark:
+          type: string
+          nullable: true
+    StockPriceHistoryResponse:
+      type: object
+      required:
+        - id
+        - stockCode
+        - transDate
+      properties:
+        id:
+          type: integer
+          format: int64
+        stockCode:
+          type: string
+        transDate:
+          type: string
+          format: date
+        beforeDayPrice:
+          type: integer
+          nullable: true
+        openPrice:
+          type: integer
+          nullable: true
+        highPrice:
+          type: integer
+          nullable: true
+        lowPrice:
+          type: integer
+          nullable: true
+        closePrice:
+          type: integer
+          nullable: true
+        adjustedClosePrice:
+          type: integer
+          nullable: true
+        beforeDayDiff:
+          type: integer
+          nullable: true
+        beforeDayDiffPercent:
+          type: number
+          format: double
+          nullable: true
+        volume:
+          type: integer
+          nullable: true
+        remark:
+          type: string
+          nullable: true
+    StockPriceHistoryListResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - size
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockPriceHistoryResponse'
+        total:
+          type: integer
+          format: int64
+        page:
+          type: integer
+        size:
+          type: integer
+    StockPriceHistoryImportRequest:
+      type: object
+      required:
+        - mode
+        - items
+      properties:
+        mode:
+          type: string
+          enum:
+            - OVERWRITE
+            - SKIP_DUPLICATE
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockPriceHistoryCreateRequest'
+    StockPriceHistoryImportFailure:
+      type: object
+      required:
+        - stockCode
+        - transDate
+        - reason
+      properties:
+        stockCode:
+          type: string
+        transDate:
+          type: string
+        reason:
+          type: string
+    StockPriceHistoryImportResponse:
+      type: object
+      required:
+        - total
+        - success
+        - created
+        - updated
+        - skipped
+        - failed
+        - failures
+      properties:
+        total:
+          type: integer
+        success:
+          type: integer
+        created:
+          type: integer
+        updated:
+          type: integer
+        skipped:
+          type: integer
+        failed:
+          type: integer
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockPriceHistoryImportFailure'
+    StockDividendConfirmedCreateRequest:
+      type: object
+      required:
+        - stockCode
+        - dividendAmount
+        - recordDate
+      properties:
+        stockCode:
+          type: string
+          minLength: 1
+          maxLength: 10
+        dividendAmount:
+          type: number
+          format: double
+        dividendYield:
+          type: number
+          format: double
+          nullable: true
+        rightsLastDay:
+          type: string
+          format: date
+          nullable: true
+        exDividendDate:
+          type: string
+          format: date
+          nullable: true
+        recordDate:
+          type: string
+          format: date
+        confirmedFlg:
+          type: string
+          enum:
+            - '0'
+            - '1'
+            - N
+            - Y
+          nullable: true
+    StockDividendConfirmedUpdateRequest:
+      type: object
+      required:
+        - stockCode
+        - dividendAmount
+        - recordDate
+      properties:
+        stockCode:
+          type: string
+          minLength: 1
+          maxLength: 10
+        dividendAmount:
+          type: number
+          format: double
+        dividendYield:
+          type: number
+          format: double
+          nullable: true
+        rightsLastDay:
+          type: string
+          format: date
+          nullable: true
+        exDividendDate:
+          type: string
+          format: date
+          nullable: true
+        recordDate:
+          type: string
+          format: date
+        confirmedFlg:
+          type: string
+          enum:
+            - '0'
+            - '1'
+            - N
+            - Y
+          nullable: true
+    StockDividendConfirmedResponse:
+      type: object
+      required:
+        - id
+        - stockCode
+        - dividendAmount
+        - recordDate
+        - confirmedFlg
+      properties:
+        id:
+          type: integer
+          format: int64
+        stockCode:
+          type: string
+        stockName:
+          type: string
+          nullable: true
+        typeName:
+          type: string
+          nullable: true
+        stockPrice:
+          type: string
+          nullable: true
+        dividendAmount:
+          type: number
+          format: double
+        dividendYield:
+          type: number
+          format: double
+          nullable: true
+        rightsLastDay:
+          type: string
+          format: date
+          nullable: true
+        exDividendDate:
+          type: string
+          format: date
+          nullable: true
+        recordDate:
+          type: string
+          format: date
+        confirmedFlg:
+          type: string
+          enum:
+            - '0'
+            - '1'
+    StockDividendConfirmedListResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - size
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockDividendConfirmedResponse'
+        total:
+          type: integer
+          format: int64
+        page:
+          type: integer
+        size:
+          type: integer
+    StockDividendConfirmedImportRequest:
+      type: object
+      required:
+        - mode
+        - items
+      properties:
+        mode:
+          type: string
+          enum:
+            - OVERWRITE
+            - SKIP_DUPLICATE
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockDividendConfirmedCreateRequest'
+    StockDividendConfirmedImportFailure:
+      type: object
+      required:
+        - stockCode
+        - recordDate
+        - reason
+      properties:
+        stockCode:
+          type: string
+        recordDate:
+          type: string
+        reason:
+          type: string
+    StockDividendConfirmedImportResponse:
+      type: object
+      required:
+        - total
+        - success
+        - created
+        - updated
+        - skipped
+        - failed
+        - failures
+      properties:
+        total:
+          type: integer
+        success:
+          type: integer
+        created:
+          type: integer
+        updated:
+          type: integer
+        skipped:
+          type: integer
+        failed:
+          type: integer
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockDividendConfirmedImportFailure'
+    StockDividendConfirmedRightsLastDayStatsResponse:
+      type: object
+      required:
+        - rightsLastDay
+        - totalCount
+        - confirmedCount
+      properties:
+        rightsLastDay:
+          type: string
+          format: date
+        totalCount:
+          type: integer
+          format: int64
+        confirmedCount:
+          type: integer
+          format: int64
+        avgDividendAmount:
+          type: number
+          format: double
+          nullable: true
+        avgDividendYield:
+          type: number
+          format: double
+          nullable: true
+    StockDividendConfirmedRightsLastDayStatsListResponse:
+      type: object
+      required:
+        - items
+        - totalDays
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockDividendConfirmedRightsLastDayStatsResponse'
+        totalDays:
+          type: integer
+          format: int64
     ErrorResponse:
       type: object
       required:
@@ -279,8 +3332,10 @@ components:
         message:
           type: string
   securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
 security:
-  - basicAuth: []
+  - sessionAuth: []
+

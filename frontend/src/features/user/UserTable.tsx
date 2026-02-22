@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Space, Table, Tag } from 'antd'
+import { Button, Popconfirm, Space, Switch, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { UserResponse } from './userApi'
 
@@ -7,9 +7,11 @@ interface UserTableProps {
   loading: boolean
   onEdit: (user: UserResponse) => void
   onDelete: (user: UserResponse) => void
+  onToggleStatus: (user: UserResponse, checked: boolean) => void
+  onToggleLock: (user: UserResponse, checked: boolean) => void
 }
 
-export function UserTable({ users, loading, onEdit, onDelete }: UserTableProps) {
+export function UserTable({ users, loading, onEdit, onDelete, onToggleStatus, onToggleLock }: UserTableProps) {
   const columns: ColumnsType<UserResponse> = [
     {
       title: 'ID',
@@ -17,42 +19,66 @@ export function UserTable({ users, loading, onEdit, onDelete }: UserTableProps) 
       width: 100
     },
     {
-      title: 'Username',
+      title: '用户名',
       dataIndex: 'username'
     },
     {
-      title: 'Display Name',
+      title: '显示名称',
       dataIndex: 'displayName',
       render: (value: string | null | undefined) => value ?? '-'
     },
     {
-      title: 'Email',
+      title: '邮箱',
       dataIndex: 'email',
       render: (value: string | null | undefined) => value ?? '-'
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      width: 120,
-      render: (status: number) =>
-        status === 1 ? <Tag color="green">Enabled</Tag> : <Tag color="red">Disabled</Tag>
+      title: '手机号',
+      dataIndex: 'phone',
+      render: (value: string | null | undefined) => value ?? '-'
     },
     {
-      title: 'Action',
+      title: '状态',
+      dataIndex: 'status',
+      width: 120,
+      render: (_: number, user) => (
+        <Switch
+          checked={user.status === 1}
+          onChange={(checked) => onToggleStatus(user, checked)}
+          checkedChildren="开"
+          unCheckedChildren="关"
+        />
+      )
+    },
+    {
+      title: '锁定',
+      dataIndex: 'accountLocked',
+      width: 120,
+      render: (_: number | undefined, user) => (
+        <Switch
+          checked={user.accountLocked === 1}
+          onChange={(checked) => onToggleLock(user, checked)}
+          checkedChildren="已锁"
+          unCheckedChildren="未锁"
+        />
+      )
+    },
+    {
+      title: '操作',
       width: 160,
       render: (_, user) => (
         <Space>
           <Button size="small" onClick={() => onEdit(user)}>
-            Edit
+            编辑
           </Button>
           <Popconfirm
-            title="Delete this user?"
-            okText="Delete"
-            cancelText="Cancel"
+            title="确认删除该用户？"
+            okText="删除"
+            cancelText="取消"
             onConfirm={() => onDelete(user)}
           >
             <Button danger size="small">
-              Delete
+              删除
             </Button>
           </Popconfirm>
         </Space>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.role.mapper.RoleMapper">
+
+    <sql id="roleColumns">
+        ID,
+        ROLE_CODE,
+        ROLE_NAME,
+        DESCRIPTION,
+        STATUS,
+        IS_SYSTEM,
+        SORT_ORDER,
+        CREATED_AT,
+        UPDATED_AT,
+        DELETED_AT
+    </sql>
+
+    <resultMap id="roleResultMap" type="com.kabu.admin.role.model.Role">
+        <id property="id" column="ID"/>
+        <result property="roleCode" column="ROLE_CODE"/>
+        <result property="roleName" column="ROLE_NAME"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="status" column="STATUS"/>
+        <result property="isSystem" column="IS_SYSTEM"/>
+        <result property="sortOrder" column="SORT_ORDER"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+        <result property="deletedAt" column="DELETED_AT"/>
+    </resultMap>
+
+    <select id="findByCriteria" resultMap="roleResultMap">
+        SELECT
+            <include refid="roleColumns"/>
+        FROM M_ROLE
+        <where>
+            DELETED_AT IS NULL
+            <if test="roleCode != null and roleCode != ''">
+                AND ROLE_CODE LIKE CONCAT('%', #{roleCode}, '%')
+            </if>
+            <if test="roleName != null and roleName != ''">
+                AND ROLE_NAME LIKE CONCAT('%', #{roleName}, '%')
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status}
+            </if>
+        </where>
+        ORDER BY SORT_ORDER ASC, ID DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByCriteria" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM M_ROLE
+        <where>
+            DELETED_AT IS NULL
+            <if test="roleCode != null and roleCode != ''">
+                AND ROLE_CODE LIKE CONCAT('%', #{roleCode}, '%')
+            </if>
+            <if test="roleName != null and roleName != ''">
+                AND ROLE_NAME LIKE CONCAT('%', #{roleName}, '%')
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="roleResultMap">
+        SELECT
+            <include refid="roleColumns"/>
+        FROM M_ROLE
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <select id="findByRoleCode" resultMap="roleResultMap">
+        SELECT
+            <include refid="roleColumns"/>
+        FROM M_ROLE
+        WHERE ROLE_CODE = #{roleCode}
+          AND DELETED_AT IS NULL
+    </select>
+
+    <insert id="insert" parameterType="com.kabu.admin.role.model.Role" useGeneratedKeys="true" keyProperty="id"
+        keyColumn="ID">
+        INSERT INTO M_ROLE (
+            ROLE_CODE,
+            ROLE_NAME,
+            DESCRIPTION,
+            STATUS,
+            IS_SYSTEM,
+            SORT_ORDER,
+            CREATED_AT,
+            UPDATED_AT
+        ) VALUES (
+            #{roleCode},
+            #{roleName},
+            #{description},
+            #{status},
+            #{isSystem},
+            #{sortOrder},
+            #{createdAt},
+            #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.kabu.admin.role.model.Role">
+        UPDATE M_ROLE
+        SET
+            ROLE_CODE = #{roleCode},
+            ROLE_NAME = #{roleName},
+            DESCRIPTION = #{description},
+            STATUS = #{status},
+            IS_SYSTEM = #{isSystem},
+            SORT_ORDER = #{sortOrder},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
+
+    <update id="updateStatus">
+        UPDATE M_ROLE
+        SET
+            STATUS = #{status},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
+
+    <update id="softDelete">
+        UPDATE M_ROLE
+        SET
+            DELETED_AT = #{deletedAt},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+          AND DELETED_AT IS NULL
+    </update>
+
+    <select id="findExistingIds" resultType="long">
+        SELECT
+            ID
+        FROM M_ROLE
+        WHERE DELETED_AT IS NULL
+          <if test="ids != null and ids.size() > 0">
+            AND ID IN
+            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+          </if>
+    </select>
+
+</mapper>

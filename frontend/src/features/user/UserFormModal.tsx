@@ -1,9 +1,15 @@
 import { Controller, useForm } from 'react-hook-form'
 import { Form, Input, Modal, Select } from 'antd'
 import { useEffect } from 'react'
-import type { UserCreateRequest } from './userApi'
 
-export type UserFormValues = UserCreateRequest
+export interface UserFormValues {
+  username: string
+  displayName?: string
+  email?: string
+  phone?: string
+  password?: string
+  status: number
+}
 
 interface UserFormModalProps {
   open: boolean
@@ -27,6 +33,8 @@ export function UserFormModal({
       username: '',
       displayName: '',
       email: '',
+      phone: '',
+      password: '',
       status: 1
     }
   })
@@ -37,6 +45,8 @@ export function UserFormModal({
         username: initialValues?.username ?? '',
         displayName: initialValues?.displayName ?? '',
         email: initialValues?.email ?? '',
+        phone: initialValues?.phone ?? '',
+        password: initialValues?.password ?? '',
         status: initialValues?.status ?? 1
       })
     }
@@ -51,12 +61,12 @@ export function UserFormModal({
       onOk={handleSubmit(async (values) => {
         await onSubmit(values)
       })}
-      okText="Save"
+      okText="保存"
       destroyOnClose
     >
       <Form layout="vertical">
         <Form.Item
-          label="Username"
+          label="用户名"
           validateStatus={formState.errors.username ? 'error' : ''}
           help={formState.errors.username?.message}
           required
@@ -64,12 +74,12 @@ export function UserFormModal({
           <Controller
             name="username"
             control={control}
-            rules={{ required: 'Username is required' }}
+            rules={{ required: '用户名不能为空' }}
             render={({ field }) => <Input {...field} maxLength={50} />}
           />
         </Form.Item>
 
-        <Form.Item label="Display Name">
+        <Form.Item label="显示名称">
           <Controller
             name="displayName"
             control={control}
@@ -78,7 +88,7 @@ export function UserFormModal({
         </Form.Item>
 
         <Form.Item
-          label="Email"
+          label="邮箱"
           validateStatus={formState.errors.email ? 'error' : ''}
           help={formState.errors.email?.message}
         >
@@ -88,14 +98,30 @@ export function UserFormModal({
             rules={{
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Invalid email format'
+                message: '邮箱格式不正确'
               }
             }}
             render={({ field }) => <Input {...field} maxLength={100} />}
           />
         </Form.Item>
 
-        <Form.Item label="Status" required>
+        <Form.Item label="手机号">
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => <Input {...field} maxLength={30} />}
+          />
+        </Form.Item>
+
+        <Form.Item label="密码">
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => <Input.Password {...field} maxLength={100} />}
+          />
+        </Form.Item>
+
+        <Form.Item label="状态" required>
           <Controller
             name="status"
             control={control}
@@ -103,8 +129,8 @@ export function UserFormModal({
               <Select
                 {...field}
                 options={[
-                  { label: 'Enabled', value: 1 },
-                  { label: 'Disabled', value: 0 }
+                  { label: '启用', value: 1 },
+                  { label: '停用', value: 0 }
                 ]}
               />
             )}
