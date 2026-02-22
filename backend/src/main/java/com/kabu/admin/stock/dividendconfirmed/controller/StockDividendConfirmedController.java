@@ -37,20 +37,16 @@ public class StockDividendConfirmedController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','STOCK_DIVIDEND_CONFIRMED:VIEW','STOCK_DIVIDEND_CONFIRMED:MANAGE','STOCK_DIVIDEND_CONFIRMED:CONFIRM','STOCK_DIVIDEND_CONFIRMED:IMPORT')")
     public StockDividendConfirmedListResponse list(
         @RequestParam(required = false) String stockCode,
+        @RequestParam(required = false) String industryCode,
         @RequestParam(required = false) String rightsLastDay,
-        @RequestParam(required = false) String recordDateFrom,
-        @RequestParam(required = false) String recordDateTo,
-        @RequestParam(required = false) String confirmedFlg,
         @RequestParam(required = false) Integer page,
         @RequestParam(required = false) Integer size,
         @RequestParam(required = false) String sort
     ) {
         StockDividendConfirmedQueryRequest request = new StockDividendConfirmedQueryRequest(
             stockCode,
+            industryCode,
             rightsLastDay,
-            recordDateFrom,
-            recordDateTo,
-            confirmedFlg,
             page,
             size,
             sort

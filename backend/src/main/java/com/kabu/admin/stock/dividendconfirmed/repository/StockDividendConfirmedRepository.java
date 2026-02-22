@@ -10,10 +10,8 @@ public interface StockDividendConfirmedRepository {
 
     List<StockDividendConfirmed> findByCriteria(
         String stockCode,
+        String industryCode,
         LocalDate rightsLastDay,
-        LocalDate recordDateFrom,
-        LocalDate recordDateTo,
-        String confirmedFlg,
         String sortBy,
         String sortDirection,
         int limit,
@@ -22,10 +20,8 @@ public interface StockDividendConfirmedRepository {
 
     long countByCriteria(
         String stockCode,
-        LocalDate rightsLastDay,
-        LocalDate recordDateFrom,
-        LocalDate recordDateTo,
-        String confirmedFlg
+        String industryCode,
+        LocalDate rightsLastDay
     );
 
     Optional<StockDividendConfirmed> findById(Long id);

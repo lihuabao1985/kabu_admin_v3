@@ -69,13 +69,8 @@ public class StockDividendConfirmedServiceImpl implements StockDividendConfirmed
         }
 
         String stockCode = normalizeStockCodeOptional(request.stockCode());
+        String industryCode = normalizeText(request.industryCode());
         LocalDate rightsLastDay = normalizeDate(request.rightsLastDay(), "rightsLastDay", true);
-        LocalDate recordDateFrom = normalizeDate(request.recordDateFrom(), "recordDateFrom", true);
-        LocalDate recordDateTo = normalizeDate(request.recordDateTo(), "recordDateTo", true);
-        if (recordDateFrom != null && recordDateTo != null && recordDateFrom.isAfter(recordDateTo)) {
-            throw new IllegalArgumentException("recordDateFrom 荳崎・譎壻ｺ・recordDateTo");
-        }
-        String confirmedFlg = normalizeConfirmedFlgForQuery(request.confirmedFlg());
 
         int page = normalizePage(request.page());
         int size = normalizeSize(request.size());
@@ -85,10 +80,8 @@ public class StockDividendConfirmedServiceImpl implements StockDividendConfirmed
         List<StockDividendConfirmedResponse> items = stockDividendConfirmedRepository
             .findByCriteria(
                 stockCode,
+                industryCode,
                 rightsLastDay,
-                recordDateFrom,
-                recordDateTo,
-                confirmedFlg,
                 sortSpec.sortBy(),
                 sortSpec.sortDirection(),
                 size,
@@ -99,10 +92,8 @@ public class StockDividendConfirmedServiceImpl implements StockDividendConfirmed
             .toList();
         long total = stockDividendConfirmedRepository.countByCriteria(
             stockCode,
-            rightsLastDay,
-            recordDateFrom,
-            recordDateTo,
-            confirmedFlg
+            industryCode,
+            rightsLastDay
         );
         return new StockDividendConfirmedListResponse(items, total, page, size);
     }

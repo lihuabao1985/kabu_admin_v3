@@ -12,10 +12,8 @@ public interface StockDividendConfirmedMapper {
 
     List<StockDividendConfirmed> findByCriteria(
         @Param("stockCode") String stockCode,
+        @Param("industryCode") String industryCode,
         @Param("rightsLastDay") LocalDate rightsLastDay,
-        @Param("recordDateFrom") LocalDate recordDateFrom,
-        @Param("recordDateTo") LocalDate recordDateTo,
-        @Param("confirmedFlg") String confirmedFlg,
         @Param("sortBy") String sortBy,
         @Param("sortDirection") String sortDirection,
         @Param("limit") int limit,
@@ -24,10 +22,8 @@ public interface StockDividendConfirmedMapper {
 
     long countByCriteria(
         @Param("stockCode") String stockCode,
-        @Param("rightsLastDay") LocalDate rightsLastDay,
-        @Param("recordDateFrom") LocalDate recordDateFrom,
-        @Param("recordDateTo") LocalDate recordDateTo,
-        @Param("confirmedFlg") String confirmedFlg
+        @Param("industryCode") String industryCode,
+        @Param("rightsLastDay") LocalDate rightsLastDay
     );
 
     StockDividendConfirmed findById(@Param("id") Long id);

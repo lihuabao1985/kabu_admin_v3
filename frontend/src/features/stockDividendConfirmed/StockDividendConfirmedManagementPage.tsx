@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Typography } from 'antd'
+import { useQuery } from '@tanstack/react-query'
 import { ListPagination } from '../../lib/ListPagination'
 import {
   StockDividendConfirmedTable,
@@ -8,15 +9,13 @@ import {
   type StockDividendSortOrder
 } from './StockDividendConfirmedTable'
 import { useStockDividendConfirmedListQuery } from './useStockDividendConfirmedQueries'
-import type { ListStockDividendConfirmedQuery } from './stockDividendConfirmedApi'
+import { listIndustryCodeOptions, type IndustryCodeOption, type ListStockDividendConfirmedQuery } from './stockDividendConfirmedApi'
 import { consumeStockDividendConfirmedDrilldownRightsLastDay } from './stockDividendDrilldown'
 
 interface SearchFormValues {
   stockCode: string
+  industryCode: string
   rightsLastDay: string
-  recordDateFrom: string
-  recordDateTo: string
-  confirmedFlg: '' | '0' | '1'
 }
 
 const defaultSortField: StockDividendSortField = 'rightsLastDay'
@@ -44,10 +43,8 @@ export function StockDividendConfirmedManagementPage() {
   const { control, handleSubmit, reset } = useForm<SearchFormValues>({
     defaultValues: {
       stockCode: '',
-      rightsLastDay: '',
-      recordDateFrom: '',
-      recordDateTo: '',
-      confirmedFlg: ''
+      industryCode: '',
+      rightsLastDay: ''
     }
   })
 
@@ -59,10 +56,8 @@ export function StockDividendConfirmedManagementPage() {
 
     reset({
       stockCode: '',
-      rightsLastDay,
-      recordDateFrom: '',
-      recordDateTo: '',
-      confirmedFlg: ''
+      industryCode: '',
+      rightsLastDay
     })
 
     setQuery((previous) => ({
@@ -76,10 +71,8 @@ export function StockDividendConfirmedManagementPage() {
   const onSearch = (values: SearchFormValues) => {
     setQuery((previous) => ({
       stockCode: toNullableText(values.stockCode),
+      industryCode: toNullableText(values.industryCode),
       rightsLastDay: toNullableText(values.rightsLastDay),
-      recordDateFrom: toNullableText(values.recordDateFrom),
-      recordDateTo: toNullableText(values.recordDateTo),
-      confirmedFlg: values.confirmedFlg ? values.confirmedFlg : undefined,
       page: 1,
       size: previous.size ?? 20,
       sort: previous.sort ?? toSortString(sortField, sortOrder)
@@ -87,7 +80,7 @@ export function StockDividendConfirmedManagementPage() {
   }
 
   const onReset = () => {
-    reset({ stockCode: '', rightsLastDay: '', recordDateFrom: '', recordDateTo: '', confirmedFlg: '' })
+    reset({ stockCode: '', industryCode: '', rightsLastDay: '' })
     setSortField(defaultSortField)
     setSortOrder(defaultSortOrder)
     setQuery(defaultQuery)
@@ -119,6 +112,10 @@ export function StockDividendConfirmedManagementPage() {
   }
 
   const listQuery = useMemo(() => query, [query])
+  const { data: industryOptions = [] } = useQuery<IndustryCodeOption[]>({
+    queryKey: ['industry-options'],
+    queryFn: listIndustryCodeOptions
+  })
   const { data, isLoading, isError, error } = useStockDividendConfirmedListQuery(listQuery)
 
   return (
@@ -136,47 +133,31 @@ export function StockDividendConfirmedManagementPage() {
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>
-              <Form.Item label="権利付き最終日">
+              <Form.Item label="業種名">
                 <Controller
-                  name="rightsLastDay"
-                  control={control}
-                  render={({ field }) => <Input {...field} type="date" />}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item label="権利確定日(基準日) From">
-                <Controller
-                  name="recordDateFrom"
-                  control={control}
-                  render={({ field }) => <Input {...field} type="date" />}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item label="権利確定日(基準日) To">
-                <Controller
-                  name="recordDateTo"
-                  control={control}
-                  render={({ field }) => <Input {...field} type="date" />}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={6}>
-              <Form.Item label="確定状態">
-                <Controller
-                  name="confirmedFlg"
+                  name="industryCode"
                   control={control}
                   render={({ field }) => (
                     <Select
                       {...field}
                       options={[
                         { label: '全て', value: '' },
-                        { label: '未確定', value: '0' },
-                        { label: '確定済み', value: '1' }
+                        ...industryOptions.map((item) => ({
+                          label: item.codeValue,
+                          value: item.codeKey
+                        }))
                       ]}
                     />
                   )}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={6}>
+              <Form.Item label="権利付き最終日">
+                <Controller
+                  name="rightsLastDay"
+                  control={control}
+                  render={({ field }) => <Input {...field} type="date" />}
                 />
               </Form.Item>
             </Col>
