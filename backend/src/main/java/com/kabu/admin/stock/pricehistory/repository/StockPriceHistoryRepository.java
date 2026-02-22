@@ -9,7 +9,7 @@ public interface StockPriceHistoryRepository {
 
     List<StockPriceHistory> findByCriteria(
         String stockCode,
-        String typeName,
+        String typeCode,
         LocalDate dateFrom,
         LocalDate dateTo,
         String sortBy,
@@ -18,7 +18,7 @@ public interface StockPriceHistoryRepository {
         int offset
     );
 
-    long countByCriteria(String stockCode, String typeName, LocalDate dateFrom, LocalDate dateTo);
+    long countByCriteria(String stockCode, String typeCode, LocalDate dateFrom, LocalDate dateTo);
 
     Optional<StockPriceHistory> findById(Long id);
 

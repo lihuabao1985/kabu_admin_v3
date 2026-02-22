@@ -36,6 +36,7 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
     private static final int MAX_SIZE = 100;
     private static final String SORT_BY_TRANS_DATE = "TRANS_DATE";
     private static final String SORT_BY_ID = "ID";
+    private static final String SORT_BY_STOCK_CODE = "STOCK_CODE";
     private static final String SORT_ASC = "ASC";
     private static final String SORT_DESC = "DESC";
     private static final String IMPORT_MODE_OVERWRITE = "OVERWRITE";
@@ -60,7 +61,7 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
         }
 
         String stockCode = normalizeStockCodeForSearch(request.stockCode());
-        String typeName = normalizeText(request.typeName());
+        String typeCode = normalizeText(request.typeCode());
         LocalDate dateFrom = normalizeDate(request.dateFrom(), "dateFrom", true);
         LocalDate dateTo = normalizeDate(request.dateTo(), "dateTo", true);
         if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
@@ -73,11 +74,11 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
         SortSpec sortSpec = normalizeSort(request.sort());
 
         List<StockPriceHistoryResponse> items = stockPriceHistoryRepository
-            .findByCriteria(stockCode, typeName, dateFrom, dateTo, sortSpec.sortBy(), sortSpec.sortDirection(), size, offset)
+            .findByCriteria(stockCode, typeCode, dateFrom, dateTo, sortSpec.sortBy(), sortSpec.sortDirection(), size, offset)
             .stream()
             .map(this::toResponse)
             .toList();
-        long total = stockPriceHistoryRepository.countByCriteria(stockCode, typeName, dateFrom, dateTo);
+        long total = stockPriceHistoryRepository.countByCriteria(stockCode, typeCode, dateFrom, dateTo);
         return new StockPriceHistoryListResponse(items, total, page, size);
     }
 
@@ -439,7 +440,7 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
     private SortSpec normalizeSort(String sort) {
         String normalized = normalizeText(sort);
         if (normalized == null) {
-            return new SortSpec(SORT_BY_TRANS_DATE, SORT_DESC);
+            return new SortSpec(SORT_BY_STOCK_CODE, SORT_ASC);
         }
         String[] parts = normalized.split(",");
         String field = parts[0].trim().toLowerCase();
@@ -447,6 +448,7 @@ public class StockPriceHistoryServiceImpl implements StockPriceHistoryService {
         String sortBy = switch (field) {
             case "transdate", "trans_date", "date" -> SORT_BY_TRANS_DATE;
             case "id" -> SORT_BY_ID;
+            case "stockcode", "stock_code", "code" -> SORT_BY_STOCK_CODE;
             default -> throw new IllegalArgumentException("不支持的排序字段: " + field);
         };
         String sortDirection = switch (direction) {

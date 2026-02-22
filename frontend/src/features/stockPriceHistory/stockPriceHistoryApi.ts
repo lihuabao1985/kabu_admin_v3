@@ -7,7 +7,7 @@ export type StockPriceHistoryListResponse = components['schemas']['StockPriceHis
 
 export interface ListStockPriceHistoryParams {
   stockCode?: string
-  typeName?: string
+  typeCode?: string
   dateFrom?: string
   dateTo?: string
   page?: number
@@ -19,7 +19,7 @@ const toQueryString = (query: ListStockPriceHistoryParams | undefined): string =
   if (!query) return ''
   const params = new URLSearchParams()
   if (query.stockCode) params.set('stockCode', query.stockCode)
-  if (query.typeName) params.set('typeName', query.typeName)
+  if (query.typeCode) params.set('typeCode', query.typeCode)
   if (query.dateFrom) params.set('dateFrom', query.dateFrom)
   if (query.dateTo) params.set('dateTo', query.dateTo)
   if (query.page !== undefined) params.set('page', String(query.page))
@@ -39,3 +39,12 @@ export interface ListStockPriceHistoryByStockCodeParams extends ListStockPriceHi
 export const listStockPriceHistoryByStockCode = (
   params: ListStockPriceHistoryByStockCodeParams
 ): Promise<StockPriceHistoryListResponse> => listStockPriceHistory(params)
+
+
+export interface IndustryCodeOption {
+  codeKey: string
+  codeValue: string
+}
+
+export const listIndustryCodeOptions = (): Promise<IndustryCodeOption[]> =>
+  request<IndustryCodeOption[]>('/api/stocks/industry-options')

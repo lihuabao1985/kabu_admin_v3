@@ -5,6 +5,7 @@ import com.kabu.admin.stock.dto.StockFavoriteCreateRequest;
 import com.kabu.admin.stock.dto.StockFavoriteListResponse;
 import com.kabu.admin.stock.dto.StockFavoriteResponse;
 import com.kabu.admin.stock.dto.StockImportRequest;
+import com.kabu.admin.stock.dto.IndustryCodeOptionResponse;
 import com.kabu.admin.stock.dto.StockImportResponse;
 import com.kabu.admin.stock.dto.StockListResponse;
 import com.kabu.admin.stock.dto.StockOptionResponse;
@@ -29,6 +30,8 @@ public interface StockService {
     StockResponse updateDeleteFlag(Long id, String delFlg);
 
     void deleteStock(Long id);
+
+    List<IndustryCodeOptionResponse> listIndustryCodeOptions();
 
     List<StockOptionResponse> listOptions(String keyword, String market, Integer limit);
 

@@ -1,6 +1,7 @@
 package com.kabu.admin.stock.repository.impl;
 
 import com.kabu.admin.stock.mapper.StockMapper;
+import com.kabu.admin.stock.model.IndustryCodeOption;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
 import com.kabu.admin.stock.model.StockOption;
@@ -66,6 +67,11 @@ public class StockRepositoryImpl implements StockRepository {
     @Override
     public Optional<Stock> findByStockCode(String stockCode) {
         return Optional.ofNullable(stockMapper.findByStockCode(stockCode));
+    }
+
+    @Override
+    public List<IndustryCodeOption> findIndustryCodeOptions() {
+        return stockMapper.findIndustryCodeOptions();
     }
 
     @Override
