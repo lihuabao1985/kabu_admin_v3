@@ -1,4 +1,4 @@
-import type { components, operations } from '../../types/openapi'
+import type { components } from '../../types/openapi'
 import { request } from '../../lib/apiClient'
 
 export type StockDividendConfirmedCreateRequest = components['schemas']['StockDividendConfirmedCreateRequest']
@@ -11,9 +11,19 @@ export type StockDividendConfirmedRightsLastDayStatsResponse =
   components['schemas']['StockDividendConfirmedRightsLastDayStatsResponse']
 export type StockDividendConfirmedRightsLastDayStatsListResponse =
   components['schemas']['StockDividendConfirmedRightsLastDayStatsListResponse']
-export type ListStockDividendConfirmedQuery = NonNullable<
-  operations['listStockDividendConfirmed']['parameters']['query']
->
+export interface ListStockDividendConfirmedQuery {
+  stockCode?: string
+  industryCode?: string
+  rightsLastDay?: string
+  page?: number
+  size?: number
+  sort?: string
+}
+
+export interface IndustryCodeOption {
+  codeKey: string
+  codeValue: string
+}
 
 const toQueryString = (query: ListStockDividendConfirmedQuery | undefined): string => {
   if (!query) {
@@ -23,17 +33,11 @@ const toQueryString = (query: ListStockDividendConfirmedQuery | undefined): stri
   if (query.stockCode) {
     params.set('stockCode', query.stockCode)
   }
+  if (query.industryCode) {
+    params.set('industryCode', query.industryCode)
+  }
   if (query.rightsLastDay) {
     params.set('rightsLastDay', query.rightsLastDay)
-  }
-  if (query.recordDateFrom) {
-    params.set('recordDateFrom', query.recordDateFrom)
-  }
-  if (query.recordDateTo) {
-    params.set('recordDateTo', query.recordDateTo)
-  }
-  if (query.confirmedFlg) {
-    params.set('confirmedFlg', query.confirmedFlg)
   }
   if (query.page !== undefined) {
     params.set('page', String(query.page))
@@ -95,6 +99,10 @@ export const importStockDividendConfirmed = (
     method: 'POST',
     body: JSON.stringify(payload)
   })
+
+
+export const listIndustryCodeOptions = (): Promise<IndustryCodeOption[]> =>
+  request<IndustryCodeOption[]>('/api/stocks/industry-options')
 
 export const listStockDividendConfirmedRightsLastDayStats = (): Promise<StockDividendConfirmedRightsLastDayStatsListResponse> =>
   request<StockDividendConfirmedRightsLastDayStatsListResponse>('/api/stock-dividend-confirmed/stats/rights-last-day')

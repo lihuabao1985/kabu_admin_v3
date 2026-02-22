@@ -42,17 +42,11 @@
             <if test="stockCode != null and stockCode != ''">
                 AND TSDC.STOCK_CODE = #{stockCode}
             </if>
+            <if test="industryCode != null and industryCode != ''">
+                AND MS.TYPE_CODE = #{industryCode}
+            </if>
             <if test="rightsLastDay != null">
                 AND TSDC.RIGHTS_LAST_DAY = #{rightsLastDay}
-            </if>
-            <if test="recordDateFrom != null">
-                AND TSDC.RECORD_DATE <![CDATA[>=]]> #{recordDateFrom}
-            </if>
-            <if test="recordDateTo != null">
-                AND TSDC.RECORD_DATE <![CDATA[<=]]> #{recordDateTo}
-            </if>
-            <if test="confirmedFlg != null and confirmedFlg != ''">
-                AND TSDC.CONFIRMED_FLG = #{confirmedFlg}
             </if>
         </where>
         ORDER BY
@@ -82,17 +76,11 @@
             <if test="stockCode != null and stockCode != ''">
                 AND TSDC.STOCK_CODE = #{stockCode}
             </if>
+            <if test="industryCode != null and industryCode != ''">
+                AND MS.TYPE_CODE = #{industryCode}
+            </if>
             <if test="rightsLastDay != null">
                 AND TSDC.RIGHTS_LAST_DAY = #{rightsLastDay}
-            </if>
-            <if test="recordDateFrom != null">
-                AND TSDC.RECORD_DATE <![CDATA[>=]]> #{recordDateFrom}
-            </if>
-            <if test="recordDateTo != null">
-                AND TSDC.RECORD_DATE <![CDATA[<=]]> #{recordDateTo}
-            </if>
-            <if test="confirmedFlg != null and confirmedFlg != ''">
-                AND TSDC.CONFIRMED_FLG = #{confirmedFlg}
             </if>
         </where>
     </select>

@@ -21,10 +21,8 @@ public class StockDividendConfirmedRepositoryImpl implements StockDividendConfir
     @Override
     public List<StockDividendConfirmed> findByCriteria(
         String stockCode,
+        String industryCode,
         LocalDate rightsLastDay,
-        LocalDate recordDateFrom,
-        LocalDate recordDateTo,
-        String confirmedFlg,
         String sortBy,
         String sortDirection,
         int limit,
@@ -32,10 +30,8 @@ public class StockDividendConfirmedRepositoryImpl implements StockDividendConfir
     ) {
         return stockDividendConfirmedMapper.findByCriteria(
             stockCode,
+            industryCode,
             rightsLastDay,
-            recordDateFrom,
-            recordDateTo,
-            confirmedFlg,
             sortBy,
             sortDirection,
             limit,
@@ -46,17 +42,13 @@ public class StockDividendConfirmedRepositoryImpl implements StockDividendConfir
     @Override
     public long countByCriteria(
         String stockCode,
-        LocalDate rightsLastDay,
-        LocalDate recordDateFrom,
-        LocalDate recordDateTo,
-        String confirmedFlg
+        String industryCode,
+        LocalDate rightsLastDay
     ) {
         return stockDividendConfirmedMapper.countByCriteria(
             stockCode,
-            rightsLastDay,
-            recordDateFrom,
-            recordDateTo,
-            confirmedFlg
+            industryCode,
+            rightsLastDay
         );
     }
 
