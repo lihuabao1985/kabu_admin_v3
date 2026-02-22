@@ -5,6 +5,7 @@ import com.kabu.admin.stock.dto.StockDeleteFlagPatchRequest;
 import com.kabu.admin.stock.dto.StockFavoriteCreateRequest;
 import com.kabu.admin.stock.dto.StockFavoriteListResponse;
 import com.kabu.admin.stock.dto.StockFavoriteResponse;
+import com.kabu.admin.stock.dto.IndustryCodeOptionResponse;
 import com.kabu.admin.stock.dto.StockImportRequest;
 import com.kabu.admin.stock.dto.StockImportResponse;
 import com.kabu.admin.stock.dto.StockListResponse;
@@ -87,6 +88,12 @@ public class StockController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','STOCK:MANAGE')")
     public void deleteStock(@PathVariable Long id) {
         stockService.deleteStock(id);
+    }
+
+    @GetMapping("/industry-options")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','STOCK:VIEW','STOCK:MANAGE','STOCK_PRICE_HISTORY:VIEW','STOCK_PRICE_HISTORY:MANAGE')")
+    public List<IndustryCodeOptionResponse> listIndustryOptions() {
+        return stockService.listIndustryCodeOptions();
     }
 
     @GetMapping("/options")

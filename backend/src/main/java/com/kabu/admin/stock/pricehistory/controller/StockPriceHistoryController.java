@@ -35,7 +35,7 @@ public class StockPriceHistoryController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','STOCK_PRICE_HISTORY:VIEW','STOCK_PRICE_HISTORY:MANAGE','STOCK_PRICE_HISTORY:IMPORT')")
     public StockPriceHistoryListResponse list(
         @RequestParam(required = false) String stockCode,
-        @RequestParam(required = false) String typeName,
+        @RequestParam(required = false) String typeCode,
         @RequestParam(required = false) String dateFrom,
         @RequestParam(required = false) String dateTo,
         @RequestParam(required = false) Integer page,
@@ -44,7 +44,7 @@ public class StockPriceHistoryController {
     ) {
         StockPriceHistoryQueryRequest request = new StockPriceHistoryQueryRequest(
             stockCode,
-            typeName,
+            typeCode,
             dateFrom,
             dateTo,
             page,

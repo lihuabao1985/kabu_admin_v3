@@ -1,5 +1,6 @@
 package com.kabu.admin.stock.repository;
 
+import com.kabu.admin.stock.model.IndustryCodeOption;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
 import com.kabu.admin.stock.model.StockOption;
@@ -35,6 +36,8 @@ public interface StockRepository {
     Optional<Stock> findById(Long id);
 
     Optional<Stock> findByStockCode(String stockCode);
+
+    List<IndustryCodeOption> findIndustryCodeOptions();
 
     List<StockOption> findOptions(String keyword, String market, int limit);
 

@@ -82,6 +82,11 @@
         <result property="salesDestination" column="SALES_DESTINATION"/>
     </resultMap>
 
+    <resultMap id="industryCodeOptionResultMap" type="com.kabu.admin.stock.model.IndustryCodeOption">
+        <result property="codeKey" column="CODE_KEY"/>
+        <result property="codeValue" column="CODE_VALUE"/>
+    </resultMap>
+
     <resultMap id="stockOptionResultMap" type="com.kabu.admin.stock.model.StockOption">
         <id property="id" column="ID"/>
         <result property="stockCode" column="STOCK_CODE"/>
@@ -186,6 +191,15 @@
             <include refid="stockColumns"/>
         FROM M_STOCK
         WHERE STOCK_CODE = #{stockCode}
+    </select>
+
+    <select id="findIndustryCodeOptions" resultMap="industryCodeOptionResultMap">
+        SELECT
+            CODE_KEY,
+            CODE_VALUE
+        FROM M_CODE
+        WHERE CODE_TYPE = 'INDUSTRY'
+        ORDER BY CODE_KEY ASC
     </select>
 
     <select id="findOptions" resultMap="stockOptionResultMap">

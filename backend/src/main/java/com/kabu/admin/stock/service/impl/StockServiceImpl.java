@@ -4,6 +4,7 @@ import com.kabu.admin.stock.dto.StockCreateRequest;
 import com.kabu.admin.stock.dto.StockFavoriteCreateRequest;
 import com.kabu.admin.stock.dto.StockFavoriteListResponse;
 import com.kabu.admin.stock.dto.StockFavoriteResponse;
+import com.kabu.admin.stock.dto.IndustryCodeOptionResponse;
 import com.kabu.admin.stock.dto.StockImportFailure;
 import com.kabu.admin.stock.dto.StockImportRequest;
 import com.kabu.admin.stock.dto.StockImportResponse;
@@ -166,6 +167,15 @@ public class StockServiceImpl implements StockService {
     @Transactional
     public void deleteStock(Long id) {
         updateDeleteFlag(id, "1");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<IndustryCodeOptionResponse> listIndustryCodeOptions() {
+        return stockRepository.findIndustryCodeOptions()
+            .stream()
+            .map(item -> new IndustryCodeOptionResponse(item.getCodeKey(), item.getCodeValue()))
+            .toList();
     }
 
     @Override

@@ -1,14 +1,16 @@
 import { useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Alert, Button, Card, Col, Form, Input, Row, Space, Typography } from 'antd'
+import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Typography } from 'antd'
 import { StockPriceHistoryTable } from './StockPriceHistoryTable'
 import { ListPagination } from '../../lib/ListPagination'
 import { useStockPriceHistoryListQuery } from './useStockPriceHistoryQueries'
-import type { ListStockPriceHistoryParams } from './stockPriceHistoryApi'
+import type { IndustryCodeOption, ListStockPriceHistoryParams } from './stockPriceHistoryApi'
+import { listIndustryCodeOptions } from './stockPriceHistoryApi'
+import { useQuery } from '@tanstack/react-query'
 
 interface SearchFormValues {
   stockCode: string
-  typeName: string
+  typeCode: string
   dateFrom: string
   dateTo: string
 }
@@ -16,7 +18,7 @@ interface SearchFormValues {
 const defaultQuery: ListStockPriceHistoryParams = {
   page: 1,
   size: 20,
-  sort: 'transDate,desc'
+  sort: 'stockCode,asc'
 }
 
 const toNullableText = (value: string | undefined): string | undefined => {
@@ -30,7 +32,7 @@ export function StockPriceHistoryManagementPage() {
   const { control, handleSubmit, reset } = useForm<SearchFormValues>({
     defaultValues: {
       stockCode: '',
-      typeName: '',
+      typeCode: '',
       dateFrom: '',
       dateTo: ''
     }
@@ -38,21 +40,25 @@ export function StockPriceHistoryManagementPage() {
 
   const listQuery = useMemo(() => query, [query])
   const { data, isLoading, isError, error } = useStockPriceHistoryListQuery(listQuery)
+  const { data: industryOptions = [] } = useQuery<IndustryCodeOption[]>({
+    queryKey: ['stock-industry-code-options'],
+    queryFn: listIndustryCodeOptions
+  })
 
   const onSearch = (values: SearchFormValues) => {
     setQuery((prev) => ({
       stockCode: toNullableText(values.stockCode),
-      typeName: toNullableText(values.typeName),
+      typeCode: toNullableText(values.typeCode),
       dateFrom: toNullableText(values.dateFrom),
       dateTo: toNullableText(values.dateTo),
       page: 1,
       size: prev.size ?? 20,
-      sort: prev.sort ?? 'transDate,desc'
+      sort: prev.sort ?? 'stockCode,asc'
     }))
   }
 
   const onReset = () => {
-    reset({ stockCode: '', typeName: '', dateFrom: '', dateTo: '' })
+    reset({ stockCode: '', typeCode: '', dateFrom: '', dateTo: '' })
     setQuery(defaultQuery)
   }
 
@@ -76,7 +82,18 @@ export function StockPriceHistoryManagementPage() {
             </Col>
             <Col xs={24} md={6}>
               <Form.Item label="業種名">
-                <Controller name="typeName" control={control} render={({ field }) => <Input {...field} placeholder="例如 輸送用機器" />} />
+                <Controller
+                  name="typeCode"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      allowClear
+                      placeholder="请选择業種"
+                      options={industryOptions.map((item) => ({ label: item.codeValue, value: item.codeKey }))}
+                    />
+                  )}
+                />
               </Form.Item>
             </Col>
             <Col xs={24} md={6}>

@@ -1,5 +1,6 @@
 package com.kabu.admin.stock.mapper;
 
+import com.kabu.admin.stock.model.IndustryCodeOption;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
 import com.kabu.admin.stock.model.StockOption;
@@ -37,6 +38,8 @@ public interface StockMapper {
     Stock findById(@Param("id") Long id);
 
     Stock findByStockCode(@Param("stockCode") String stockCode);
+
+    List<IndustryCodeOption> findIndustryCodeOptions();
 
     List<StockOption> findOptions(
         @Param("keyword") String keyword,

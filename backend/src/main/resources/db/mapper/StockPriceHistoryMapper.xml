@@ -27,8 +27,8 @@
             <if test="stockCode != null">
                 h.STOCK_CODE = #{stockCode}
             </if>
-            <if test="typeName != null">
-                AND s.TYPE_NAME = #{typeName}
+            <if test="typeCode != null">
+                AND s.TYPE_CODE = #{typeCode}
             </if>
             <if test="dateFrom != null">
                 AND h.TRANS_DATE <![CDATA[>=]]> #{dateFrom}
@@ -66,6 +66,7 @@
         ORDER BY
             <choose>
                 <when test="sortBy == 'ID'">h.ID</when>
+                <when test="sortBy == 'STOCK_CODE'">h.STOCK_CODE</when>
                 <otherwise>h.TRANS_DATE</otherwise>
             </choose>
             <choose>
@@ -79,8 +80,25 @@
         SELECT
             COUNT(1)
         FROM M_STOCK_PRICE_HISTORY h
-        LEFT JOIN M_STOCK s ON h.STOCK_CODE = s.STOCK_CODE
-        <include refid="criteriaWhere"/>
+        <choose>
+            <when test="typeCode != null">
+                INNER JOIN M_STOCK s ON h.STOCK_CODE = s.STOCK_CODE
+                <include refid="criteriaWhere"/>
+            </when>
+            <otherwise>
+                <where>
+                    <if test="stockCode != null">
+                        h.STOCK_CODE = #{stockCode}
+                    </if>
+                    <if test="dateFrom != null">
+                        AND h.TRANS_DATE <![CDATA[>=]]> #{dateFrom}
+                    </if>
+                    <if test="dateTo != null">
+                        AND h.TRANS_DATE <![CDATA[<=]]> #{dateTo}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
     </select>
 
     <select id="findById" resultMap="resultMap">
