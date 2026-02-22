@@ -1,37 +1,13 @@
-import { Button, Card, Form, Input, Typography } from 'antd'
-import { Controller, useForm } from 'react-hook-form'
-
-interface BootstrapForm {
-  projectName: string
-}
+import { Layout, Typography } from 'antd'
+import { UserManagementPage } from './features/user/UserManagementPage'
 
 export function App() {
-  const { control, handleSubmit } = useForm<BootstrapForm>({
-    defaultValues: { projectName: 'kabu-admin-v3' }
-  })
-
-  const onSubmit = (data: BootstrapForm) => {
-    console.log('bootstrap form submit', data)
-  }
-
   return (
-    <Card style={{ maxWidth: 640, margin: '48px auto' }}>
-      <Typography.Title level={3}>Kabu Admin V3 Frontend Bootstrap</Typography.Title>
-      <Typography.Paragraph>
-        React + TypeScript strict + Ant Design + React Query + React Hook Form initialized.
-      </Typography.Paragraph>
-      <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-        <Form.Item label="Project Name">
-          <Controller
-            name="projectName"
-            control={control}
-            render={({ field }) => <Input {...field} />}
-          />
-        </Form.Item>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form>
-    </Card>
+    <Layout style={{ minHeight: '100vh', padding: 24, background: '#f5f7fa' }}>
+      <Layout.Content style={{ maxWidth: 1200, width: '100%', margin: '0 auto' }}>
+        <Typography.Title level={3}>User Management</Typography.Title>
+        <UserManagementPage />
+      </Layout.Content>
+    </Layout>
   )
 }

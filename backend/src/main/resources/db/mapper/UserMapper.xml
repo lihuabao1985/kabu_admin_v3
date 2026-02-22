@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kabu.admin.user.mapper.UserMapper">
+
+    <sql id="userColumns">
+        ID,
+        USERNAME,
+        DISPLAY_NAME,
+        EMAIL,
+        STATUS,
+        CREATED_AT,
+        UPDATED_AT
+    </sql>
+
+    <resultMap id="userResultMap" type="com.kabu.admin.user.model.User">
+        <id property="id" column="ID"/>
+        <result property="username" column="USERNAME"/>
+        <result property="displayName" column="DISPLAY_NAME"/>
+        <result property="email" column="EMAIL"/>
+        <result property="status" column="STATUS"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <select id="findByCriteria" resultMap="userResultMap">
+        SELECT
+            <include refid="userColumns"/>
+        FROM M_USER
+        <where>
+            <if test="username != null and username != ''">
+                AND USERNAME LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND EMAIL LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status}
+            </if>
+        </where>
+        ORDER BY ID DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByCriteria" resultType="long">
+        SELECT
+            COUNT(1)
+        FROM M_USER
+        <where>
+            <if test="username != null and username != ''">
+                AND USERNAME LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND EMAIL LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="userResultMap">
+        SELECT
+            <include refid="userColumns"/>
+        FROM M_USER
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findByUsername" resultMap="userResultMap">
+        SELECT
+            <include refid="userColumns"/>
+        FROM M_USER
+        WHERE USERNAME = #{username}
+    </select>
+
+    <insert id="insert" parameterType="com.kabu.admin.user.model.User" useGeneratedKeys="true" keyProperty="id"
+        keyColumn="ID">
+        INSERT INTO M_USER (
+            USERNAME,
+            DISPLAY_NAME,
+            EMAIL,
+            STATUS,
+            CREATED_AT,
+            UPDATED_AT
+        ) VALUES (
+            #{username},
+            #{displayName},
+            #{email},
+            #{status},
+            #{createdAt},
+            #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.kabu.admin.user.model.User">
+        UPDATE M_USER
+        SET
+            USERNAME = #{username},
+            DISPLAY_NAME = #{displayName},
+            EMAIL = #{email},
+            STATUS = #{status},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM M_USER
+        WHERE ID = #{id}
+    </delete>
+
+</mapper>
