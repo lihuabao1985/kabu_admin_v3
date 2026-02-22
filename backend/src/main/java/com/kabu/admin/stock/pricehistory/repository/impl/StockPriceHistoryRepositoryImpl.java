@@ -33,7 +33,7 @@ public class StockPriceHistoryRepositoryImpl implements StockPriceHistoryReposit
 
     @Override
     public long countByCriteria(String stockCode, String typeCode, LocalDate dateFrom, LocalDate dateTo) {
-        return stockPriceHistoryMapper.countByCriteria(stockCode, typeName, dateFrom, dateTo);
+        return stockPriceHistoryMapper.countByCriteria(stockCode, typeCode, dateFrom, dateTo);
     }
 
     @Override
