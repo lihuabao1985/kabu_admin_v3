@@ -20,6 +20,7 @@ public class StockPriceHistoryRepositoryImpl implements StockPriceHistoryReposit
     @Override
     public List<StockPriceHistory> findByCriteria(
         String stockCode,
+        String typeName,
         LocalDate dateFrom,
         LocalDate dateTo,
         String sortBy,
@@ -27,12 +28,12 @@ public class StockPriceHistoryRepositoryImpl implements StockPriceHistoryReposit
         int limit,
         int offset
     ) {
-        return stockPriceHistoryMapper.findByCriteria(stockCode, dateFrom, dateTo, sortBy, sortDirection, limit, offset);
+        return stockPriceHistoryMapper.findByCriteria(stockCode, typeName, dateFrom, dateTo, sortBy, sortDirection, limit, offset);
     }
 
     @Override
-    public long countByCriteria(String stockCode, LocalDate dateFrom, LocalDate dateTo) {
-        return stockPriceHistoryMapper.countByCriteria(stockCode, dateFrom, dateTo);
+    public long countByCriteria(String stockCode, String typeName, LocalDate dateFrom, LocalDate dateTo) {
+        return stockPriceHistoryMapper.countByCriteria(stockCode, typeName, dateFrom, dateTo);
     }
 
     @Override

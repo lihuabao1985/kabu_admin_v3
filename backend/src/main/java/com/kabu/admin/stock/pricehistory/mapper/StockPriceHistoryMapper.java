@@ -11,6 +11,7 @@ public interface StockPriceHistoryMapper {
 
     List<StockPriceHistory> findByCriteria(
         @Param("stockCode") String stockCode,
+        @Param("typeName") String typeName,
         @Param("dateFrom") LocalDate dateFrom,
         @Param("dateTo") LocalDate dateTo,
         @Param("sortBy") String sortBy,
@@ -21,6 +22,7 @@ public interface StockPriceHistoryMapper {
 
     long countByCriteria(
         @Param("stockCode") String stockCode,
+        @Param("typeName") String typeName,
         @Param("dateFrom") LocalDate dateFrom,
         @Param("dateTo") LocalDate dateTo
     );

@@ -5,24 +5,45 @@
 <mapper namespace="com.kabu.admin.stock.pricehistory.mapper.StockPriceHistoryMapper">
 
     <sql id="columns">
-        ID,
-        STOCK_CODE,
-        TRANS_DATE,
-        BEFORE_DAY_PRICE,
-        OPEN_PRICE,
-        HIGH_PRICE,
-        LOW_PRICE,
-        CLOSE_PRICE,
-        ADJUSTED_CLOSE_PRICE,
-        BEFORE_DAY_DIFF,
-        BEFORE_DAY_DIFF_PERCENT,
-        VOLUME,
-        REMARK
+        h.ID,
+        h.STOCK_CODE,
+        s.STOCK_NAME,
+        s.TYPE_NAME,
+        h.TRANS_DATE,
+        h.BEFORE_DAY_PRICE,
+        h.OPEN_PRICE,
+        h.HIGH_PRICE,
+        h.LOW_PRICE,
+        h.CLOSE_PRICE,
+        h.ADJUSTED_CLOSE_PRICE,
+        h.BEFORE_DAY_DIFF,
+        h.BEFORE_DAY_DIFF_PERCENT,
+        h.VOLUME,
+        h.REMARK
+    </sql>
+
+    <sql id="criteriaWhere">
+        <where>
+            <if test="stockCode != null">
+                h.STOCK_CODE = #{stockCode}
+            </if>
+            <if test="typeName != null">
+                AND s.TYPE_NAME = #{typeName}
+            </if>
+            <if test="dateFrom != null">
+                AND h.TRANS_DATE <![CDATA[>=]]> #{dateFrom}
+            </if>
+            <if test="dateTo != null">
+                AND h.TRANS_DATE <![CDATA[<=]]> #{dateTo}
+            </if>
+        </where>
     </sql>
 
     <resultMap id="resultMap" type="com.kabu.admin.stock.pricehistory.model.StockPriceHistory">
         <id property="id" column="ID"/>
         <result property="stockCode" column="STOCK_CODE"/>
+        <result property="stockName" column="STOCK_NAME"/>
+        <result property="typeName" column="TYPE_NAME"/>
         <result property="transDate" column="TRANS_DATE"/>
         <result property="beforeDayPrice" column="BEFORE_DAY_PRICE"/>
         <result property="openPrice" column="OPEN_PRICE"/>
@@ -39,20 +60,13 @@
     <select id="findByCriteria" resultMap="resultMap">
         SELECT
             <include refid="columns"/>
-        FROM M_STOCK_PRICE_HISTORY
-        <where>
-            STOCK_CODE = #{stockCode}
-            <if test="dateFrom != null">
-                AND TRANS_DATE <![CDATA[>=]]> #{dateFrom}
-            </if>
-            <if test="dateTo != null">
-                AND TRANS_DATE <![CDATA[<=]]> #{dateTo}
-            </if>
-        </where>
+        FROM M_STOCK_PRICE_HISTORY h
+        LEFT JOIN M_STOCK s ON h.STOCK_CODE = s.STOCK_CODE
+        <include refid="criteriaWhere"/>
         ORDER BY
             <choose>
-                <when test="sortBy == 'ID'">ID</when>
-                <otherwise>TRANS_DATE</otherwise>
+                <when test="sortBy == 'ID'">h.ID</when>
+                <otherwise>h.TRANS_DATE</otherwise>
             </choose>
             <choose>
                 <when test="sortDirection == 'ASC'">ASC</when>
@@ -64,31 +78,26 @@
     <select id="countByCriteria" resultType="long">
         SELECT
             COUNT(1)
-        FROM M_STOCK_PRICE_HISTORY
-        <where>
-            STOCK_CODE = #{stockCode}
-            <if test="dateFrom != null">
-                AND TRANS_DATE <![CDATA[>=]]> #{dateFrom}
-            </if>
-            <if test="dateTo != null">
-                AND TRANS_DATE <![CDATA[<=]]> #{dateTo}
-            </if>
-        </where>
+        FROM M_STOCK_PRICE_HISTORY h
+        LEFT JOIN M_STOCK s ON h.STOCK_CODE = s.STOCK_CODE
+        <include refid="criteriaWhere"/>
     </select>
 
     <select id="findById" resultMap="resultMap">
         SELECT
             <include refid="columns"/>
-        FROM M_STOCK_PRICE_HISTORY
-        WHERE ID = #{id}
+        FROM M_STOCK_PRICE_HISTORY h
+        LEFT JOIN M_STOCK s ON h.STOCK_CODE = s.STOCK_CODE
+        WHERE h.ID = #{id}
     </select>
 
     <select id="findByStockCodeAndTransDate" resultMap="resultMap">
         SELECT
             <include refid="columns"/>
-        FROM M_STOCK_PRICE_HISTORY
-        WHERE STOCK_CODE = #{stockCode}
-          AND TRANS_DATE = #{transDate}
+        FROM M_STOCK_PRICE_HISTORY h
+        LEFT JOIN M_STOCK s ON h.STOCK_CODE = s.STOCK_CODE
+        WHERE h.STOCK_CODE = #{stockCode}
+          AND h.TRANS_DATE = #{transDate}
     </select>
 
     <insert id="insert" parameterType="com.kabu.admin.stock.pricehistory.model.StockPriceHistory" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
