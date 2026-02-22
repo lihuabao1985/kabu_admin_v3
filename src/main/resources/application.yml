@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: kabu-admin-v3
+  datasource:
+    url: jdbc:mysql://localhost:3306/kabu_admin_v3?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: kabu
+    password: kabu
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath*:db/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8080

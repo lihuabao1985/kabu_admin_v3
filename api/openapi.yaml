@@ -1,0 +1,16 @@
+openapi: 3.0.3
+info:
+  title: Kabu Admin V3 API
+  version: 0.0.1
+  description: Initial OpenAPI-first contract skeleton.
+servers:
+  - url: http://localhost:8080
+paths: {}
+components:
+  schemas: {}
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
