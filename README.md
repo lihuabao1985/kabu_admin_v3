@@ -5,7 +5,7 @@
 - MyBatis 基础配置
 - Spring Security 全局默认保护（所有请求需要认证）
 - MySQL 数据源配置（`application.yml`）
-- OpenAPI First 根文档（`api/openapi.yaml`）
+- OpenAPI First 根文档（`openapi/openapi.yaml`）
 
 ## Frontend
 - React + TypeScript (strict)
@@ -17,6 +17,6 @@
 
 ## Build
 ```bash
-mvn clean verify
+cd backend && mvn clean verify
 cd frontend && npm install && npm run build
 ```
