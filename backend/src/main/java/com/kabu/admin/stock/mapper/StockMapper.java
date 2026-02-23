@@ -18,9 +18,11 @@ public interface StockMapper {
     List<Stock> findByCriteria(
         @Param("stockCode") String stockCode,
         @Param("stockName") String stockName,
-        @Param("typeCode") String typeCode,
+        @Param("typeName") String typeName,
         @Param("market") String market,
-        @Param("delFlg") String delFlg,
+        @Param("stockPriceFrom") String stockPriceFrom,
+        @Param("stockPriceTo") String stockPriceTo,
+        @Param("freeWord") String freeWord,
         @Param("sortBy") String sortBy,
         @Param("sortDirection") String sortDirection,
         @Param("limit") int limit,
@@ -30,9 +32,11 @@ public interface StockMapper {
     long countByCriteria(
         @Param("stockCode") String stockCode,
         @Param("stockName") String stockName,
-        @Param("typeCode") String typeCode,
+        @Param("typeName") String typeName,
         @Param("market") String market,
-        @Param("delFlg") String delFlg
+        @Param("stockPriceFrom") String stockPriceFrom,
+        @Param("stockPriceTo") String stockPriceTo,
+        @Param("freeWord") String freeWord
     );
 
     Stock findById(@Param("id") Long id);

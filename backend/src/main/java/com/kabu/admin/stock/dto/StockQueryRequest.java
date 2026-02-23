@@ -3,9 +3,11 @@ package com.kabu.admin.stock.dto;
 public record StockQueryRequest(
     String stockCode,
     String stockName,
-    String typeCode,
+    String typeName,
     String market,
-    String delFlg,
+    String stockPriceFrom,
+    String stockPriceTo,
+    String freeWord,
     Integer page,
     Integer size,
     String sort

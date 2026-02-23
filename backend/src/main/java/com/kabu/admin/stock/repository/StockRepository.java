@@ -16,9 +16,11 @@ public interface StockRepository {
     List<Stock> findByCriteria(
         String stockCode,
         String stockName,
-        String typeCode,
+        String typeName,
         String market,
-        String delFlg,
+        String stockPriceFrom,
+        String stockPriceTo,
+        String freeWord,
         String sortBy,
         String sortDirection,
         int limit,
@@ -28,9 +30,11 @@ public interface StockRepository {
     long countByCriteria(
         String stockCode,
         String stockName,
-        String typeCode,
+        String typeName,
         String market,
-        String delFlg
+        String stockPriceFrom,
+        String stockPriceTo,
+        String freeWord
     );
 
     Optional<Stock> findById(Long id);
