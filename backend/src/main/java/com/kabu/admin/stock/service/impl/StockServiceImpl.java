@@ -580,6 +580,7 @@ public class StockServiceImpl implements StockService {
         return new StockPriceChangeRankingResponse(
             item.getStockCode(),
             item.getStockName(),
+            item.getTypeName(),
             item.getStartDate(),
             item.getEndDate(),
             item.getStartClosePrice(),

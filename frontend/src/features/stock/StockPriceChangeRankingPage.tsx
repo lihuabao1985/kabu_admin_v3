@@ -111,6 +111,11 @@ export function StockPriceChangeRankingPage() {
       width: 220
     },
     {
+      title: '業種名',
+      dataIndex: 'typeName',
+      width: 180
+    },
+    {
       title: '起始日期',
       dataIndex: 'startDate',
       width: 140
