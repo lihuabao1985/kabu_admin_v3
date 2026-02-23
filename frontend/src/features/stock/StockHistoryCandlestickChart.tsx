@@ -27,6 +27,8 @@ const plotRight = 24
 const plotBottom = 36
 const volumeGap = 28
 const volumeHeight = 110
+const priceTickCount = 7
+const volumeTickCount = 4
 
 const periodOptions = [
   { label: '30日', value: 30 },
@@ -177,9 +179,10 @@ export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCan
       <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} width="100%" height={chartHeight} role="img">
         <rect x={0} y={0} width={chartWidth} height={chartHeight} fill="#fafafa" />
 
-        {Array.from({ length: 5 }).map((_, index) => {
-          const y = plotTop + (pricePlotHeight / 4) * index
-          const tickPrice = maxPrice - (safeRange / 4) * index
+        {Array.from({ length: priceTickCount }).map((_, index) => {
+          const ratio = index / (priceTickCount - 1)
+          const y = plotTop + pricePlotHeight * ratio
+          const tickPrice = maxPrice - safeRange * ratio
           return (
             <g key={`grid-${index}`}>
               <line x1={plotLeft} y1={y} x2={chartWidth - plotRight} y2={y} stroke="#f0f0f0" strokeWidth={1} />
@@ -257,6 +260,20 @@ export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCan
           strokeWidth={1}
         />
 
+        {Array.from({ length: volumeTickCount }).map((_, index) => {
+          const ratio = index / (volumeTickCount - 1)
+          const y = volumeTop + volumeHeight * ratio
+          const tickValue = Math.round(maxVolume * (1 - ratio))
+          return (
+            <g key={`volume-grid-${index}`}>
+              <line x1={plotLeft} y1={y} x2={chartWidth - plotRight} y2={y} stroke="#f0f0f0" strokeWidth={1} />
+              <text x={plotLeft - 8} y={y + 4} textAnchor="end" fontSize={11} fill="#8c8c8c">
+                {tickValue.toLocaleString('ja-JP')}
+              </text>
+            </g>
+          )
+        })}
+
         {candles.map((item, index) => {
           const x = plotLeft + step * (index + 0.5)
           const rise = item.close >= item.open
@@ -274,10 +291,6 @@ export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCan
             />
           )
         })}
-
-        <text x={plotLeft - 8} y={volumeTop + 4} textAnchor="end" fontSize={11} fill="#8c8c8c">
-          量 {Math.round(maxVolume).toLocaleString('ja-JP')}
-        </text>
 
         {xLabelIndexes.map((labelIndex) => {
           const candle = candles[labelIndex]
