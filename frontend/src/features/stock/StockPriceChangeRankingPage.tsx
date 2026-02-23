@@ -19,20 +19,26 @@ interface SearchFormValues {
   changePercent: string
 }
 
-const toDateString = (date: Date): string => date.toISOString().slice(0, 10)
+const toDateString = (date: Date): string => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 
 const defaultEndDate = new Date()
 const defaultStartDate = new Date(defaultEndDate)
 defaultStartDate.setDate(defaultStartDate.getDate() - 30)
 
-const defaultQuery: ListStockPriceChangeRankingQuery = {
+const createDefaultQuery = (): ListStockPriceChangeRankingQuery => ({
   startDate: toDateString(defaultStartDate),
   endDate: toDateString(defaultEndDate),
   changeType: 'RISE',
-  changePercent: '',
   page: 1,
   size: 20
-}
+})
+
+const defaultQuery = createDefaultQuery()
 
 const toNullableText = (value: string | undefined): string | undefined => {
   const trimmed = value?.trim()
@@ -71,7 +77,7 @@ export function StockPriceChangeRankingPage() {
       changeType: defaultQuery.changeType,
       changePercent: ''
     })
-    setQuery(defaultQuery)
+    setQuery(createDefaultQuery())
   }
 
   const onPageChange = (page: number) => {
