@@ -15,6 +15,7 @@ interface StockTableProps {
   sortField?: StockSortField
   sortOrder?: StockSortOrder
   onSortChange: (field: StockSortField, order: StockSortOrder) => void
+  onShowPriceHistory: (stock: StockResponse) => void
 }
 
 const renderText = (value: string | null | undefined): string => {
@@ -22,7 +23,7 @@ const renderText = (value: string | null | undefined): string => {
   return text && text.length > 0 ? text : '-'
 }
 
-export function StockTable({ stocks, loading, sortField, sortOrder, onSortChange }: StockTableProps) {
+export function StockTable({ stocks, loading, sortField, sortOrder, onSortChange, onShowPriceHistory }: StockTableProps) {
   const columns: ColumnsType<StockResponse> = [
     {
       title: '銘柄コード',
@@ -69,6 +70,14 @@ export function StockTable({ stocks, loading, sortField, sortOrder, onSortChange
       sortDirections: sortableDirections,
       sortOrder: sortField === 'stockPrice' ? sortOrder : null,
       render: (value) => renderText(value)
+    },
+    {
+      title: '股价历史',
+      key: 'priceHistory',
+      width: 120,
+      render: (_value, record) => (
+        <Typography.Link onClick={() => onShowPriceHistory(record)}>股价历史</Typography.Link>
+      )
     },
     {
       title: '主页',
