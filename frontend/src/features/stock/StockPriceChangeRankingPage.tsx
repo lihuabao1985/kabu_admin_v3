@@ -46,7 +46,7 @@ const toNullableText = (value: string | undefined): string | undefined => {
 }
 
 export function StockPriceChangeRankingPage() {
-  const [query, setQuery] = useState<ListStockPriceChangeRankingQuery>(defaultQuery)
+  const [query, setQuery] = useState<ListStockPriceChangeRankingQuery | undefined>(undefined)
   const { control, handleSubmit, reset } = useForm<SearchFormValues>({
     defaultValues: {
       startDate: defaultQuery.startDate,
@@ -66,7 +66,7 @@ export function StockPriceChangeRankingPage() {
       changeType: values.changeType,
       changePercent: toNullableText(values.changePercent),
       page: 1,
-      size: previous.size ?? 20
+      size: previous?.size ?? 20
     }))
   }
 
@@ -77,26 +77,36 @@ export function StockPriceChangeRankingPage() {
       changeType: defaultQuery.changeType,
       changePercent: ''
     })
-    setQuery(createDefaultQuery())
+    setQuery(undefined)
   }
 
   const onPageChange = (page: number) => {
-    setQuery((previous) => ({
-      ...previous,
-      page
-    }))
+    setQuery((previous) => {
+      if (!previous) {
+        return previous
+      }
+      return {
+        ...previous,
+        page
+      }
+    })
   }
 
   const onPageSizeChange = (size: number) => {
-    setQuery((previous) => ({
-      ...previous,
-      page: 1,
-      size
-    }))
+    setQuery((previous) => {
+      if (!previous) {
+        return previous
+      }
+      return {
+        ...previous,
+        page: 1,
+        size
+      }
+    })
   }
 
-  const page = data?.page ?? query.page ?? 1
-  const size = data?.size ?? query.size ?? 20
+  const page = data?.page ?? query?.page ?? 1
+  const size = data?.size ?? query?.size ?? 20
   const startIndex = (page - 1) * size
 
   const columns: ColumnsType<StockPriceChangeRankingResponse> = [
@@ -223,7 +233,13 @@ export function StockPriceChangeRankingPage() {
         <Typography.Text style={{ marginBottom: 16, display: 'inline-block' }}>
           总数: {data?.total ?? 0}
         </Typography.Text>
-        {isError ? (
+        {!query ? (
+          <Alert
+            type="info"
+            showIcon
+            message="请输入检索条件后点击“检索”加载排行榜"
+          />
+        ) : isError ? (
           <Alert
             type="error"
             showIcon
