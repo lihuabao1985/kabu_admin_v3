@@ -1,11 +1,11 @@
-﻿import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Typography } from 'antd'
+import { Alert, Button, Card, Col, Form, Input, Modal, Row, Select, Space, Typography } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { StockTable, type StockSortField, type StockSortOrder } from './StockTable'
 import { ListPagination } from '../../lib/ListPagination'
 import { useStockListQuery } from './useStockQueries'
-import type { IndustryCodeOption, ListStocksQuery } from './stockApi'
+import type { IndustryCodeOption, ListStocksQuery, StockResponse } from './stockApi'
 import { listIndustryCodeOptions } from './stockApi'
 import { useStockPriceHistoryListQuery } from '../stockPriceHistory/useStockPriceHistoryQueries'
 import { StockHistoryCandlestickChart } from './StockHistoryCandlestickChart'
@@ -18,12 +18,6 @@ interface SearchFormValues {
   stockPriceFrom: string
   stockPriceTo: string
   freeWord: string
-}
-
-interface KLineFormValues {
-  stockCode: string
-  dateFrom: string
-  dateTo: string
 }
 
 type StockQueryState = NonNullable<ListStocksQuery>
@@ -65,7 +59,7 @@ const parseSort = (sort?: string): { field: StockSortField; order: StockSortOrde
 
 export function StockManagementPage() {
   const [query, setQuery] = useState<StockQueryState>(defaultQuery)
-  const [kLineQuery, setKLineQuery] = useState<{ stockCode: string; dateFrom?: string; dateTo?: string }>()
+  const [historyModalStock, setHistoryModalStock] = useState<Pick<StockResponse, 'stockCode' | 'stockName'>>()
 
   const { control, handleSubmit, reset } = useForm<SearchFormValues>({
     defaultValues: {
@@ -76,14 +70,6 @@ export function StockManagementPage() {
       stockPriceFrom: '',
       stockPriceTo: '',
       freeWord: ''
-    }
-  })
-
-  const { control: kLineControl, handleSubmit: handleKLineSubmit, reset: resetKLine } = useForm<KLineFormValues>({
-    defaultValues: {
-      stockCode: '',
-      dateFrom: '',
-      dateTo: ''
     }
   })
 
@@ -102,11 +88,9 @@ export function StockManagementPage() {
     isError: isHistoryError,
     error: historyError
   } = useStockPriceHistoryListQuery(
-    kLineQuery
+    historyModalStock
       ? {
-          stockCode: kLineQuery.stockCode,
-          dateFrom: kLineQuery.dateFrom,
-          dateTo: kLineQuery.dateTo,
+          stockCode: historyModalStock.stockCode,
           page: 1,
           size: 200,
           sort: 'transDate,asc'
@@ -140,25 +124,6 @@ export function StockManagementPage() {
       freeWord: ''
     })
     setQuery(defaultQuery)
-  }
-
-  const onKLineSearch = (values: KLineFormValues) => {
-    const stockCode = toNullable(values.stockCode)
-    if (!stockCode) {
-      setKLineQuery(undefined)
-      return
-    }
-
-    setKLineQuery({
-      stockCode,
-      dateFrom: toNullable(values.dateFrom),
-      dateTo: toNullable(values.dateTo)
-    })
-  }
-
-  const onKLineReset = () => {
-    resetKLine({ stockCode: '', dateFrom: '', dateTo: '' })
-    setKLineQuery(undefined)
   }
 
   const onSortChange = (field: StockSortField, order: StockSortOrder) => {
@@ -273,6 +238,9 @@ export function StockManagementPage() {
               sortField={currentSort.field}
               sortOrder={currentSort.order}
               onSortChange={onSortChange}
+              onShowPriceHistory={(stock) =>
+                setHistoryModalStock({ stockCode: stock.stockCode, stockName: stock.stockName })
+              }
             />
             <ListPagination
               total={data?.total ?? 0}
@@ -286,37 +254,14 @@ export function StockManagementPage() {
         )}
       </Card>
 
-      <Card title="历史股价K线图查询">
-        <Form layout="vertical" onFinish={handleKLineSubmit(onKLineSearch)}>
-          <Row gutter={16}>
-            <Col xs={24} md={8}>
-              <Form.Item label="銘柄コード">
-                <Controller
-                  name="stockCode"
-                  control={kLineControl}
-                  render={({ field }) => <Input {...field} placeholder="例: 7203" />}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item label="开始日期">
-                <Controller name="dateFrom" control={kLineControl} render={({ field }) => <Input {...field} type="date" />} />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item label="结束日期">
-                <Controller name="dateTo" control={kLineControl} render={({ field }) => <Input {...field} type="date" />} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Space style={{ marginBottom: 16 }}>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button onClick={onKLineReset}>重置</Button>
-          </Space>
-        </Form>
-
+      <Modal
+        title={`股价历史K线图${historyModalStock ? ` - ${historyModalStock.stockCode}${historyModalStock.stockName ? ` ${historyModalStock.stockName}` : ''}` : ''}`}
+        width={1080}
+        open={!!historyModalStock}
+        footer={null}
+        onCancel={() => setHistoryModalStock(undefined)}
+        destroyOnClose
+      >
         {isHistoryError ? (
           <Alert
             type="error"
@@ -327,7 +272,7 @@ export function StockManagementPage() {
         ) : (
           <StockHistoryCandlestickChart items={historyData?.items ?? []} loading={isHistoryLoading} />
         )}
-      </Card>
+      </Modal>
     </Space>
   )
 }

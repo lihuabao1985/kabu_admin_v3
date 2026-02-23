@@ -91,7 +91,7 @@ export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCan
       <Typography.Text
         style={{
           marginLeft: 16,
-          color: diff >= 0 ? '#cf1322' : '#389e0d'
+          color: diff >= 0 ? '#cf1322' : '#1d39c4'
         }}
       >
         前日比 {diff >= 0 ? '+' : ''}
@@ -99,7 +99,7 @@ export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCan
       </Typography.Text>
 
       <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} width="100%" height={chartHeight} role="img">
-        <rect x={0} y={0} width={chartWidth} height={chartHeight} fill="#fff" />
+        <rect x={0} y={0} width={chartWidth} height={chartHeight} fill="#fafafa" />
 
         {Array.from({ length: 5 }).map((_, index) => {
           const y = plotTop + (plotHeight / 4) * index
@@ -130,7 +130,7 @@ export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCan
           const yHigh = toY(item.high)
           const yLow = toY(item.low)
           const rise = item.close >= item.open
-          const color = rise ? '#cf1322' : '#389e0d'
+          const color = rise ? '#cf1322' : '#1d39c4'
           const bodyY = Math.min(yOpen, yClose)
           const bodyHeight = Math.max(1, Math.abs(yClose - yOpen))
 
