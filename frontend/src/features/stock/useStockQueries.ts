@@ -6,13 +6,11 @@ import {
   getStockRealtimeChange,
   importStocks,
   listStockFavorites,
-  listStockPriceChangeRanking,
   listStockOptions,
   listStocks,
   removeStockFavorite,
   updateStock,
   updateStockDeleteFlag,
-  type ListStockPriceChangeRankingQuery,
   type ListStockOptionsQuery,
   type ListStocksQuery,
   type StockFavoriteCreateRequest,
@@ -23,8 +21,6 @@ import {
 
 const stockListKey = (query: ListStocksQuery | undefined) => ['stocks', query] as const
 const stockOptionsKey = (query: ListStockOptionsQuery | undefined) => ['stocks', 'options', query] as const
-const stockPriceChangeRankingKey = (query: ListStockPriceChangeRankingQuery | undefined) =>
-  ['stocks', 'priceChangeRanking', query] as const
 const stockRealtimeChangeKey = (stockCode: string | undefined) => ['stocks', 'realtimeChange', stockCode] as const
 const stockFavoritesKey = ['stocks', 'favorites'] as const
 
@@ -39,14 +35,6 @@ export const useStockOptionsQuery = (query: ListStockOptionsQuery | undefined) =
     queryKey: stockOptionsKey(query),
     queryFn: () => listStockOptions(query)
   })
-
-export const useStockPriceChangeRankingQuery = (query: ListStockPriceChangeRankingQuery | undefined) =>
-  useQuery({
-    queryKey: stockPriceChangeRankingKey(query),
-    queryFn: () => listStockPriceChangeRanking(query as ListStockPriceChangeRankingQuery),
-    enabled: !!query?.startDate && !!query?.endDate && !!query?.changeType
-  })
-
 export const useStockRealtimeChangeQuery = (stockCode: string | undefined) =>
   useQuery({
     queryKey: stockRealtimeChangeKey(stockCode),

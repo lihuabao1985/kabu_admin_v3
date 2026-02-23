@@ -10,8 +10,6 @@ import com.kabu.admin.stock.dto.StockImportRequest;
 import com.kabu.admin.stock.dto.StockImportResponse;
 import com.kabu.admin.stock.dto.StockListResponse;
 import com.kabu.admin.stock.dto.StockOptionResponse;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingListResponse;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingQueryRequest;
 import com.kabu.admin.stock.dto.StockQueryRequest;
 import com.kabu.admin.stock.dto.StockRealtimeChangeResponse;
 import com.kabu.admin.stock.dto.StockResponse;
@@ -125,27 +123,6 @@ public class StockController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','STOCK:IMPORT')")
     public StockImportResponse importStocks(@RequestBody StockImportRequest request) {
         return stockService.importStocks(request);
-    }
-
-    @GetMapping("/price-change-ranking")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','STOCK:VIEW','STOCK:MANAGE','STOCK_PRICE_HISTORY:VIEW','STOCK_PRICE_HISTORY:MANAGE')")
-    public StockPriceChangeRankingListResponse listPriceChangeRanking(
-        @RequestParam String startDate,
-        @RequestParam String endDate,
-        @RequestParam String changeType,
-        @RequestParam(required = false) String changePercent,
-        @RequestParam(required = false) Integer page,
-        @RequestParam(required = false) Integer size
-    ) {
-        StockPriceChangeRankingQueryRequest request = new StockPriceChangeRankingQueryRequest(
-            startDate,
-            endDate,
-            changeType,
-            changePercent,
-            page,
-            size
-        );
-        return stockService.listPriceChangeRanking(request);
     }
 
     @GetMapping("/realtime-change")

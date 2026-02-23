@@ -5,11 +5,8 @@ import com.kabu.admin.stock.model.IndustryCodeOption;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
 import com.kabu.admin.stock.model.StockOption;
-import com.kabu.admin.stock.model.StockPriceChangeRanking;
 import com.kabu.admin.stock.model.StockRealtimeChange;
 import com.kabu.admin.stock.repository.StockRepository;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -86,28 +83,6 @@ public class StockRepositoryImpl implements StockRepository {
     @Override
     public List<StockOption> findOptions(String keyword, String market, int limit) {
         return stockMapper.findOptions(keyword, market, limit);
-    }
-
-    @Override
-    public List<StockPriceChangeRanking> findPriceChangeRanking(
-        LocalDate startDate,
-        LocalDate endDate,
-        String changeType,
-        BigDecimal threshold,
-        int limit,
-        int offset
-    ) {
-        return stockMapper.findPriceChangeRanking(startDate, endDate, changeType, threshold, limit, offset);
-    }
-
-    @Override
-    public long countPriceChangeRanking(
-        LocalDate startDate,
-        LocalDate endDate,
-        String changeType,
-        BigDecimal threshold
-    ) {
-        return stockMapper.countPriceChangeRanking(startDate, endDate, changeType, threshold);
     }
 
     @Override

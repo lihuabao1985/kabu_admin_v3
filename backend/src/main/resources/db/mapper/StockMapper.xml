@@ -94,18 +94,6 @@
         <result property="market" column="MARKET"/>
     </resultMap>
 
-    <resultMap id="stockPriceChangeRankingResultMap" type="com.kabu.admin.stock.model.StockPriceChangeRanking">
-        <result property="stockCode" column="STOCK_CODE"/>
-        <result property="stockName" column="STOCK_NAME"/>
-        <result property="typeName" column="TYPE_NAME"/>
-        <result property="startDate" column="START_DATE"/>
-        <result property="endDate" column="END_DATE"/>
-        <result property="startClosePrice" column="START_CLOSE_PRICE"/>
-        <result property="endClosePrice" column="END_CLOSE_PRICE"/>
-        <result property="changeAmount" column="CHANGE_AMOUNT"/>
-        <result property="changePercent" column="CHANGE_PERCENT"/>
-    </resultMap>
-
     <resultMap id="stockRealtimeChangeResultMap" type="com.kabu.admin.stock.model.StockRealtimeChange">
         <result property="stockCode" column="STOCK_CODE"/>
         <result property="stockName" column="STOCK_NAME"/>
@@ -257,109 +245,6 @@
         </where>
         ORDER BY STOCK_CODE ASC
         LIMIT #{limit}
-    </select>
-
-    <select id="findPriceChangeRanking" resultMap="stockPriceChangeRankingResultMap">
-        SELECT
-            RP.STOCK_CODE,
-            MS.STOCK_NAME,
-            MS.TYPE_NAME,
-            RP.START_DATE,
-            RP.END_DATE,
-            RP.START_CLOSE_PRICE,
-            RP.END_CLOSE_PRICE,
-            (RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) AS CHANGE_AMOUNT,
-            ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) AS CHANGE_PERCENT
-        FROM (
-            SELECT
-                P.STOCK_CODE,
-                P.START_DATE,
-                P.END_DATE,
-                START_HISTORY.CLOSE_PRICE AS START_CLOSE_PRICE,
-                END_HISTORY.CLOSE_PRICE AS END_CLOSE_PRICE
-            FROM (
-                SELECT
-                    STOCK_CODE,
-                    MIN(TRANS_DATE) AS START_DATE,
-                    MAX(TRANS_DATE) AS END_DATE
-                FROM M_STOCK_PRICE_HISTORY
-                WHERE TRANS_DATE BETWEEN #{startDate} AND #{endDate}
-                GROUP BY STOCK_CODE
-                HAVING MIN(TRANS_DATE) <![CDATA[<]]> MAX(TRANS_DATE)
-            ) P
-            JOIN M_STOCK_PRICE_HISTORY START_HISTORY
-              ON START_HISTORY.STOCK_CODE = P.STOCK_CODE
-             AND START_HISTORY.TRANS_DATE = P.START_DATE
-            JOIN M_STOCK_PRICE_HISTORY END_HISTORY
-              ON END_HISTORY.STOCK_CODE = P.STOCK_CODE
-             AND END_HISTORY.TRANS_DATE = P.END_DATE
-            WHERE START_HISTORY.CLOSE_PRICE IS NOT NULL
-              AND START_HISTORY.CLOSE_PRICE <![CDATA[<>]]> 0
-              AND END_HISTORY.CLOSE_PRICE IS NOT NULL
-        ) RP
-        LEFT JOIN M_STOCK MS ON RP.STOCK_CODE = MS.STOCK_CODE
-        <where>
-            (MS.TYPE_CODE IS NULL OR MS.TYPE_CODE <![CDATA[<>]]> '9999')
-            AND (MS.DEL_FLG IS NULL OR MS.DEL_FLG = '0')
-            <if test="changeType == 'RISE'">
-                ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[>=]]> #{threshold}
-            </if>
-            <if test="changeType == 'FALL'">
-                ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[<=]]> -#{threshold}
-            </if>
-        </where>
-        ORDER BY
-            <choose>
-                <when test="changeType == 'RISE'">CHANGE_PERCENT DESC</when>
-                <otherwise>CHANGE_PERCENT ASC</otherwise>
-            </choose>,
-            RP.STOCK_CODE ASC
-        LIMIT #{limit} OFFSET #{offset}
-    </select>
-
-    <select id="countPriceChangeRanking" resultType="long">
-        SELECT
-            COUNT(1)
-        FROM (
-            SELECT
-                RP.STOCK_CODE
-            FROM (
-                SELECT
-                    P.STOCK_CODE,
-                    START_HISTORY.CLOSE_PRICE AS START_CLOSE_PRICE,
-                    END_HISTORY.CLOSE_PRICE AS END_CLOSE_PRICE
-                FROM (
-                    SELECT
-                        STOCK_CODE,
-                        MIN(TRANS_DATE) AS START_DATE,
-                        MAX(TRANS_DATE) AS END_DATE
-                    FROM M_STOCK_PRICE_HISTORY
-                    WHERE TRANS_DATE BETWEEN #{startDate} AND #{endDate}
-                    GROUP BY STOCK_CODE
-                    HAVING MIN(TRANS_DATE) <![CDATA[<]]> MAX(TRANS_DATE)
-                ) P
-                JOIN M_STOCK_PRICE_HISTORY START_HISTORY
-                  ON START_HISTORY.STOCK_CODE = P.STOCK_CODE
-                 AND START_HISTORY.TRANS_DATE = P.START_DATE
-                JOIN M_STOCK_PRICE_HISTORY END_HISTORY
-                  ON END_HISTORY.STOCK_CODE = P.STOCK_CODE
-                 AND END_HISTORY.TRANS_DATE = P.END_DATE
-                WHERE START_HISTORY.CLOSE_PRICE IS NOT NULL
-                  AND START_HISTORY.CLOSE_PRICE <![CDATA[<>]]> 0
-                  AND END_HISTORY.CLOSE_PRICE IS NOT NULL
-            ) RP
-            LEFT JOIN M_STOCK MS ON RP.STOCK_CODE = MS.STOCK_CODE
-            <where>
-                (MS.TYPE_CODE IS NULL OR MS.TYPE_CODE <![CDATA[<>]]> '9999')
-                AND (MS.DEL_FLG IS NULL OR MS.DEL_FLG = '0')
-                <if test="changeType == 'RISE'">
-                    ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[>=]]> #{threshold}
-                </if>
-                <if test="changeType == 'FALL'">
-                    ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[<=]]> -#{threshold}
-                </if>
-            </where>
-        ) C
     </select>
 
     <select id="findRealtimeChangeByStockCode" resultMap="stockRealtimeChangeResultMap">

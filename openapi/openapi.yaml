@@ -1140,61 +1140,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StockOptionResponse'
-  /api/stocks/price-change-ranking:
-    get:
-      tags:
-        - 鬮｢・ｧ繝ｻ・｡鬨ｾ・ｾ繝ｻ・ｨ
-      summary: 隴滂ｽ･髫ｸ・｢隰悶・・ｮ螢ｽ謔・ｫ｣・ｴ雎ｸ・ｨ髴肴ぁ・ｹ繝ｻ雉憺勗譴ｧ・ｦ繝ｻ
-      operationId: listStockPriceChangeRanking
-      parameters:
-        - name: startDate
-          in: query
-          required: true
-          schema:
-            type: string
-            format: date
-        - name: endDate
-          in: query
-          required: true
-          schema:
-            type: string
-            format: date
-        - name: changeType
-          in: query
-          required: true
-          schema:
-            type: string
-            enum:
-              - RISE
-              - FALL
-        - name: changePercent
-          in: query
-          required: false
-          schema:
-            type: string
-            example: '5'
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: size
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-      responses:
-        '200':
-          description: 雎ｸ・ｨ髴肴ぁ・ｹ繝ｻ雉憺勗譴ｧ・ｦ繝ｻ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StockPriceChangeRankingListResponse'
   /api/stocks/realtime-change:
     get:
       tags:
@@ -2701,59 +2646,6 @@ components:
         market:
           type: string
           nullable: true
-    StockPriceChangeRankingResponse:
-      type: object
-      required:
-        - stockCode
-        - startDate
-        - endDate
-        - startClosePrice
-        - endClosePrice
-        - changeAmount
-        - changePercent
-      properties:
-        stockCode:
-          type: string
-        stockName:
-          type: string
-          nullable: true
-        startDate:
-          type: string
-          format: date
-        endDate:
-          type: string
-          format: date
-        startClosePrice:
-          type: number
-          format: double
-        endClosePrice:
-          type: number
-          format: double
-        changeAmount:
-          type: number
-          format: double
-        changePercent:
-          type: number
-          format: double
-    StockPriceChangeRankingListResponse:
-      type: object
-      required:
-        - items
-        - total
-        - page
-        - size
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/StockPriceChangeRankingResponse'
-        total:
-          type: integer
-          format: int64
-        page:
-          type: integer
-        size:
-          type: integer
     StockRealtimeChangeResponse:
       type: object
       required:

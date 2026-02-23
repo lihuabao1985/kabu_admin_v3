@@ -11,12 +11,10 @@ import com.kabu.admin.stock.dto.StockCreateRequest;
 import com.kabu.admin.stock.dto.StockFavoriteCreateRequest;
 import com.kabu.admin.stock.dto.StockImportRequest;
 import com.kabu.admin.stock.dto.StockListResponse;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingQueryRequest;
 import com.kabu.admin.stock.dto.StockQueryRequest;
 import com.kabu.admin.stock.exception.StockConflictException;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
-import com.kabu.admin.stock.model.StockPriceChangeRanking;
 import com.kabu.admin.stock.model.StockRealtimeChange;
 import com.kabu.admin.stock.repository.StockRepository;
 import com.kabu.admin.stock.service.impl.StockServiceImpl;
@@ -113,36 +111,6 @@ class StockServiceTest {
         ArgumentCaptor<List<String>> captor = ArgumentCaptor.forClass(List.class);
         verify(stockRepository).markDeletedExceptCodes(captor.capture());
         assertEquals(List.of("7203", "6758"), captor.getValue());
-    }
-
-    @Test
-    void listPriceChangeRankingShouldReturnPagedResult() {
-        LocalDate startDate = LocalDate.parse("2026-01-01");
-        LocalDate endDate = LocalDate.parse("2026-01-31");
-        BigDecimal threshold = new BigDecimal("5.00");
-
-        StockPriceChangeRanking ranking = new StockPriceChangeRanking();
-        ranking.setStockCode("7203");
-        ranking.setStockName("Toyota");
-        ranking.setStartDate(startDate);
-        ranking.setEndDate(endDate);
-        ranking.setStartClosePrice(new BigDecimal("1000.00"));
-        ranking.setEndClosePrice(new BigDecimal("1100.00"));
-        ranking.setChangeAmount(new BigDecimal("100.00"));
-        ranking.setChangePercent(new BigDecimal("10.00"));
-
-        when(stockRepository.findPriceChangeRanking(startDate, endDate, "RISE", threshold, 20, 0))
-            .thenReturn(List.of(ranking));
-        when(stockRepository.countPriceChangeRanking(startDate, endDate, "RISE", threshold)).thenReturn(1L);
-
-        var response = stockService.listPriceChangeRanking(
-            new StockPriceChangeRankingQueryRequest("2026-01-01", "2026-01-31", "RISE", "5", null, null)
-        );
-
-        assertEquals(1L, response.total());
-        assertEquals(1, response.items().size());
-        assertEquals("7203", response.items().get(0).stockCode());
-        assertEquals(0, response.items().get(0).changePercent().compareTo(new BigDecimal("10.00")));
     }
 
     @Test
