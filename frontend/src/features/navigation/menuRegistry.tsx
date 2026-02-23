@@ -5,7 +5,6 @@ import { RolePermissionBindingPage } from '../rbac/RolePermissionBindingPage'
 import { UserRoleBindingPage } from '../rbac/UserRoleBindingPage'
 import { StockFavoriteManagementPage } from '../stock/StockFavoriteManagementPage'
 import { StockManagementPage } from '../stock/StockManagementPage'
-import { StockPriceChangeRankingPage } from '../stock/StockPriceChangeRankingPage'
 import { StockRealtimeChangePage } from '../stock/StockRealtimeChangePage'
 import { StockDividendConfirmedManagementPage } from '../stockDividendConfirmed/StockDividendConfirmedManagementPage'
 import { StockDividendRightsLastDayStatsPage } from '../stockDividendConfirmed/StockDividendRightsLastDayStatsPage'
@@ -22,7 +21,6 @@ export type PageKey =
   | 'stockDividendConfirmed'
   | 'stockDividendRightsLastDayStats'
   | 'stockPriceHistory'
-  | 'stockPriceChangeRanking'
   | 'stockRealtimeChange'
   | 'stockFavorites'
 
@@ -113,18 +111,6 @@ export const menuModules: MenuModuleConfig[] = [
         label: '股票历史股价',
         requiredAuthorities: ['ROLE_ADMIN', 'STOCK_PRICE_HISTORY:VIEW', 'STOCK_PRICE_HISTORY:MANAGE'],
         component: StockPriceHistoryManagementPage
-      },
-      {
-        key: 'stockPriceChangeRanking',
-        label: '排行榜',
-        requiredAuthorities: [
-          'ROLE_ADMIN',
-          'STOCK:VIEW',
-          'STOCK:MANAGE',
-          'STOCK_PRICE_HISTORY:VIEW',
-          'STOCK_PRICE_HISTORY:MANAGE'
-        ],
-        component: StockPriceChangeRankingPage
       },
       {
         key: 'stockRealtimeChange',

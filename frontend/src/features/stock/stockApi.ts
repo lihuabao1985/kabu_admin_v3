@@ -17,35 +17,6 @@ export type ListStocksQuery = operations['listStocks']['parameters']['query'] & 
   freeWord?: string
 }
 export type ListStockOptionsQuery = operations['listStockOptions']['parameters']['query']
-export type PriceChangeType = 'RISE' | 'FALL'
-
-export interface ListStockPriceChangeRankingQuery {
-  startDate: string
-  endDate: string
-  changeType: PriceChangeType
-  changePercent?: string
-  page?: number
-  size?: number
-}
-
-export interface StockPriceChangeRankingResponse {
-  stockCode: string
-  stockName?: string | null
-  typeName?: string | null
-  startDate: string
-  endDate: string
-  startClosePrice: number
-  endClosePrice: number
-  changeAmount: number
-  changePercent: number
-}
-
-export interface StockPriceChangeRankingListResponse {
-  items: StockPriceChangeRankingResponse[]
-  total: number
-  page: number
-  size: number
-}
 
 export interface StockRealtimeChangeResponse {
   stockCode: string
@@ -139,24 +110,6 @@ const toOptionQueryString = (query: ListStockOptionsQuery | undefined): string =
   return queryString ? `?${queryString}` : ''
 }
 
-const toPriceChangeRankingQueryString = (query: ListStockPriceChangeRankingQuery): string => {
-  const params = new URLSearchParams()
-  params.set('startDate', query.startDate)
-  params.set('endDate', query.endDate)
-  params.set('changeType', query.changeType)
-  if (query.changePercent) {
-    params.set('changePercent', query.changePercent)
-  }
-  if (query.page !== undefined) {
-    params.set('page', String(query.page))
-  }
-  if (query.size !== undefined) {
-    params.set('size', String(query.size))
-  }
-  const queryString = params.toString()
-  return queryString ? `?${queryString}` : ''
-}
-
 export const listStocks = (query: ListStocksQuery | undefined): Promise<StockListResponse> =>
   request<StockListResponse>(`/api/stocks${toStockQueryString(query)}`)
 
@@ -207,11 +160,6 @@ export const importStocks = (payload: StockImportRequest): Promise<StockImportRe
     method: 'POST',
     body: JSON.stringify(payload)
   })
-
-export const listStockPriceChangeRanking = (
-  query: ListStockPriceChangeRankingQuery
-): Promise<StockPriceChangeRankingListResponse> =>
-  request<StockPriceChangeRankingListResponse>(`/api/stocks/price-change-ranking${toPriceChangeRankingQueryString(query)}`)
 
 export const getStockRealtimeChange = (stockCode: string): Promise<StockRealtimeChangeResponse> =>
   request<StockRealtimeChangeResponse>(`/api/stocks/realtime-change?stockCode=${encodeURIComponent(stockCode)}`)

@@ -4,10 +4,7 @@ import com.kabu.admin.stock.model.IndustryCodeOption;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
 import com.kabu.admin.stock.model.StockOption;
-import com.kabu.admin.stock.model.StockPriceChangeRanking;
 import com.kabu.admin.stock.model.StockRealtimeChange;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -51,22 +48,6 @@ public interface StockMapper {
         @Param("keyword") String keyword,
         @Param("market") String market,
         @Param("limit") int limit
-    );
-
-    List<StockPriceChangeRanking> findPriceChangeRanking(
-        @Param("startDate") LocalDate startDate,
-        @Param("endDate") LocalDate endDate,
-        @Param("changeType") String changeType,
-        @Param("threshold") BigDecimal threshold,
-        @Param("limit") int limit,
-        @Param("offset") int offset
-    );
-
-    long countPriceChangeRanking(
-        @Param("startDate") LocalDate startDate,
-        @Param("endDate") LocalDate endDate,
-        @Param("changeType") String changeType,
-        @Param("threshold") BigDecimal threshold
     );
 
     StockRealtimeChange findRealtimeChangeByStockCode(@Param("stockCode") String stockCode);

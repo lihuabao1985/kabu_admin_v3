@@ -10,9 +10,6 @@ import com.kabu.admin.stock.dto.StockImportRequest;
 import com.kabu.admin.stock.dto.StockImportResponse;
 import com.kabu.admin.stock.dto.StockListResponse;
 import com.kabu.admin.stock.dto.StockOptionResponse;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingListResponse;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingQueryRequest;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingResponse;
 import com.kabu.admin.stock.dto.StockQueryRequest;
 import com.kabu.admin.stock.dto.StockRealtimeChangeResponse;
 import com.kabu.admin.stock.dto.StockResponse;
@@ -24,7 +21,6 @@ import com.kabu.admin.stock.exception.StockNotFoundException;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
 import com.kabu.admin.stock.model.StockOption;
-import com.kabu.admin.stock.model.StockPriceChangeRanking;
 import com.kabu.admin.stock.model.StockRealtimeChange;
 import com.kabu.admin.stock.repository.StockRepository;
 import com.kabu.admin.stock.service.StockService;
@@ -61,8 +57,6 @@ public class StockServiceImpl implements StockService {
     private static final int MAX_SIZE = 100;
     private static final int DEFAULT_OPTION_LIMIT = 20;
     private static final int MAX_OPTION_LIMIT = 200;
-    private static final String CHANGE_TYPE_RISE = "RISE";
-    private static final String CHANGE_TYPE_FALL = "FALL";
 
     private final StockRepository stockRepository;
 
@@ -199,35 +193,6 @@ public class StockServiceImpl implements StockService {
             .stream()
             .map(this::toOptionResponse)
             .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public StockPriceChangeRankingListResponse listPriceChangeRanking(StockPriceChangeRankingQueryRequest request) {
-        if (request == null) {
-            throw new IllegalArgumentException("query request is required");
-        }
-
-        LocalDate startDate = normalizeDateRequired(request.startDate(), "startDate");
-        LocalDate endDate = normalizeDateRequired(request.endDate(), "endDate");
-        if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("startDate must be before or equal to endDate");
-        }
-        String changeType = normalizeChangeType(request.changeType());
-        BigDecimal threshold = normalizeNonNegativeDecimal(request.changePercent(), "changePercent", BigDecimal.ZERO);
-
-        int page = normalizePage(request.page());
-        int size = normalizeSize(request.size());
-        int offset = (page - 1) * size;
-
-        List<StockPriceChangeRankingResponse> items = stockRepository
-            .findPriceChangeRanking(startDate, endDate, changeType, threshold, size, offset)
-            .stream()
-            .map(this::toPriceChangeRankingResponse)
-            .toList();
-
-        long total = stockRepository.countPriceChangeRanking(startDate, endDate, changeType, threshold);
-        return new StockPriceChangeRankingListResponse(items, total, page, size);
     }
 
     @Override
@@ -578,20 +543,6 @@ public class StockServiceImpl implements StockService {
         );
     }
 
-    private StockPriceChangeRankingResponse toPriceChangeRankingResponse(StockPriceChangeRanking item) {
-        return new StockPriceChangeRankingResponse(
-            item.getStockCode(),
-            item.getStockName(),
-            item.getTypeName(),
-            item.getStartDate(),
-            item.getEndDate(),
-            item.getStartClosePrice(),
-            item.getEndClosePrice(),
-            item.getChangeAmount(),
-            item.getChangePercent()
-        );
-    }
-
     private StockFavoriteResponse toFavoriteResponse(StockFavorite item) {
         return new StockFavoriteResponse(
             item.getId(),
@@ -692,195 +643,4 @@ public class StockServiceImpl implements StockService {
         }
     }
 
-    private String normalizeChangeType(String changeType) {
-        String normalized = requireText(changeType, "changeType is required").toUpperCase();
-        return switch (normalized) {
-            case CHANGE_TYPE_RISE -> CHANGE_TYPE_RISE;
-            case CHANGE_TYPE_FALL -> CHANGE_TYPE_FALL;
-            default -> throw new IllegalArgumentException("changeType must be RISE or FALL");
-        };
-    }
-
-
-    private String normalizeDecimalForQuery(String value, String fieldName) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            return null;
-        }
-
-        String sanitized = normalized.replace(",", "").replace("，", "").trim();
-        try {
-            BigDecimal parsed = new BigDecimal(sanitized);
-            return parsed.toPlainString();
-        } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(fieldName + " must be numeric");
-        }
-    }
-
-    private void validateStockPriceRange(String stockPriceFrom, String stockPriceTo) {
-        if (stockPriceFrom == null || stockPriceTo == null) {
-            return;
-        }
-
-        BigDecimal from = new BigDecimal(stockPriceFrom);
-        BigDecimal to = new BigDecimal(stockPriceTo);
-        if (from.compareTo(to) > 0) {
-            throw new IllegalArgumentException("stockPriceFrom must be <= stockPriceTo");
-        }
-    }
-
-    private BigDecimal normalizeNonNegativeDecimal(String value, String fieldName, BigDecimal defaultValue) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            return defaultValue;
-        }
-        try {
-            BigDecimal parsed = new BigDecimal(normalized);
-            if (parsed.compareTo(BigDecimal.ZERO) < 0) {
-                throw new IllegalArgumentException(fieldName + " must be >= 0");
-            }
-            return parsed.setScale(2, RoundingMode.HALF_UP);
-        } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(fieldName + " must be numeric");
-        }
-    }
-
-    private String normalizeImportMode(String mode) {
-        String normalized = normalizeText(mode);
-        if (normalized == null) {
-            return IMPORT_MODE_INCREMENTAL;
-        }
-        String upper = normalized.toUpperCase();
-        if (!IMPORT_MODE_INCREMENTAL.equals(upper) && !IMPORT_MODE_FULL.equals(upper)) {
-            throw new IllegalArgumentException("蟇ｼ蜈･讓｡蠑丞ｿ・｡ｻ荳ｺ INCREMENTAL 謌・FULL");
-        }
-        return upper;
-    }
-
-    private String normalizeDateValue(String value, String fieldName) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            return null;
-        }
-        try {
-            LocalDate.parse(normalized, DATE_FORMATTER);
-            return normalized;
-        } catch (DateTimeParseException ex) {
-            throw new IllegalArgumentException(fieldName + " 譌･譛滓ｼ蠑丞ｿ・｡ｻ荳ｺ yyyy-MM-dd");
-        }
-    }
-
-    private String normalizeDecimalLike(String value, String fieldName) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            return null;
-        }
-
-        String sanitized = normalized.replace(",", "").replace("%", "");
-        if (sanitized.isEmpty()) {
-            return null;
-        }
-
-        try {
-            new BigDecimal(sanitized);
-            return normalized;
-        } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(fieldName + " 蠢・｡ｻ荳ｺ謨ｰ蛟ｼ");
-        }
-    }
-
-    private BigDecimal parseNumericText(String value, String fieldName) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            return null;
-        }
-
-        String sanitized = normalized
-            .replace(",", "")
-            .replace("，", "")
-            .replace("%", "")
-            .replace("％", "")
-            .replace("円", "")
-            .replace("¥", "")
-            .replace("￥", "")
-            .replaceAll("\\s+", "");
-        if (sanitized.isEmpty()) {
-            return null;
-        }
-
-        try {
-            return new BigDecimal(sanitized).setScale(2, RoundingMode.HALF_UP);
-        } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(fieldName + " is not numeric: " + normalized);
-        }
-    }
-
-    private String normalizeUrl(String value, String fieldName) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            return null;
-        }
-
-        try {
-            URI uri = new URI(normalized);
-            String scheme = uri.getScheme();
-            if (scheme == null || (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme))) {
-                throw new IllegalArgumentException(fieldName + " 蠢・｡ｻ譏ｯ http/https URL");
-            }
-            return normalized;
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(fieldName + " URL 譬ｼ蠑丈ｸ肴ｭ｣遑ｮ");
-        }
-    }
-
-    private String normalizeFlag(String value, String fieldName, boolean allowNull, String defaultValue) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            if (allowNull) {
-                return defaultValue;
-            }
-            throw new IllegalArgumentException(fieldName + " 荳崎・荳ｺ遨ｺ");
-        }
-
-        String upper = normalized.toUpperCase();
-        return switch (upper) {
-            case "1", "Y" -> "1";
-            case "0", "N" -> "0";
-            default -> throw new IllegalArgumentException(fieldName + " 蠢・｡ｻ荳ｺ 0/1 謌・Y/N");
-        };
-    }
-
-    private String normalizeText(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
-    }
-
-    private String requireText(String value, String message) {
-        String normalized = normalizeText(value);
-        if (normalized == null) {
-            throw new IllegalArgumentException(message);
-        }
-        return normalized;
-    }
-
-    private void validateId(Long id) {
-        if (id == null || id < 1) {
-            throw new IllegalArgumentException("ID蠢・｡ｻ荳ｺ豁｣謨ｴ謨ｰ");
-        }
-    }
-
-    private String extractRawStockCode(StockCreateRequest request) {
-        if (request == null) {
-            return "";
-        }
-        String code = normalizeText(request.stockCode());
-        return code == null ? "" : code;
-    }
-
-    private record SortSpec(String sortBy, String sortDirection) {
-    }
-}
 

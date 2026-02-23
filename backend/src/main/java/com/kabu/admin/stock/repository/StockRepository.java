@@ -4,10 +4,7 @@ import com.kabu.admin.stock.model.IndustryCodeOption;
 import com.kabu.admin.stock.model.Stock;
 import com.kabu.admin.stock.model.StockFavorite;
 import com.kabu.admin.stock.model.StockOption;
-import com.kabu.admin.stock.model.StockPriceChangeRanking;
 import com.kabu.admin.stock.model.StockRealtimeChange;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,22 +43,6 @@ public interface StockRepository {
     List<IndustryCodeOption> findIndustryCodeOptions();
 
     List<StockOption> findOptions(String keyword, String market, int limit);
-
-    List<StockPriceChangeRanking> findPriceChangeRanking(
-        LocalDate startDate,
-        LocalDate endDate,
-        String changeType,
-        BigDecimal threshold,
-        int limit,
-        int offset
-    );
-
-    long countPriceChangeRanking(
-        LocalDate startDate,
-        LocalDate endDate,
-        String changeType,
-        BigDecimal threshold
-    );
 
     Optional<StockRealtimeChange> findRealtimeChangeByStockCode(String stockCode);
 

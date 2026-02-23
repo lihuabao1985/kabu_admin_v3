@@ -9,8 +9,6 @@ import com.kabu.admin.stock.dto.IndustryCodeOptionResponse;
 import com.kabu.admin.stock.dto.StockImportResponse;
 import com.kabu.admin.stock.dto.StockListResponse;
 import com.kabu.admin.stock.dto.StockOptionResponse;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingListResponse;
-import com.kabu.admin.stock.dto.StockPriceChangeRankingQueryRequest;
 import com.kabu.admin.stock.dto.StockQueryRequest;
 import com.kabu.admin.stock.dto.StockRealtimeChangeResponse;
 import com.kabu.admin.stock.dto.StockResponse;
@@ -34,8 +32,6 @@ public interface StockService {
     List<IndustryCodeOptionResponse> listIndustryCodeOptions();
 
     List<StockOptionResponse> listOptions(String keyword, String market, Integer limit);
-
-    StockPriceChangeRankingListResponse listPriceChangeRanking(StockPriceChangeRankingQueryRequest request);
 
     StockRealtimeChangeResponse getRealtimeChange(String stockCode);
 
