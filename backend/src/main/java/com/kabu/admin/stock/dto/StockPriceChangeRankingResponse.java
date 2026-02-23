@@ -6,6 +6,7 @@ import java.time.LocalDate;
 public record StockPriceChangeRankingResponse(
     String stockCode,
     String stockName,
+    String typeName,
     LocalDate startDate,
     LocalDate endDate,
     BigDecimal startClosePrice,

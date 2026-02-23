@@ -116,7 +116,7 @@ export const menuModules: MenuModuleConfig[] = [
       },
       {
         key: 'stockPriceChangeRanking',
-        label: '涨跌幅排行榜',
+        label: '排行榜',
         requiredAuthorities: [
           'ROLE_ADMIN',
           'STOCK:VIEW',

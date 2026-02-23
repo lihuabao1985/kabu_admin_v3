@@ -30,6 +30,7 @@ export interface ListStockPriceChangeRankingQuery {
 export interface StockPriceChangeRankingResponse {
   stockCode: string
   stockName?: string | null
+  typeName?: string | null
   startDate: string
   endDate: string
   startClosePrice: number
