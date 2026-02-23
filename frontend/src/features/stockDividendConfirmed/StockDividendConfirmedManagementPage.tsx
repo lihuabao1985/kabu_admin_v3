@@ -18,13 +18,13 @@ interface SearchFormValues {
   rightsLastDay: string
 }
 
-const defaultSortField: StockDividendSortField = 'rightsLastDay'
-const defaultSortOrder: StockDividendSortOrder = 'descend'
+const defaultSortField: StockDividendSortField = 'stockCode'
+const defaultSortOrder: StockDividendSortOrder = 'ascend'
 
 const defaultQuery: ListStockDividendConfirmedQuery = {
   page: 1,
   size: 20,
-  sort: 'rightsLastDay,desc'
+  sort: 'stockCode,asc'
 }
 
 const toNullableText = (value: string | undefined): string | undefined => {
