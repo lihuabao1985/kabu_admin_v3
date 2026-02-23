@@ -58,7 +58,7 @@ const calculateMA = (values: number[], endIndex: number, period: number): number
 
 const toCandleData = (items: StockPriceHistoryResponse[]): CandleData[] => {
   const candles = [...items]
-    .sort((a, b) => a.transDate.localeCompare(b.transDate))
+    .sort((a, b) => b.transDate.localeCompare(a.transDate))
     .map((item) => {
       const open = item.openPrice ?? item.beforeDayPrice ?? item.closePrice ?? item.adjustedClosePrice
       const close = item.closePrice ?? item.openPrice ?? item.beforeDayPrice ?? item.adjustedClosePrice
@@ -96,7 +96,7 @@ const toCandleData = (items: StockPriceHistoryResponse[]): CandleData[] => {
 export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCandlestickChartProps) {
   const [periodDays, setPeriodDays] = useState<number>(100)
   const allCandles = useMemo(() => toCandleData(items), [items])
-  const candles = useMemo(() => allCandles.slice(-periodDays), [allCandles, periodDays])
+  const candles = useMemo(() => allCandles.slice(0, periodDays), [allCandles, periodDays])
 
   if (loading) {
     return <Spin />
@@ -123,8 +123,8 @@ export function StockHistoryCandlestickChart({ items, loading }: StockHistoryCan
   const step = plotWidth / candles.length
   const bodyWidth = Math.max(4, Math.min(14, step * 0.58))
 
-  const latest = candles[candles.length - 1]
-  const previous = candles.length > 1 ? candles[candles.length - 2] : null
+  const latest = candles[0]
+  const previous = candles.length > 1 ? candles[1] : null
   const diff = previous ? latest.close - previous.close : 0
 
   const xLabelIndexes = [0, Math.floor((candles.length - 1) / 2), candles.length - 1]

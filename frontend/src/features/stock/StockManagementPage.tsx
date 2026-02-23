@@ -93,7 +93,7 @@ export function StockManagementPage() {
           stockCode: historyModalStock.stockCode,
           page: 1,
           size: 200,
-          sort: 'transDate,asc'
+          sort: 'transDate,desc'
         }
       : undefined
   )
