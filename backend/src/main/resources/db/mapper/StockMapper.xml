@@ -300,6 +300,7 @@
         LEFT JOIN M_STOCK MS ON RP.STOCK_CODE = MS.STOCK_CODE
         <where>
             (MS.TYPE_CODE IS NULL OR MS.TYPE_CODE <![CDATA[<>]]> '9999')
+            AND (MS.DEL_FLG IS NULL OR MS.DEL_FLG = '0')
             <if test="changeType == 'RISE'">
                 ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[>=]]> #{threshold}
             </if>
@@ -350,6 +351,7 @@
             LEFT JOIN M_STOCK MS ON RP.STOCK_CODE = MS.STOCK_CODE
             <where>
                 (MS.TYPE_CODE IS NULL OR MS.TYPE_CODE <![CDATA[<>]]> '9999')
+                AND (MS.DEL_FLG IS NULL OR MS.DEL_FLG = '0')
                 <if test="changeType == 'RISE'">
                     ROUND((RP.END_CLOSE_PRICE - RP.START_CLOSE_PRICE) * 100 / RP.START_CLOSE_PRICE, 2) <![CDATA[>=]]> #{threshold}
                 </if>
