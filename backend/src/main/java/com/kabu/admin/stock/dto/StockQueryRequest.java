@@ -3,6 +3,7 @@ package com.kabu.admin.stock.dto;
 public record StockQueryRequest(
     String stockCode,
     String stockName,
+    String typeCode,
     String typeName,
     String market,
     String stockPriceFrom,
