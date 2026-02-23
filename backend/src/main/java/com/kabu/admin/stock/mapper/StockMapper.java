@@ -18,6 +18,7 @@ public interface StockMapper {
     List<Stock> findByCriteria(
         @Param("stockCode") String stockCode,
         @Param("stockName") String stockName,
+        @Param("typeCode") String typeCode,
         @Param("typeName") String typeName,
         @Param("market") String market,
         @Param("stockPriceFrom") String stockPriceFrom,
@@ -32,6 +33,7 @@ public interface StockMapper {
     long countByCriteria(
         @Param("stockCode") String stockCode,
         @Param("stockName") String stockName,
+        @Param("typeCode") String typeCode,
         @Param("typeName") String typeName,
         @Param("market") String market,
         @Param("stockPriceFrom") String stockPriceFrom,

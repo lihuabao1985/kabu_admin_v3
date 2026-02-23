@@ -135,6 +135,9 @@
             <if test="stockName != null and stockName != ''">
                 AND STOCK_NAME LIKE CONCAT('%', #{stockName}, '%')
             </if>
+            <if test="typeCode != null and typeCode != ''">
+                AND TYPE_CODE = #{typeCode}
+            </if>
             <if test="typeName != null and typeName != ''">
                 AND TYPE_NAME LIKE CONCAT('%', #{typeName}, '%')
             </if>
@@ -182,6 +185,9 @@
             </if>
             <if test="stockName != null and stockName != ''">
                 AND STOCK_NAME LIKE CONCAT('%', #{stockName}, '%')
+            </if>
+            <if test="typeCode != null and typeCode != ''">
+                AND TYPE_CODE = #{typeCode}
             </if>
             <if test="typeName != null and typeName != ''">
                 AND TYPE_NAME LIKE CONCAT('%', #{typeName}, '%')

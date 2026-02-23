@@ -47,6 +47,7 @@ public class StockController {
     public StockListResponse listStocks(
         @RequestParam(required = false) String stockCode,
         @RequestParam(required = false) String stockName,
+        @RequestParam(required = false) String typeCode,
         @RequestParam(required = false) String typeName,
         @RequestParam(required = false) String market,
         @RequestParam(required = false) String stockPriceFrom,
@@ -59,6 +60,7 @@ public class StockController {
         StockQueryRequest request = new StockQueryRequest(
             stockCode,
             stockName,
+            typeCode,
             typeName,
             market,
             stockPriceFrom,

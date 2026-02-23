@@ -27,6 +27,7 @@ public class StockRepositoryImpl implements StockRepository {
     public List<Stock> findByCriteria(
         String stockCode,
         String stockName,
+        String typeCode,
         String typeName,
         String market,
         String stockPriceFrom,
@@ -40,6 +41,7 @@ public class StockRepositoryImpl implements StockRepository {
         return stockMapper.findByCriteria(
             stockCode,
             stockName,
+            typeCode,
             typeName,
             market,
             stockPriceFrom,
@@ -56,13 +58,14 @@ public class StockRepositoryImpl implements StockRepository {
     public long countByCriteria(
         String stockCode,
         String stockName,
+        String typeCode,
         String typeName,
         String market,
         String stockPriceFrom,
         String stockPriceTo,
         String freeWord
     ) {
-        return stockMapper.countByCriteria(stockCode, stockName, typeName, market, stockPriceFrom, stockPriceTo, freeWord);
+        return stockMapper.countByCriteria(stockCode, stockName, typeCode, typeName, market, stockPriceFrom, stockPriceTo, freeWord);
     }
 
     @Override

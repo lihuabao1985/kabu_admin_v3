@@ -79,6 +79,7 @@ public class StockServiceImpl implements StockService {
 
         String stockCode = normalizeStockCodeForQuery(request.stockCode());
         String stockName = normalizeText(request.stockName());
+        String typeCode = normalizeText(request.typeCode());
         String typeName = normalizeText(request.typeName());
         String market = normalizeText(request.market());
         String stockPriceFrom = normalizeDecimalForQuery(request.stockPriceFrom(), "stockPriceFrom");
@@ -91,6 +92,7 @@ public class StockServiceImpl implements StockService {
             .findByCriteria(
                 stockCode,
                 stockName,
+                typeCode,
                 typeName,
                 market,
                 stockPriceFrom,
@@ -105,7 +107,7 @@ public class StockServiceImpl implements StockService {
             .map(this::toResponse)
             .toList();
 
-        long total = stockRepository.countByCriteria(stockCode, stockName, typeName, market, stockPriceFrom, stockPriceTo, freeWord);
+        long total = stockRepository.countByCriteria(stockCode, stockName, typeCode, typeName, market, stockPriceFrom, stockPriceTo, freeWord);
         return new StockListResponse(items, total, page, size);
     }
 

@@ -10,6 +10,7 @@ export type StockResponse = components['schemas']['StockResponse']
 export type StockListResponse = components['schemas']['StockListResponse']
 export type StockOptionResponse = components['schemas']['StockOptionResponse']
 export type ListStocksQuery = operations['listStocks']['parameters']['query'] & {
+  typeCode?: string
   typeName?: string
   stockPriceFrom?: string
   stockPriceTo?: string
@@ -86,6 +87,9 @@ const toStockQueryString = (query: ListStocksQuery | undefined): string => {
   }
   if (query.stockName) {
     params.set('stockName', query.stockName)
+  }
+  if (query.typeCode) {
+    params.set('typeCode', query.typeCode)
   }
   if (query.typeName) {
     params.set('typeName', query.typeName)
@@ -188,6 +192,15 @@ export const deleteStock = (id: number): Promise<void> =>
 export const listStockOptions = (
   query: ListStockOptionsQuery | undefined
 ): Promise<StockOptionResponse[]> => request<StockOptionResponse[]>(`/api/stocks/options${toOptionQueryString(query)}`)
+
+export interface IndustryCodeOption {
+  codeKey: string
+  codeValue: string
+}
+
+export const listIndustryCodeOptions = (): Promise<IndustryCodeOption[]> =>
+  request<IndustryCodeOption[]>('/api/stocks/industry-options')
+
 
 export const importStocks = (payload: StockImportRequest): Promise<StockImportResponse> =>
   request<StockImportResponse>('/api/stocks:import', {
