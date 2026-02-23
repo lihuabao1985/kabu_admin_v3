@@ -19,6 +19,8 @@ interface SearchFormValues {
   changePercent: string
 }
 
+const NON_NEGATIVE_DECIMAL_PATTERN = /^\d+(\.\d+)?$/
+
 const toDateString = (date: Date): string => {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -43,6 +45,14 @@ const defaultQuery = createDefaultQuery()
 const toNullableText = (value: string | undefined): string | undefined => {
   const trimmed = value?.trim()
   return trimmed ? trimmed : undefined
+}
+
+const formatPercent = (value: number | null | undefined): string => {
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric)) {
+    return '--'
+  }
+  return numeric.toFixed(2)
 }
 
 export function StockPriceChangeRankingPage() {
@@ -160,10 +170,10 @@ export function StockPriceChangeRankingPage() {
       title: '涨跌幅(%)',
       dataIndex: 'changePercent',
       width: 130,
-      render: (value: number) => {
+      render: (value: number | null | undefined) => {
         const numeric = Number(value)
         const color = numeric > 0 ? '#cf1322' : numeric < 0 ? '#1677ff' : undefined
-        return <span style={{ color }}>{numeric.toFixed(2)}</span>
+        return <span style={{ color }}>{formatPercent(value)}</span>
       }
     }
   ]
@@ -215,7 +225,25 @@ export function StockPriceChangeRankingPage() {
                 <Controller
                   name="changePercent"
                   control={control}
-                  render={({ field }) => <Input {...field} placeholder="例如 5" />}
+                  rules={{
+                    validate: (value) => {
+                      const trimmed = value.trim()
+                      if (!trimmed) {
+                        return true
+                      }
+                      return NON_NEGATIVE_DECIMAL_PATTERN.test(trimmed)
+                        ? true
+                        : '请输入非负数字，例如 5 或 5.5'
+                    }
+                  }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input {...field} placeholder="例如 5" status={fieldState.error ? 'error' : undefined} />
+                      {fieldState.error ? (
+                        <Typography.Text type="danger">{fieldState.error.message}</Typography.Text>
+                      ) : null}
+                    </>
+                  )}
                 />
               </Form.Item>
             </Col>
