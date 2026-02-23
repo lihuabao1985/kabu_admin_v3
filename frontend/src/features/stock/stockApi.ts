@@ -9,7 +9,12 @@ export type StockImportResponse = components['schemas']['StockImportResponse']
 export type StockResponse = components['schemas']['StockResponse']
 export type StockListResponse = components['schemas']['StockListResponse']
 export type StockOptionResponse = components['schemas']['StockOptionResponse']
-export type ListStocksQuery = operations['listStocks']['parameters']['query']
+export type ListStocksQuery = operations['listStocks']['parameters']['query'] & {
+  typeName?: string
+  stockPriceFrom?: string
+  stockPriceTo?: string
+  freeWord?: string
+}
 export type ListStockOptionsQuery = operations['listStockOptions']['parameters']['query']
 export type PriceChangeType = 'RISE' | 'FALL'
 
@@ -81,14 +86,20 @@ const toStockQueryString = (query: ListStocksQuery | undefined): string => {
   if (query.stockName) {
     params.set('stockName', query.stockName)
   }
-  if (query.typeCode) {
-    params.set('typeCode', query.typeCode)
+  if (query.typeName) {
+    params.set('typeName', query.typeName)
   }
   if (query.market) {
     params.set('market', query.market)
   }
-  if (query.delFlg) {
-    params.set('delFlg', query.delFlg)
+  if (query.stockPriceFrom) {
+    params.set('stockPriceFrom', query.stockPriceFrom)
+  }
+  if (query.stockPriceTo) {
+    params.set('stockPriceTo', query.stockPriceTo)
+  }
+  if (query.freeWord) {
+    params.set('freeWord', query.freeWord)
   }
   if (query.page !== undefined) {
     params.set('page', String(query.page))

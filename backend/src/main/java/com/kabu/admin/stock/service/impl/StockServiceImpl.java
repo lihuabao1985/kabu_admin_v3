@@ -49,6 +49,9 @@ public class StockServiceImpl implements StockService {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final String SORT_BY_ID = "ID";
     private static final String SORT_BY_STOCK_CODE = "STOCK_CODE";
+    private static final String SORT_BY_TYPE_CODE = "TYPE_CODE";
+    private static final String SORT_BY_MARKET = "MARKET";
+    private static final String SORT_BY_STOCK_PRICE = "STOCK_PRICE";
     private static final String SORT_ASC = "ASC";
     private static final String SORT_DESC = "DESC";
     private static final String IMPORT_MODE_INCREMENTAL = "INCREMENTAL";
@@ -76,18 +79,23 @@ public class StockServiceImpl implements StockService {
 
         String stockCode = normalizeStockCodeForQuery(request.stockCode());
         String stockName = normalizeText(request.stockName());
-        String typeCode = normalizeText(request.typeCode());
+        String typeName = normalizeText(request.typeName());
         String market = normalizeText(request.market());
-        String delFlg = normalizeDeleteFlagForQuery(request.delFlg());
+        String stockPriceFrom = normalizeDecimalForQuery(request.stockPriceFrom(), "stockPriceFrom");
+        String stockPriceTo = normalizeDecimalForQuery(request.stockPriceTo(), "stockPriceTo");
+        validateStockPriceRange(stockPriceFrom, stockPriceTo);
+        String freeWord = normalizeText(request.freeWord());
         SortSpec sortSpec = normalizeSort(request.sort());
 
         List<StockResponse> items = stockRepository
             .findByCriteria(
                 stockCode,
                 stockName,
-                typeCode,
+                typeName,
                 market,
-                delFlg,
+                stockPriceFrom,
+                stockPriceTo,
+                freeWord,
                 sortSpec.sortBy(),
                 sortSpec.sortDirection(),
                 size,
@@ -97,7 +105,7 @@ public class StockServiceImpl implements StockService {
             .map(this::toResponse)
             .toList();
 
-        long total = stockRepository.countByCriteria(stockCode, stockName, typeCode, market, delFlg);
+        long total = stockRepository.countByCriteria(stockCode, stockName, typeName, market, stockPriceFrom, stockPriceTo, freeWord);
         return new StockListResponse(items, total, page, size);
     }
 
@@ -623,7 +631,7 @@ public class StockServiceImpl implements StockService {
     private SortSpec normalizeSort(String sort) {
         String normalized = normalizeText(sort);
         if (normalized == null) {
-            return new SortSpec(SORT_BY_ID, SORT_DESC);
+            return new SortSpec(SORT_BY_STOCK_CODE, SORT_ASC);
         }
 
         String[] parts = normalized.split(",");
@@ -633,6 +641,9 @@ public class StockServiceImpl implements StockService {
         String sortBy = switch (field) {
             case "id" -> SORT_BY_ID;
             case "stockcode", "stock_code" -> SORT_BY_STOCK_CODE;
+            case "typecode", "type_code" -> SORT_BY_TYPE_CODE;
+            case "market" -> SORT_BY_MARKET;
+            case "stockprice", "stock_price" -> SORT_BY_STOCK_PRICE;
             default -> throw new IllegalArgumentException("荳肴髪謖∫噪謗貞ｺ丞ｭ玲ｮｵ: " + field);
         };
 
@@ -685,6 +696,34 @@ public class StockServiceImpl implements StockService {
             case CHANGE_TYPE_FALL -> CHANGE_TYPE_FALL;
             default -> throw new IllegalArgumentException("changeType must be RISE or FALL");
         };
+    }
+
+
+    private String normalizeDecimalForQuery(String value, String fieldName) {
+        String normalized = normalizeText(value);
+        if (normalized == null) {
+            return null;
+        }
+
+        String sanitized = normalized.replace(",", "").replace("，", "").trim();
+        try {
+            BigDecimal parsed = new BigDecimal(sanitized);
+            return parsed.toPlainString();
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException(fieldName + " must be numeric");
+        }
+    }
+
+    private void validateStockPriceRange(String stockPriceFrom, String stockPriceTo) {
+        if (stockPriceFrom == null || stockPriceTo == null) {
+            return;
+        }
+
+        BigDecimal from = new BigDecimal(stockPriceFrom);
+        BigDecimal to = new BigDecimal(stockPriceTo);
+        if (from.compareTo(to) > 0) {
+            throw new IllegalArgumentException("stockPriceFrom must be <= stockPriceTo");
+        }
     }
 
     private BigDecimal normalizeNonNegativeDecimal(String value, String fieldName, BigDecimal defaultValue) {

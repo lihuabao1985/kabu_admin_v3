@@ -47,14 +47,27 @@ public class StockController {
     public StockListResponse listStocks(
         @RequestParam(required = false) String stockCode,
         @RequestParam(required = false) String stockName,
-        @RequestParam(required = false) String typeCode,
+        @RequestParam(required = false) String typeName,
         @RequestParam(required = false) String market,
-        @RequestParam(required = false) String delFlg,
+        @RequestParam(required = false) String stockPriceFrom,
+        @RequestParam(required = false) String stockPriceTo,
+        @RequestParam(required = false) String freeWord,
         @RequestParam(required = false) Integer page,
         @RequestParam(required = false) Integer size,
         @RequestParam(required = false) String sort
     ) {
-        StockQueryRequest request = new StockQueryRequest(stockCode, stockName, typeCode, market, delFlg, page, size, sort);
+        StockQueryRequest request = new StockQueryRequest(
+            stockCode,
+            stockName,
+            typeName,
+            market,
+            stockPriceFrom,
+            stockPriceTo,
+            freeWord,
+            page,
+            size,
+            sort
+        );
         return stockService.listStocks(request);
     }
 

@@ -134,19 +134,34 @@
             <if test="stockName != null and stockName != ''">
                 AND STOCK_NAME LIKE CONCAT('%', #{stockName}, '%')
             </if>
-            <if test="typeCode != null and typeCode != ''">
-                AND TYPE_CODE = #{typeCode}
+            <if test="typeName != null and typeName != ''">
+                AND TYPE_NAME LIKE CONCAT('%', #{typeName}, '%')
             </if>
             <if test="market != null and market != ''">
                 AND MARKET = #{market}
             </if>
-            <if test="delFlg != null and delFlg != ''">
-                AND DEL_FLG = #{delFlg}
+            <if test="stockPriceFrom != null and stockPriceFrom != ''">
+                AND CAST(REPLACE(REPLACE(REPLACE(STOCK_PRICE, ',', ''), '，', ''), ' ', '') AS DECIMAL(18,2)) <![CDATA[>=]]> #{stockPriceFrom}
             </if>
+            <if test="stockPriceTo != null and stockPriceTo != ''">
+                AND CAST(REPLACE(REPLACE(REPLACE(STOCK_PRICE, ',', ''), '，', ''), ' ', '') AS DECIMAL(18,2)) <![CDATA[<=]]> #{stockPriceTo}
+            </if>
+            <if test="freeWord != null and freeWord != ''">
+                AND (
+                    TEKUSYOKU LIKE CONCAT('%', #{freeWord}, '%')
+                    OR RENKETU_ZIGYO LIKE CONCAT('%', #{freeWord}, '%')
+                    OR SUPPLIER LIKE CONCAT('%', #{freeWord}, '%')
+                    OR SALES_DESTINATION LIKE CONCAT('%', #{freeWord}, '%')
+                )
+            </if>
+            AND DEL_FLG = '0' 
         </where>
         ORDER BY
             <choose>
                 <when test="sortBy == 'STOCK_CODE'">STOCK_CODE</when>
+                <when test="sortBy == 'TYPE_CODE'">TYPE_CODE</when>
+                <when test="sortBy == 'MARKET'">MARKET</when>
+                <when test="sortBy == 'STOCK_PRICE'">CAST(REPLACE(REPLACE(REPLACE(STOCK_PRICE, ',', ''), '，', ''), ' ', '') AS DECIMAL(18,2))</when>
                 <otherwise>ID</otherwise>
             </choose>
             <choose>
@@ -167,15 +182,27 @@
             <if test="stockName != null and stockName != ''">
                 AND STOCK_NAME LIKE CONCAT('%', #{stockName}, '%')
             </if>
-            <if test="typeCode != null and typeCode != ''">
-                AND TYPE_CODE = #{typeCode}
+            <if test="typeName != null and typeName != ''">
+                AND TYPE_NAME LIKE CONCAT('%', #{typeName}, '%')
             </if>
             <if test="market != null and market != ''">
                 AND MARKET = #{market}
             </if>
-            <if test="delFlg != null and delFlg != ''">
-                AND DEL_FLG = #{delFlg}
+            <if test="stockPriceFrom != null and stockPriceFrom != ''">
+                AND CAST(REPLACE(REPLACE(REPLACE(STOCK_PRICE, ',', ''), '，', ''), ' ', '') AS DECIMAL(18,2)) <![CDATA[>=]]> #{stockPriceFrom}
             </if>
+            <if test="stockPriceTo != null and stockPriceTo != ''">
+                AND CAST(REPLACE(REPLACE(REPLACE(STOCK_PRICE, ',', ''), '，', ''), ' ', '') AS DECIMAL(18,2)) <![CDATA[<=]]> #{stockPriceTo}
+            </if>
+            <if test="freeWord != null and freeWord != ''">
+                AND (
+                    TEKUSYOKU LIKE CONCAT('%', #{freeWord}, '%')
+                    OR RENKETU_ZIGYO LIKE CONCAT('%', #{freeWord}, '%')
+                    OR SUPPLIER LIKE CONCAT('%', #{freeWord}, '%')
+                    OR SALES_DESTINATION LIKE CONCAT('%', #{freeWord}, '%')
+                )
+            </if>
+            AND DEL_FLG = '0' 
         </where>
     </select>
 

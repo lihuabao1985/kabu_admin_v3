@@ -71,12 +71,12 @@ class StockServiceTest {
 
     @Test
     void listStocksShouldUseDefaultQueryAndPaging() {
-        when(stockRepository.findByCriteria(null, null, null, null, "0", "ID", "DESC", 20, 0))
+        when(stockRepository.findByCriteria(null, null, null, null, null, null, null, "STOCK_CODE", "ASC", 20, 0))
             .thenReturn(List.of(buildStock(1L, "7203", "Toyota", "0")));
-        when(stockRepository.countByCriteria(null, null, null, null, "0")).thenReturn(1L);
+        when(stockRepository.countByCriteria(null, null, null, null, null, null, null)).thenReturn(1L);
 
         StockListResponse response = stockService.listStocks(
-            new StockQueryRequest(null, null, null, null, null, null, null, null)
+            new StockQueryRequest(null, null, null, null, null, null, null, null, null, null)
         );
 
         assertEquals(1, response.items().size());
