@@ -644,3 +644,126 @@ public class StockServiceImpl implements StockService {
     }
 
 
+    private String normalizeDateValue(String value, String fieldName) {
+        String normalized = normalizeText(value);
+        if (normalized == null) {
+            return null;
+        }
+        try {
+            LocalDate.parse(normalized, DATE_FORMATTER);
+            return normalized;
+        } catch (DateTimeParseException ex) {
+            throw new IllegalArgumentException(fieldName + " must be yyyy-MM-dd");
+        }
+    }
+
+    private String normalizeDecimalLike(String value, String fieldName) {
+        String normalized = normalizeText(value);
+        if (normalized == null) {
+            return null;
+        }
+        try {
+            new BigDecimal(normalized);
+            return normalized;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException(fieldName + " must be numeric");
+        }
+    }
+
+    private String normalizeDecimalForQuery(String value, String fieldName) {
+        return normalizeDecimalLike(value, fieldName);
+    }
+
+    private void validateStockPriceRange(String from, String to) {
+        if (from == null || to == null) {
+            return;
+        }
+        if (new BigDecimal(from).compareTo(new BigDecimal(to)) > 0) {
+            throw new IllegalArgumentException("stockPriceFrom must be less than or equal to stockPriceTo");
+        }
+    }
+
+    private void validateId(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("id must be positive");
+        }
+    }
+
+    private String normalizeImportMode(String mode) {
+        String normalized = normalizeText(mode);
+        if (normalized == null) {
+            return IMPORT_MODE_INCREMENTAL;
+        }
+        String upper = normalized.toUpperCase();
+        if (IMPORT_MODE_INCREMENTAL.equals(upper) || IMPORT_MODE_FULL.equals(upper)) {
+            return upper;
+        }
+        throw new IllegalArgumentException("mode must be INCREMENTAL or FULL");
+    }
+
+    private String extractRawStockCode(StockCreateRequest item) {
+        return item == null ? null : item.stockCode();
+    }
+
+    private String requireText(String value, String message) {
+        String normalized = normalizeText(value);
+        if (normalized == null) {
+            throw new IllegalArgumentException(message);
+        }
+        return normalized;
+    }
+
+    private String normalizeText(String value) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    private String normalizeFlag(String value, String fieldName, boolean allowNull, String defaultValue) {
+        String normalized = normalizeText(value);
+        if (normalized == null) {
+            if (allowNull) {
+                return defaultValue;
+            }
+            throw new IllegalArgumentException(fieldName + " is required");
+        }
+        if (!"0".equals(normalized) && !"1".equals(normalized)) {
+            throw new IllegalArgumentException(fieldName + " must be 0 or 1");
+        }
+        return normalized;
+    }
+
+    private String normalizeUrl(String value, String fieldName) {
+        String normalized = normalizeText(value);
+        if (normalized == null) {
+            return null;
+        }
+        try {
+            URI uri = new URI(normalized);
+            String scheme = uri.getScheme();
+            if (scheme == null || (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme))) {
+                throw new IllegalArgumentException(fieldName + " must start with http:// or https://");
+            }
+            return normalized;
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException(fieldName + " is not a valid URL");
+        }
+    }
+
+    private BigDecimal parseNumericText(String value, String fieldName) {
+        String normalized = normalizeText(value);
+        if (normalized == null) {
+            return null;
+        }
+        try {
+            return new BigDecimal(normalized);
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException(fieldName + " must be numeric");
+        }
+    }
+
+    private record SortSpec(String sortBy, String sortDirection) {
+    }
+}
